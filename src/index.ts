@@ -21,7 +21,7 @@ app.get('/', (c) => {
 
 
 
-  return c.text('Hello Hono from dev !')
+  return c.text('Hello Hono from main !')
 })
 
 app.use(

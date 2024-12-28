@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { auth } from './lib/auth';
 import { cors } from 'hono/cors';
+import { dashboard } from './routes/dashbaord';
 
 interface Env {
   DATABASE_URL: string;
@@ -16,6 +17,7 @@ interface AuthVariables  {
 }
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
+app.route('/dashbaord', dashboard)
 
 app.get('/', (c) => {
 

@@ -6,7 +6,7 @@ type IndicatorMetadata = {
     params: string[],
     formula: (...params:number[])=>number
 }
-const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata} = {
+export const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata} = {
     OPS_PLAN_EXEC: {
         weight: 0.08,
         parent: "ROOT",

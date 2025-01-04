@@ -1,7 +1,7 @@
 import { TOperationalIndicators } from "../../db/types"
 
-const initOperationalIndicators = ()=>{
-    let indi:TOperationalIndicators = {
+export const initOperationalIndicators = ()=>{
+    let indicators:TOperationalIndicators = {
         REACH_TARGET_AUD_PERC:(0).toPrecision(3),
         PRJK_GOALS_ACHV_PERC:(0).toPrecision(3),
         BUDGET_COMMIT_PERC:(0).toPrecision(3),
@@ -10,6 +10,8 @@ const initOperationalIndicators = ()=>{
         VOLUN_GROWTH_RATE_QUAR:(0).toPrecision(3),
         DOCS_ARCHIV:(0).toPrecision(3),
         QLY_SPEED_PROC_EXEC:(0).toPrecision(3),
+        EFFIC_PRJKS_EXEC:(0).toPrecision(3),
+        VOLN_CONTR_PRJKS_EXEC:(0).toPrecision(3),
         PGRM_PRJKS_EXEC_PERC:(0).toPrecision(3),
         OPS_GOALS_ACH_PERC:(0).toPrecision(3),
         EFFITV_PRJKS_PGRM:(0).toPrecision(3),
@@ -18,4 +20,6 @@ const initOperationalIndicators = ()=>{
         PRJKT_PRGM_MGMT:(0).toPrecision(3),
         OPS_PLAN_EXEC:(0).toPrecision(3),
     }
+
+    return indicators
 }

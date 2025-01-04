@@ -2,27 +2,13 @@ import { Hono } from 'hono'
 import { auth } from './lib/auth';
 import { cors } from 'hono/cors';
 import { dashboard } from './routes/dashbaord';
+import { AuthVariables, Env } from './types/types';
 
-interface Env {
-  DATABASE_URL: string;
-  BETTER_AUTH_URL:string;
-  BETTER_AUTH_SECRET:string
-}
-
-
-
-interface AuthVariables  {
-  user: typeof auth.$Infer.Session.user | null;
-  session: typeof auth.$Infer.Session.session | null
-}
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
-app.route('/dashbaord', dashboard)
+app.route('/dashboard', dashboard)
 
 app.get('/', (c) => {
-
-
-
   return c.text('Hello Hono from main !')
 })
 
@@ -39,7 +25,7 @@ app.use(
 );
 
 app.use("*", async (c, next) => {
-	const session = await auth.api.getSession({ headers: c.req.raw.headers });
+	const session = await auth(c.env).api.getSession({ headers: c.req.raw.headers });
  
   	if (!session) {
     	c.set("user", null);
@@ -53,7 +39,7 @@ app.use("*", async (c, next) => {
 });
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => {
-	return auth.handler(c.req.raw);
+	return auth(c.env).handler(c.req.raw);
 });
 
 export default app

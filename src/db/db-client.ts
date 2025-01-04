@@ -4,8 +4,17 @@ import { neon } from "@neondatabase/serverless";
 import { config } from "dotenv";
 import type { Logger as drizzleLogger } from 'drizzle-orm/logger';
 import { logger } from "../lib/loggers";
+import { schema } from "./schema";
+import { defineConfig } from "drizzle-kit";
 
-config({ path: ".dev.vars" }); // or .env.local
+config({ path: ".dev.vars" }); 
+
+
+
+export default defineConfig({
+  dialect: 'postgresql', // 'mysql' | 'sqlite' | 'turso'
+  schema: './schema.ts'
+})
 
 class DBLogger implements drizzleLogger {
     logQuery(query: string, params: unknown[]): void {
@@ -13,23 +22,13 @@ class DBLogger implements drizzleLogger {
     }
   }
 
-const sql = neon("postgresql://neondb_owner:HVeO1nUqpJ9K@ep-white-forest-a2x5b7yh.eu-central-1.aws.neon.tech/neondb?sslmode=require");
-export const db = drizzle({ client: sql ,logger: new DBLogger()});
 
 
-const DB_ERRORS = {
-    DUPLICATE_KEY: 'ER_DUP_ENTRY',
-  };
-  
-  export interface DatabaseError {
-    type: string;
-    message: string;
-    stack?: string;
-    code: string;
-    errno: number;
-    sql: string;
-    sqlState: string;
-    sqlMessage: string;
-  }
+export const dbCLient = (dbUrl:string)=>{
 
-  
+const sql = neon(dbUrl);
+return drizzle({ client: sql ,logger: new DBLogger(),schema})
+
+}
+
+

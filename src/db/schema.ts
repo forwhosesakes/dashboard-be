@@ -1,4 +1,6 @@
-import { pgTable, text, timestamp, boolean, numeric } from "drizzle-orm/pg-core";
+
+import { pgTable, text, serial, timestamp, boolean, numeric, uuid, integer } from "drizzle-orm/pg-core";
+
 			
 export const user = pgTable("user", {
 					id: text("id").primaryKey(),
@@ -51,11 +53,27 @@ export const verification = pgTable("verification", {
  updatedAt: timestamp('updatedAt')
 				});
 
+
+
+export const dashbaord = pgTable("dashboard",{
+    id: serial("id").primaryKey(),
+    title:text("title").notNull(),
+    content:text("content"),
+    clientId: text("clientId").notNull().references(()=>user.id),
+    type:text("type").notNull(),
+    category:text("category"),
+    theme:text("theme").default("default"),
+    entriesId: uuid("entriesId"),
+    indicatorsId: uuid("indicatorsId"),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+})
+
 export const corporateEntries = pgTable("corporateEntries", {
-    id: text("id").primaryKey(),
-    client_id: text("clientId").notNull().references(()=>user.id),
-    createdAt: timestamp('createdAt'),
-    updatedAt: timestamp('updatedAt'),
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: integer("dashboardId").notNull().references(()=>dashbaord.id),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     COMPLIANCE_ADHERENCE_PRACTICES:numeric("COMPLIANCE_ADHERENCE_PRACTICES"),
     TRANSPARENCY_DISCLOSURE_PRACTICES:numeric("TRANSPARENCY_DISCLOSURE_PRACTICES"),
     FINANCIAL_SAFETY_PRACTICES:numeric("FINANCIAL_SAFETY_PRACTICES"),
@@ -98,10 +116,10 @@ export const corporateEntries = pgTable("corporateEntries", {
 })
 
 export const operationalEntries = pgTable("operationalEntries",
-{    id: text("id").primaryKey(),
-    client_id: text("clientId").notNull().references(()=>user.id),
-    createdAt: timestamp('createdAt'),
-    updatedAt: timestamp('updatedAt'),
+{  id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     NO_OPERATIONAL_GOALS_ACHIEVED:numeric("NO_OPERATIONAL_GOALS_ACHIEVED"),
     NO_OPERATIONAL_GOALS_PLANNED:numeric("NO_OPERATIONAL_GOALS_PLANNED"),
     NO_PROGRAMS_EXECUTED:numeric("NO_PROGRAMS_EXECUTED"),
@@ -138,11 +156,12 @@ export const operationalEntries = pgTable("operationalEntries",
 
 
 export const operationalIndicators = pgTable("operationalIndicators", {
-       id: text("id").primaryKey(),
-        clientId: text("clientId").notNull().references(()=>user.id),
-        entriesId: text("entriesId").notNull().references(()=>operationalEntries.id),
-        createdAt: timestamp('createdAt'),
-        updatedAt: timestamp('updatedAt'),
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id),
+
+        entriesId: uuid("entriesId").notNull().references(()=>operationalEntries.id),
+        createdAt: timestamp('createdAt').notNull().defaultNow(),
+        updatedAt: timestamp('updatedAt').notNull().defaultNow(),
         OPS_PLAN_EXEC:numeric("OPS_PLAN_EXEC"),
         PRJKT_PRGM_MGMT:numeric("PRJKT_PRGM_MGMT"),
         EFFIC_INTERNAL_OPS:numeric("EFFIC_INTERNAL_OPS"),
@@ -170,12 +189,73 @@ export const operationalIndicators = pgTable("operationalIndicators", {
 })
 
 
+export const financialEntries = pgTable("financialEntries", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+    COMPLIANCE_ADHERENCE_PRACTICES:numeric("COMPLIANCE_ADHERENCE_PRACTICES"),
+    TRANSPARENCY_DISCLOSURE_PRACTICES:numeric("TRANSPARENCY_DISCLOSURE_PRACTICES"),
+    FINANCIAL_SAFETY_PRACTICES:numeric("FINANCIAL_SAFETY_PRACTICES"),
+    NO_SUCCESSFUL_HIRES_POST_EXP:numeric("NO_SUCCESSFUL_HIRES_POST_EXP"),
+    TOTAL_HIRES:numeric("TOTAL_HIRES"),
+    PERC_COMMIT_WORK_HOURS:numeric("PERC_COMMIT_WORK_HOURS"),
+    NO_EXE_PRACTICES:numeric("NO_EXE_PRACTICES"),
+    NO_PLANNED_PRACTICES:numeric("NO_PLANNED_PRACTICES"),
+    NO_COMP_ELEMENTS:numeric("NO_COMP_ELEMENTS"),
+    TOTAL_ELEMENTS:numeric("TOTAL_ELEMENTS"),
+    NO_TIMELY_REPORTS:numeric("NO_TIMELY_REPORTS"),
+    NO_REQUIRED_REPORTS:numeric("NO_REQUIRED_REPORTS"),
+    NO_GRADES_BENEFITS_SATISF:numeric("NO_GRADES_BENEFITS_SATISF"),
+    NO_RESPONSES_SATIS_FORM:numeric("NO_RESPONSES_SATIS_FORM"),
+    TOTAL_GRADES_EMP_SATIS:numeric("TOTAL_GRADES_EMP_SATIS"),
+    NO_RESPONSES_EMP_SATIS:numeric("NO_RESPONSES_EMP_SATIS"),
+    TOTAL_GEADES_PARTENERS_SATIS:numeric("TOTAL_GEADES_PARTENERS_SATIS"),
+    TOTAL_RESPONSES_VOL_SATIS:numeric("TOTAL_RESPONSES_VOL_SATIS"),
+    NO_RESPOSES_VOL_SATIS_FORM:numeric("NO_RESPOSES_VOL_SATIS_FORM"),
+    TOTAL_GRADES_VOL_STATIS:numeric("TOTAL_GRADES_VOL_STATIS"),
+    NO_RESPONSES_VOL_SATIS_FORM:numeric("NO_RESPONSES_VOL_SATIS_FORM"),
+    TOTAL_SATIS_GRADES_ORG:numeric("TOTAL_SATIS_GRADES_ORG"),
+    NO_ORG_MEMBERS:numeric("NO_ORG_MEMBERS"),
+    TOTAL_GRADES_COM:numeric("TOTAL_GRADES_COM"),
+    NO_RESPONSES_COM_SATIS:numeric("NO_RESPONSES_COM_SATIS"),
+    TASKS_ACHIEVED_TIMELY_CEO:numeric("TASKS_ACHIEVED_TIMELY_CEO"),
+    TOTAL_PLANNED_TASKS_CEO:numeric("TOTAL_PLANNED_TASKS_CEO"),
+    AVG_EVAL_EMPS:numeric("AVG_EVAL_EMPS"),
+    AVG_RES_SATIS_FORMS_EMP:numeric("AVG_RES_SATIS_FORMS_EMP"),
+    EMP_EVAL:numeric("EMP_EVAL"),
+    EMP_ACHIEVMENT_PERC:numeric("EMP_ACHIEVMENT_PERC"),
 
 
+
+
+
+
+                   
+
+})
+
+export const generalEntries = pgTable("generalEntries",{
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id),
+    category: text("category").notNull(),
+    entryName:text("entryName").notNull(),
+    entryValue: text("entryValue").notNull(),
+
+
+})
+
+
+export const generalIndicators = pgTable("generalIndicators",{
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id),
+    category: text("category").notNull(),
+    indicatorName:text("indicatorName").notNull(),
+    indicatorValue: text("indicatorValue").notNull(),
+})
 
 
 
 export const schema = {user,session,account,verification,operationalIndicators,
-    operationalEntries,corporateEntries
-
+    operationalEntries,corporateEntries,financialEntries,generalEntries,generalIndicators,dashbaord
 }

@@ -1,8 +1,6 @@
 type DashboardType = "OPERATIONAL" | "CORPRATE" | "FINANCIAL"
-interface Env {
-    DB_URL: string;
-  BETTER_AUTH_URL:string;
-  BETTER_AUTH_SECRET:string
+interface Env  extends CloudflareBindings{
+
 }
 
 

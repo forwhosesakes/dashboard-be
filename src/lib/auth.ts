@@ -8,14 +8,19 @@ import { sendEmail } from "./send-email";
  
 export const auth =(env:Env)=> betterAuth({
     trustedOrigins:["http://localhost:5173", "http://localhost:3000","https://dev.dashboard-fe-aa2.pages.dev","https://dashboard-fe-aa2.pages.dev","https://chokichoki.org", "https://dev.chokichoki.org"],
-    advanced: {
+    // advanced: {
      
-        //TODO: disables after setting up domains
-        defaultCookieAttributes: {
-            sameSite: "none",
-            secure: true
-          }
-      },
+    //     //TODO: disables after setting up domains
+    //     defaultCookieAttributes: {
+    //         sameSite: "none",
+    //         secure: true
+    //       }
+    //   },
+    advanced: {
+      crossSubDomainCookies: {
+        enabled: true
+      }
+    },
       
     emailAndPassword: {  
         enabled: true,

@@ -20,7 +20,7 @@ app.use(
 		allowMethods: ["POST", "GET", "OPTIONS"],
 		exposeHeaders: ["Content-Length"],
 		maxAge: 600,
-		// credentials: true,
+		credentials: true,
 	}),
 );
 

@@ -39,6 +39,8 @@ app.use("*", async (c, next) => {
 });
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => {
+	console.log("api auth request", c);
+	
 	return auth(c.env).handler(c.req.raw);
 });
 

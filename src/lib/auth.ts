@@ -7,6 +7,7 @@ import { Env } from "../types/types";
 import { sendEmail } from "./send-email";
  
 export const auth =(env:Env)=> betterAuth({
+
     trustedOrigins:["http://localhost:5173", "http://localhost:3000","https://dev.dashboard-fe-aa2.pages.dev","https://dashboard-fe-aa2.pages.dev","https://chokichoki.org", "https://dev.chokichoki.org"],
     // advanced: {
      
@@ -18,7 +19,8 @@ export const auth =(env:Env)=> betterAuth({
     //   },
     advanced: {
       crossSubDomainCookies: {
-        enabled: true
+        enabled: true,
+        domain:env.BETTER_AUTH_URL
       }
     },
       

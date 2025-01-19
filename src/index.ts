@@ -8,7 +8,7 @@ import { org } from './routes/org';
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
 app.route('/dashboard', dashboard)
-app.route('/org', org)
+// app.route('/org', org)
 
 app.get('/', (c) => {
   return c.text('Hello Hono from main !')

@@ -58,7 +58,7 @@ dashboard.post("/entries/:type/:id", async (c) => {
 
     // Save the entries in the db
     const entriesRecord = await saveEntriesForDashboard(
-      dashbaordId,
+      Number(dashbaordId),
       entriesObject,
       dashboardType,
       c.env.DB_URL
@@ -76,7 +76,7 @@ dashboard.post("/entries/:type/:id", async (c) => {
     }
     // save the indicators in db.. that's rlly it
     const indicatorRecords = await saveIndicatorsForDashboard(
-      dashbaordId,
+      Number(dashbaordId),
       entriesRecord.data[0].id,
       indicators,
       dashboardType,

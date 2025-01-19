@@ -55,6 +55,46 @@ export const verification = pgTable("verification", {
 
 
 
+
+export const organization = pgTable("organization", {
+    id: serial("id").primaryKey(),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+    name:text("name").notNull(),
+    phoneNumber:text("phoneNumber"),
+    email:text("email"),
+    type:text("type"),
+    category:text("category"),
+    licenseNumber:text("licenseNumber"),
+    website:text("website"),
+
+
+    address:text("address"),
+    city:text("city"),
+    neighbor:text("neighbor"),
+    street:text("street"),
+    map:text("map"),
+
+
+    repName:text("repName"),
+    repPhoneNumber:text("repPhoneNumber"),
+    repEmail:text("repEmail"),
+
+
+    logo:text("logo"),
+    officialDocs:text("officialDocs"),
+    operationalPlanImage:text("operationalPlanImage"),
+    repSpeach:text("repSpeach"),
+
+    licenseImage:text("licenseImage"),
+    contractImage:text("contractImage"),
+    additionalDocs:text("additionalDocs"),
+    financialIndicatorsSetting:numeric("financialIndicatorsSetting"),
+    operationalIndicatorsSetting:numeric("operationalIndicatorsSetting"),
+    corporateIndicatorsSetting:numeric("corporateIndicatorsSetting"),
+    generalndicatorsSetting:numeric("generalndicatorsSetting"),
+                }) 
+
 export const dashbaord = pgTable("dashboard",{
     id: serial("id").primaryKey(),
     title:text("title").notNull(),
@@ -256,6 +296,6 @@ export const generalIndicators = pgTable("generalIndicators",{
 
 
 
-export const schema = {user,session,account,verification,operationalIndicators,
+export const schema = {user,session,account,verification,operationalIndicators,organization,
     operationalEntries,corporateEntries,financialEntries,generalEntries,generalIndicators,dashbaord
 }

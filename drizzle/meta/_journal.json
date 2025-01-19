@@ -8,6 +8,13 @@
       "when": 1736001176305,
       "tag": "0000_lonely_jack_power",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1737231654876,
+      "tag": "0001_conscious_wither",
+      "breakpoints": true
     }
   ]
 }

@@ -35,13 +35,15 @@ app.use("*", async (c, next) => {
 });
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => {
-	console.log("api auth request", c);
+	console.log("api auth request");
+	console.log(c);
+	
 	
 	return auth(c.env).handler(c.req.raw);
 });
 
 app.route('/dashboard', dashboard)
-app.route('/org', org)
+// app.route('/org', org)
 
 app.get('/', (c) => {
   return c.text('Hello Hono from main !')

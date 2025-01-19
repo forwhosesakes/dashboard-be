@@ -2,7 +2,8 @@ import { count, eq } from "drizzle-orm";
 import { StatusResponse } from "../../types/types";
 import { dbCLient } from "../db-client";
 import { organization } from "../schema";
-import { PaginatedResponse, PaginationParams, TOrganization, TOrganizationRecord } from "../types";
+import { PaginatedResponse, PaginationParams, TOrganization, TOrganizationOverview, TOrganizationOverviewRecord, TOrganizationRecord } from "../types";
+import { mapSettingtoDashbaordType } from "../../lib/constants";
 
 
 
@@ -212,3 +213,72 @@ export const getPaginatedOrgs = async (
       };
     }
   };
+
+
+export const getPaginatedOrgsOverview = async (
+  dbUrl: string,
+  { page = 1, limit = 10 }: PaginationParams = {}
+): Promise<PaginatedResponse<TOrganizationOverview>> => {
+  const offset = (page - 1) * limit;
+  
+  try {
+    const db = dbCLient(dbUrl);
+    
+    // Get total count and paginated records in parallel
+    const [[{count:totalCount}], records] = await Promise.all([
+      db.select({ count: count() }).from(organization),
+      db.query.organization.findMany({
+        limit: limit,
+        offset: offset,
+        columns:{
+          id:true, 
+          name:true, 
+          email:true, 
+          financialIndicatorsSetting:true, 
+          corporateIndicatorsSetting:true, 
+          operationalIndicatorsSetting:true, 
+          generalndicatorsSetting:true,
+        }
+       
+      })
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const result = records.map((record)=>{
+    let dashboards: string[]= [];
+
+    (["financialIndicatorsSetting", "corporateIndicatorsSetting","operationalIndicatorsSetting","generalndicatorsSetting"]).forEach((el: string)=>{
+       if(Number(record[el as keyof TOrganizationOverviewRecord]) >0) {
+        dashboards.push(mapSettingtoDashbaordType[el as keyof typeof mapSettingtoDashbaordType])
+       }
+
+      
+      }
+    
+    )
+    return {
+      id:record.id,
+      name:record.name,
+      email:record.email,
+      dashboards
+     }
+    })
+    
+    return {
+      status: "success",
+      data: result,
+      pagination: {
+        total: totalCount,
+        currentPage: page,
+        totalPages: totalPages,
+        limit: limit,
+        hasMore: page < totalPages
+      }
+    };
+  } catch (error: any) {
+    throw {
+      status: "error",
+      message: error,
+    };
+  }
+};

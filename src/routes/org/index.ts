@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { AuthVariables, Env } from "../../types/types";
 import { TOrganization } from "../../db/types";
-import { createUpdateOrg, getLatestNOrgs, getPaginatedOrgs, retrieveOrg } from "../../db/org/org";
+import { createUpdateOrg, getLatestNOrgs, getPaginatedOrgs, getPaginatedOrgsOverview, retrieveOrg } from "../../db/org/org";
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 
@@ -68,6 +68,72 @@ catch (error) {
   );
 }
 })
+
+//?Endpoint for retreieving overview of the organizations (paginated)
+// Validation schema for query parameters
+const querySchemaPaginatedOrgsOverview = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val) : 1))
+    .refine((val) => val > 0, { message: "Page must be a positive number" }),
+  limit: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val) : 10))
+    .refine((val) => val > 0 && val <= 100, { 
+      message: "Limit must be between 1 and 100" 
+    })
+  });
+  org.get("/overview",zValidator('query', querySchemaPaginatedOrgsOverview), async (c)=>{
+  try {
+    const { page, limit } = c.req.valid('query');
+    const dbUrl = c.env.DB_URL;
+  
+    if (!dbUrl) {
+      return c.json(
+        {
+          status: "error",
+          message: "Database configuration missing"
+        },
+        500
+      );
+    }
+  
+    const result = await getPaginatedOrgsOverview(dbUrl, { page, limit });
+
+  
+    // Map to HTTP status code
+    const statusCode = 
+      result.status === "success" ? 200 :
+      result.status === "warning" ? 400 :
+      500;
+  
+    // Set pagination headers
+    if (result.status === "success" && result.pagination) {
+      c.header('X-Total-Count', result.pagination.total.toString());
+      c.header('X-Page', result.pagination.currentPage.toString());
+      c.header('X-Pages', result.pagination.totalPages.toString());
+      c.header('X-Has-More', result.pagination.hasMore.toString());
+    }
+  
+    return c.json(result, statusCode);
+  
+  } catch (error) {
+    console.error('Error fetching organizations:', error);
+    
+    return c.json(
+      {
+        status: "error",
+        message: "Failed to fetch organizations"
+      },
+      500
+    );
+  }
+  });
+  
+
+
 
 
 

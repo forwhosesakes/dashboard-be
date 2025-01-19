@@ -7,6 +7,10 @@ import { dashbaord, operationalEntries, operationalIndicators, organization } fr
   export type TDashboard = typeof dashbaord.$inferInsert
   export type TOrganization = typeof organization.$inferInsert
   export type TOrganizationRecord = typeof organization.$inferSelect
+  export type TOrganizationOverviewRecord=   Pick<TOrganizationRecord,"id"|"name"|"email"|"corporateIndicatorsSetting"|"financialIndicatorsSetting"|"operationalIndicatorsSetting"|"generalndicatorsSetting">
+  export type TOrganizationOverview=   Pick<TOrganizationOverviewRecord,"id"|"name"|"email"> |{dashboards:any[]}
+
+
   
 
 

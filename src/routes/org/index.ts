@@ -80,7 +80,7 @@ const querySchemaLRetriveOrg = z.object({
   .refine((val) => val > 0, { message: "ID must be a positive number" }),
 
 });
-org.get("/:id([0-9]+)",zValidator('param', querySchemaLRetriveOrg), async (c)=>{
+org.get("/pre/:id([0-9]+)",zValidator('param', querySchemaLRetriveOrg), async (c)=>{
   try {
     // Get and validate query parameters
     const {id} = c.req.valid("param");

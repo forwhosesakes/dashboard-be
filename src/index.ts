@@ -9,7 +9,7 @@ import { org } from './routes/org';
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
 
 app.use(
-	"/api/auth/**", // or replace with "*" to enable cors for all routes
+	"*", // or replace with "*" to enable cors for all routes
 	cors({
 		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://chokichoki.org", "https://dev.chokichoki.org"], // replace with your origin
 		allowHeaders: ["Content-Type", "Authorization"],

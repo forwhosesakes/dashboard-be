@@ -182,45 +182,45 @@ org.post( "/",async (c) => {
 //     .refine((val) => val > 0, { message: "id must be a positive number" }),
 
 // });
-org.get("/:id", async (c)=>{
-  try {
-    // Get and validate query parameters
-    const id = c.req.param("id")
-    const dbUrl = c.env.DB_URL;
+// org.get("/:id", async (c)=>{
+//   try {
+//     // Get and validate query parameters
+//     const id = c.req.param("id")
+//     const dbUrl = c.env.DB_URL;
 
-    if (!dbUrl) {
-      return c.json(
-        {
-          status: "error",
-          message: "Database configuration missing"
-        },
-        500
-      );
-    }
-
-
-    const result = await retrieveOrg(Number(id), dbUrl);
-      // Map to HTTP status code
-      const statusCode = 
-      result.status === "success" ? 200 :
-      result.status === "warning" ? 400 :
-      500;
+//     if (!dbUrl) {
+//       return c.json(
+//         {
+//           status: "error",
+//           message: "Database configuration missing"
+//         },
+//         500
+//       );
+//     }
 
 
-      return c.json(result, statusCode);
+//     const result = await retrieveOrg(Number(id), dbUrl);
+//       // Map to HTTP status code
+//       const statusCode = 
+//       result.status === "success" ? 200 :
+//       result.status === "warning" ? 400 :
+//       500;
 
 
-}
+//       return c.json(result, statusCode);
 
-catch (error) {
-  console.error('Error fetching single organization:', error);
+
+// }
+
+// catch (error) {
+//   console.error('Error fetching single organization:', error);
   
-  return c.json(
-    {
-      status: "error",
-      message: "Failed to fetch single organization"
-    },
-    500
-  );
-}
-})
+//   return c.json(
+//     {
+//       status: "error",
+//       message: "Failed to fetch single organization"
+//     },
+//     500
+//   );
+// }
+// })

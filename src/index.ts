@@ -1,12 +1,14 @@
 import { Hono } from 'hono'
 import { auth } from './lib/auth';
 import { cors } from 'hono/cors';
-import { dashboard } from './routes/dashbaord';
+import { dashboard } from './routes/dashbaord/dashboard';
 import { AuthVariables, Env } from './types/types';
+import { org } from './routes/org/org';
 
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
 app.route('/dashboard', dashboard)
+app.route('/organization', org)
 
 app.get('/', (c) => {
   return c.text('Hello Hono from main !')

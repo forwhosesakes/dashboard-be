@@ -43,7 +43,7 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
 });
 
 app.route('/dashboard', dashboard)
-// app.route('/org', org)
+app.route('/org', org)
 
 app.get('/', (c) => {
   return c.text('Hello Hono from main !')

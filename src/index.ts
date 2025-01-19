@@ -7,12 +7,6 @@ import { org } from './routes/org';
 
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
-app.route('/dashboard', dashboard)
-// app.route('/org', org)
-
-app.get('/', (c) => {
-  return c.text('Hello Hono from main !')
-})
 
 app.use(
 	"/api/auth/**", // or replace with "*" to enable cors for all routes
@@ -45,5 +39,13 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
 	
 	return auth(c.env).handler(c.req.raw);
 });
+
+app.route('/dashboard', dashboard)
+app.route('/org', org)
+
+app.get('/', (c) => {
+  return c.text('Hello Hono from main !')
+})
+
 
 export default app

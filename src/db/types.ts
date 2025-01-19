@@ -1,12 +1,10 @@
-import { dashbaord, operationalEntries, operationalIndicators, organization } from "./schema";
+import { dashbaord, operationalEntries, operationalIndicators } from "./schema";
 
   
   export type TOperationalEntriesRecord = typeof operationalEntries.$inferSelect;
   export type TOperationalIndicatorsRecord = typeof operationalIndicators.$inferInsert
   export type TDashboardRecord = typeof dashbaord.$inferSelect
   export type TDashboard = typeof dashbaord.$inferInsert
-  export type TOrganization = typeof organization.$inferInsert
-  export type TOrganizationRecord = typeof organization.$inferSelect
   
 
 
@@ -35,21 +33,4 @@ import { dashbaord, operationalEntries, operationalIndicators, organization } fr
     sqlMessage: string;
   }
 
-
-  export interface PaginationParams {
-    page?: number;
-    limit?: number;
-  }
-  
-  export interface PaginatedResponse<T> {
-    status: string;
-    data: T[];
-    pagination: {
-      total: number;
-      currentPage: number;
-      totalPages: number;
-      limit: number;
-      hasMore: boolean;
-    };
-  }
   

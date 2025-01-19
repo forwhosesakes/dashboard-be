@@ -94,12 +94,12 @@ org.get("/",zValidator('query', querySchemaPaginatedOrgs), async (c)=>{
       500;
 
     // Set pagination headers
-    if (result.status === "success" && result.pagination) {
-      c.header('X-Total-Count', result.pagination.total.toString());
-      c.header('X-Page', result.pagination.currentPage.toString());
-      c.header('X-Pages', result.pagination.totalPages.toString());
-      c.header('X-Has-More', result.pagination.hasMore.toString());
-    }
+    // if (result.status === "success" && result.pagination) {
+    //   c.header('X-Total-Count', result.pagination.total.toString());
+    //   c.header('X-Page', result.pagination.currentPage.toString());
+    //   c.header('X-Pages', result.pagination.totalPages.toString());
+    //   c.header('X-Has-More', result.pagination.hasMore.toString());
+    // }
 
     return c.json(result, statusCode);
 

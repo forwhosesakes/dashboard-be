@@ -1,9 +1,4 @@
 type DashboardType = "OPERATIONAL" | "CORPRATE" | "FINANCIAL"
-interface Env  extends CloudflareBindings{
-
-}
-
-
 
 interface AuthVariables  {
   user: typeof auth.$Infer.Session.user | null;

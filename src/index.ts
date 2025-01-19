@@ -2,11 +2,11 @@ import { Hono } from 'hono'
 import { auth } from './lib/auth';
 import { cors } from 'hono/cors';
 import { dashboard } from './routes/dashbaord';
-import { AuthVariables, Env } from './types/types';
+import { AuthVariables } from './types/types';
 import { org } from './routes/org';
 
 
-const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
+const app = new Hono<{ Variables:AuthVariables,Bindings:  Env  } >()
 
 app.use(
 	"*", // or replace with "*" to enable cors for all routes

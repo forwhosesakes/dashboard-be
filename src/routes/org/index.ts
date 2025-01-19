@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { AuthVariables, Env } from "../../types/types";
+import { AuthVariables } from "../../types/types";
 import { TOrganization } from "../../db/types";
 import { createUpdateOrg, getLatestNOrgs, getPaginatedOrgs, getPaginatedOrgsOverview, retrieveOrg } from "../../db/org/org";
 import { z } from 'zod';
@@ -7,7 +7,7 @@ import { zValidator } from '@hono/zod-validator';
 
 export const org = new Hono<{
   Variables: AuthVariables;
-  Bindings: CloudflareBindings & Env;
+  Bindings:  Env;
 }>();
 
 org.get("/test", (c) => c.json({ data: "Hello org router!!" }));

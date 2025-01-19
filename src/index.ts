@@ -13,8 +13,8 @@ app.use(
 	cors({
 		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://chokichoki.org", "https://dev.chokichoki.org"], // replace with your origin
 		allowHeaders: ["Content-Type", "Authorization"],
-		allowMethods: ["POST", "GET", "OPTIONS"],
-		exposeHeaders: ["Content-Length"],
+		allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"], // Added more methods
+		exposeHeaders: ["Content-Length", "X-Total-Count", "X-Page", "X-Pages", "X-Has-More"], 
 		maxAge: 600,
 		credentials: true,
 	}),

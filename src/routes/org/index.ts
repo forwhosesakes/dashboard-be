@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { AuthVariables, Env } from "../../types/types";
-// import { TOrganization } from "../../db/types";
-// import { createUpdateOrg, getLatestNOrgs, getPaginatedOrgs, retrieveOrg } from "../../db/org/org";
-// import { z } from 'zod';
-// import { zValidator } from '@hono/zod-validator';
+import { TOrganization } from "../../db/types";
+import { createUpdateOrg, getLatestNOrgs, getPaginatedOrgs, retrieveOrg } from "../../db/org/org";
+import { z } from 'zod';
+import { zValidator } from '@hono/zod-validator';
 
 export const org = new Hono<{
   Variables: AuthVariables;
@@ -13,46 +13,46 @@ export const org = new Hono<{
 org.get("/test", (c) => c.json({ data: "Hello org router!!" }));
 
 
-// // ?Endpoint for create update orginization 
-// // todo: add validation schema for the body you idiot
+// ?Endpoint for create update orginization 
+// todo: add validation schema for the body you idiot
 
-// org.post( "/",async (c) => {
-//     try {
-//         const org = await c.req.json<TOrganization>();
-//         const dbUrl = c.env.DB_URL; 
+org.post( "/",async (c) => {
+    try {
+        const org = await c.req.json<TOrganization>();
+        const dbUrl = c.env.DB_URL; 
     
-//         if (!dbUrl) {
-//           return c.json(
-//             {
-//               status: "error",
-//               message: "Database configuration missing"
-//             },
-//             500
-//           );
-//         }
+        if (!dbUrl) {
+          return c.json(
+            {
+              status: "error",
+              message: "Database configuration missing"
+            },
+            500
+          );
+        }
     
-//         const result = await createUpdateOrg(org, dbUrl);
+        const result = await createUpdateOrg(org, dbUrl);
     
-//         const statusCode = 
-//           result.status === "success" ? (org.id ? 200 : 201) : // 201 for create, 200 for update
-//           result.status === "warning" ? 400 :
-//           500;
+        const statusCode = 
+          result.status === "success" ? (org.id ? 200 : 201) : // 201 for create, 200 for update
+          result.status === "warning" ? 400 :
+          500;
     
-//         return c.json(result, statusCode);
+        return c.json(result, statusCode);
     
-//       } catch (error) {
-//         console.error('Organization creation/update error:', error);
+      } catch (error) {
+        console.error('Organization creation/update error:', error);
         
-//         return c.json(
-//           {
-//             status: "error",
-//             message: "Failed to process organization data"
-//           },
-//           500
-//         );
-//       }
+        return c.json(
+          {
+            status: "error",
+            message: "Failed to process organization data"
+          },
+          500
+        );
+      }
 
-// })
+})
 
 // //?Endpoint for retreieving all the organizations (paginated)
 // // Validation schema for query parameters

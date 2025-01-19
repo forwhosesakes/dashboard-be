@@ -118,74 +118,74 @@ org.post( "/",async (c) => {
 
 
 
-//?Endpoint for getting latest added orgs 
-// Validation schema for query parameters
-const querySchemaLatestOrgs = z.object({
-  n: z
-    .string()
-    .optional()
-    .transform((val) => (val ? parseInt(val) : 5))
-    .refine((val) => val > 0, { message: "Num must be a positive number" }),
+// //?Endpoint for getting latest added orgs 
+// // Validation schema for query parameters
+// const querySchemaLatestOrgs = z.object({
+//   n: z
+//     .string()
+//     .optional()
+//     .transform((val) => (val ? parseInt(val) : 5))
+//     .refine((val) => val > 0, { message: "Num must be a positive number" }),
 
-});
-org.get("/latest",zValidator('query', querySchemaLatestOrgs), async (c)=>{
-  try {
-    // Get and validate query parameters
-    const {n} = c.req.valid("query");
-    const dbUrl = c.env.DB_URL;
+// });
+// org.get("/latest",zValidator('query', querySchemaLatestOrgs), async (c)=>{
+//   try {
+//     // Get and validate query parameters
+//     const {n} = c.req.valid("query");
+//     const dbUrl = c.env.DB_URL;
 
-    if (!dbUrl) {
-      return c.json(
-        {
-          status: "error",
-          message: "Database configuration missing"
-        },
-        500
-      );
-    }
-
-
-    const result = await getLatestNOrgs(n, dbUrl);
-      // Map to HTTP status code
-      const statusCode = 
-      result.status === "success" ? 200 :
-      result.status === "warning" ? 400 :
-      500;
+//     if (!dbUrl) {
+//       return c.json(
+//         {
+//           status: "error",
+//           message: "Database configuration missing"
+//         },
+//         500
+//       );
+//     }
 
 
-      return c.json(result, statusCode);
+//     const result = await getLatestNOrgs(n, dbUrl);
+//       // Map to HTTP status code
+//       const statusCode = 
+//       result.status === "success" ? 200 :
+//       result.status === "warning" ? 400 :
+//       500;
 
 
-}
+//       return c.json(result, statusCode);
 
-catch (error) {
-  console.error('Error fetching latest organizations:', error);
+
+// }
+
+// catch (error) {
+//   console.error('Error fetching latest organizations:', error);
   
-  return c.json(
-    {
-      status: "error",
-      message: "Failed to fetch latest organizations"
-    },
-    500
-  );
-}
-})
+//   return c.json(
+//     {
+//       status: "error",
+//       message: "Failed to fetch latest organizations"
+//     },
+//     500
+//   );
+// }
+// })
 
 
 
 //?Endpoint for retrieving one  org
-const querySchemaLRetriveOrg = z.object({
-  id: z
-    .string()
-    .optional()
-    .transform((val) => (val ? parseInt(val) : 1))
-    .refine((val) => val > 0, { message: "id must be a positive number" }),
+// const querySchemaLRetriveOrg = z.object({
+//   id: z
+//     .string()
+//     .optional()
+//     .transform((val) => (val ? parseInt(val) : 1))
+//     .refine((val) => val > 0, { message: "id must be a positive number" }),
 
-});
-org.get("/:id",zValidator('param', querySchemaLRetriveOrg), async (c)=>{
+// });
+org.get("/:id", async (c)=>{
   try {
     // Get and validate query parameters
-    const {id} = c.req.valid("param");
+    const id = c.req.param("id")
     const dbUrl = c.env.DB_URL;
 
     if (!dbUrl) {
@@ -199,7 +199,7 @@ org.get("/:id",zValidator('param', querySchemaLRetriveOrg), async (c)=>{
     }
 
 
-    const result = await retrieveOrg(id, dbUrl);
+    const result = await retrieveOrg(Number(id), dbUrl);
       // Map to HTTP status code
       const statusCode = 
       result.status === "success" ? 200 :

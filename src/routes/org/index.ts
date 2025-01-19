@@ -202,7 +202,7 @@ try {
     result.status === "warning" ? 400 :
     500;
 
-  Set pagination headers
+  // Set pagination headers
   if (result.status === "success" && result.pagination) {
     c.header('X-Total-Count', result.pagination.total.toString());
     c.header('X-Page', result.pagination.currentPage.toString());

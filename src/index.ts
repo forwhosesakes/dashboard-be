@@ -3,10 +3,11 @@ import { auth } from './lib/auth';
 import { cors } from 'hono/cors';
 import { dashboard } from './routes/dashbaord';
 import { AuthVariables, Env } from './types/types';
-
+import { users } from "./routes/users/index"
 
 const app = new Hono<{ Variables:AuthVariables,Bindings: CloudflareBindings& Env  } >()
 app.route('/dashboard', dashboard)
+app.route('/users',users)
 
 app.get('/', (c) => {
   return c.text('Hello Hono from main !')
@@ -23,6 +24,17 @@ app.use(
 		credentials: true,
 	}),
 );
+
+app.use("/users/*",
+	cors({
+		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://chokichoki.org", "https://dev.chokichoki.org"], // replace with your origin
+		allowHeaders: ["Content-Type", "Authorization"],
+		allowMethods: ["POST", "GET", "OPTIONS"],
+		exposeHeaders: ["Content-Length"],
+		maxAge: 600,
+		credentials: true,
+	})
+)
 
 app.use("*", async (c, next) => {
 	const session = await auth(c.env).api.getSession({ headers: c.req.raw.headers });

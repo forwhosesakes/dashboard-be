@@ -7,23 +7,37 @@ import { Env } from "../types/types";
 import { sendEmail } from "./send-email";
  
 export const auth =(env:Env)=> betterAuth({
-
-    trustedOrigins:["http://localhost:5173", "http://localhost:3000","https://dev.dashboard-fe-aa2.pages.dev","https://dashboard-fe-aa2.pages.dev","https://chokichoki.org", "https://dev.chokichoki.org"],
-    // advanced: {
+  trustedOrigins:["http://localhost:5173", "http://localhost:3000","https://dev.dashboard-fe-aa2.pages.dev","https://dashboard-fe-aa2.pages.dev","https://chokichoki.org", "https://dev.chokichoki.org"],
+  advanced: {
      
-    //     //TODO: disables after setting up domains
-    //     defaultCookieAttributes: {
-    //         sameSite: "none",
-    //         secure: true
-    //       }
-    //   },
-    advanced: {
-      crossSubDomainCookies: {
-        enabled: true,
-        domain:env.BETTER_AUTH_URL
+        //TODO: disables after setting up domains
+        defaultCookieAttributes: {
+            sameSite: "none",
+            secure: true
+          },
+          
+      },
+    // advanced: {
+    //   crossSubDomainCookies: {
+    //     enabled: true,
+    //     domain:env.BETTER_AUTH_URL
+    //   }
+    // },
+    user:{
+      
+      // deleteUser:{
+      //   enabled:true,
+      // },
+      additionalFields:{
+        subRole:{
+          type:"string",
+          required:false,
+          defaultValue:null,
+          input:false
+        }
       }
     },
-      
+    
     emailAndPassword: {  
         enabled: true,
         sendResetPassword: async ({user, url, token}:any, request:any) => {
@@ -49,6 +63,9 @@ export const auth =(env:Env)=> betterAuth({
     database: drizzleAdapter(dbCLient(env.DB_URL), {
         provider: "pg", // or "mysql", "sqlite"
         schema
+       
+
+    
     }),
     plugins: [
         admin() ,

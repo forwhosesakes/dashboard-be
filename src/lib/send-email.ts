@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { resetOTPTemplate, resetTemplate } from "../constants/email-template";
+import { resetOTPTemplate, resetTemplate, inviteMemberTemplate } from "../constants/email-template";
 // import ProgramStatus from "~/components/emails/programStatus";
 // import PasswordResetEmail from "~/components/emails/passwordResetEmail";
 // import { render } from "@react-email/render";
@@ -11,7 +11,7 @@ const getResendObject = (key: string) => {
   return resend;
 };
 
-type EmailTemplate = "password-reset" | "contact" | "password-reset-otp";
+type EmailTemplate = "password-reset" | "contact" | "password-reset-otp" |"member-invite";
 
 interface SendEmailProps {
   to: string | string[];
@@ -28,6 +28,7 @@ export const sendEmail = async (
 ) => {
   const resend = getResendObject(apiKey);
   let emailComponent = "";
+
   switch (template) {
     case "password-reset":
       emailComponent = resetTemplate(props.resetUrl);
@@ -36,6 +37,9 @@ export const sendEmail = async (
     case "password-reset-otp":
       emailComponent = resetOTPTemplate(props.otp);
       break;
+      case "member-invite":
+        emailComponent = inviteMemberTemplate(props)
+        break;
     default:
       throw new Error(`Unknown email template: ${template}`);
   }

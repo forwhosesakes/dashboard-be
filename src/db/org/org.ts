@@ -177,7 +177,7 @@ export const getLatestNOrgs = async (
 
 export const getPaginatedOrgs = async (
     dbUrl: string,
-    { page = 1, limit = 10 }: PaginationParams = {}
+    { page = 1, limit = 50 }: PaginationParams = {}
   ): Promise<PaginatedResponse<TOrganizationRecord>> => {
     const offset = (page - 1) * limit;
     

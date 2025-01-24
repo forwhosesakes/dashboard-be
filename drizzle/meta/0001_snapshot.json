@@ -1,5 +1,5 @@
 {
-  "id": "e677b1e1-d7df-46c8-ab1c-8c1a715d8142",
+  "id": "6cb6abea-7250-4df4-94b4-b2857a3faaa2",
   "prevId": "61040763-0863-4427-8622-eb61fdf0fb60",
   "version": "7",
   "dialect": "postgresql",
@@ -1162,195 +1162,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.organization": {
-      "name": "organization",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "phoneNumber": {
-          "name": "phoneNumber",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "type": {
-          "name": "type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "category": {
-          "name": "category",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "licenseNumber": {
-          "name": "licenseNumber",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "website": {
-          "name": "website",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "city": {
-          "name": "city",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "neighbor": {
-          "name": "neighbor",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "street": {
-          "name": "street",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "map": {
-          "name": "map",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "repName": {
-          "name": "repName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "repPhoneNumber": {
-          "name": "repPhoneNumber",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "repEmail": {
-          "name": "repEmail",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "logo": {
-          "name": "logo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "officialDocs": {
-          "name": "officialDocs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "operationalPlanImage": {
-          "name": "operationalPlanImage",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "repSpeach": {
-          "name": "repSpeach",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "licenseImage": {
-          "name": "licenseImage",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "contractImage": {
-          "name": "contractImage",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "additionalDocs": {
-          "name": "additionalDocs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "financialIndicatorsSetting": {
-          "name": "financialIndicatorsSetting",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "operationalIndicatorsSetting": {
-          "name": "operationalIndicatorsSetting",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "corporateIndicatorsSetting": {
-          "name": "corporateIndicatorsSetting",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "generalndicatorsSetting": {
-          "name": "generalndicatorsSetting",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.session": {
       "name": "session",
       "schema": "",
@@ -1507,6 +1318,12 @@
         "banExpires": {
           "name": "banExpires",
           "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subRole": {
+          "name": "subRole",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }

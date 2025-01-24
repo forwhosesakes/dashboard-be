@@ -1,4 +1,35 @@
+import { DASHBOARD_RELATED_COLUMN } from "../../db/org/constants"
 import { TOperationalIndicators } from "../../db/types"
+
+
+export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], category?:string)=>{
+switch (settingType) {
+    case "financialIndicatorsSetting":
+        return {
+            title:"NEW_FINANCIAL_INDICATORS",
+            type:"financial"
+        }
+        case "corporateIndicatorsSetting":
+            return {
+                title:"NEW_CORPORATE_INDICATORS",
+                type:"corporate"
+            }
+        case "operationalIndicatorsSetting":
+        
+            return {
+                title:"NEW_OPERATIONAL_INDICATORS",
+                type:"operational"
+            }
+            case "generalndicatorsSetting":
+                default:
+                 return {
+                    title:"NEW_GENERAL_INDICATORS", 
+                    type:"general",
+                    category:category??"",
+                 }
+
+}
+}
 
 export const initOperationalIndicators = ()=>{
     let indicators:TOperationalIndicators = {
@@ -20,6 +51,28 @@ export const initOperationalIndicators = ()=>{
         PRJKT_PRGM_MGMT:(0).toPrecision(3),
         OPS_PLAN_EXEC:(0).toPrecision(3),
     }
+    return indicators
+}
 
+export const initFinancialIndicators = ()=>{
+    let indicators:TOperationalIndicators = {
+        REACH_TARGET_AUD_PERC:(0).toPrecision(3),
+        PRJK_GOALS_ACHV_PERC:(0).toPrecision(3),
+        BUDGET_COMMIT_PERC:(0).toPrecision(3),
+        PRJKT_TIMELY_COMP_PERC:(0).toPrecision(3),
+        VOLUN_SUST_PERC:(0).toPrecision(3),
+        VOLUN_GROWTH_RATE_QUAR:(0).toPrecision(3),
+        DOCS_ARCHIV:(0).toPrecision(3),
+        QLY_SPEED_PROC_EXEC:(0).toPrecision(3),
+        EFFIC_PRJKS_EXEC:(0).toPrecision(3),
+        VOLN_CONTR_PRJKS_EXEC:(0).toPrecision(3),
+        PGRM_PRJKS_EXEC_PERC:(0).toPrecision(3),
+        OPS_GOALS_ACH_PERC:(0).toPrecision(3),
+        EFFITV_PRJKS_PGRM:(0).toPrecision(3),
+        VOLN_MGMT:(0).toPrecision(3),
+        EFFIC_INTERNAL_OPS:(0).toPrecision(3),
+        PRJKT_PRGM_MGMT:(0).toPrecision(3),
+        OPS_PLAN_EXEC:(0).toPrecision(3),
+    }
     return indicators
 }

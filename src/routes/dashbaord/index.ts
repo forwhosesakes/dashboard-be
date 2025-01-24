@@ -6,12 +6,12 @@ import {
   saveEntriesForDashboard,
   saveIndicatorsForDashboard,
 } from "../../db/dashbaord/dashboard";
-import { AuthVariables, DashboardType, Env } from "../../types/types";
+import { AuthVariables, DashboardType } from "../../types/types";
 import { TDashboard } from "../../db/types";
 
 export const dashboard = new Hono<{
   Variables: AuthVariables;
-  Bindings: CloudflareBindings & Env;
+  Bindings:   Env;
 }>();
 dashboard.get("/", (c) => c.json({ data: "Hello dashbaord" }));
 
@@ -58,7 +58,7 @@ dashboard.post("/entries/:type/:id", async (c) => {
 
     // Save the entries in the db
     const entriesRecord = await saveEntriesForDashboard(
-      dashbaordId,
+      Number(dashbaordId),
       entriesObject,
       dashboardType,
       c.env.DB_URL
@@ -76,7 +76,7 @@ dashboard.post("/entries/:type/:id", async (c) => {
     }
     // save the indicators in db.. that's rlly it
     const indicatorRecords = await saveIndicatorsForDashboard(
-      dashbaordId,
+      Number(dashbaordId),
       entriesRecord.data[0].id,
       indicators,
       dashboardType,
@@ -112,4 +112,5 @@ dashboard.post("",async (c) => {
 
 //todo: update dashboard
 //todo: delete dashboard
-//todo: get all dashboards for a given client
+//todo: get all dashboards for a given org
+

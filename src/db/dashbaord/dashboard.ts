@@ -124,6 +124,8 @@ export const createDashboard = (
   dashboardData: TDashboard,
   dbUrl: string
 ): Promise<StatusResponse<TDashboardRecord>> => {
+  console.log("create dashbaord db:", dashboardData);
+  
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     db.insert(dashbaord)
@@ -143,12 +145,14 @@ export const createDashboard = (
 
 
 
+
+
 //!not tested
-export const retrieveAllDashboardsForClient = (clientId: string,dbUrl:string):Promise<StatusResponse<TDashboardRecord[]>>=>{
+export const retrieveAllDashboardsForClient = (orgId: string,dbUrl:string):Promise<StatusResponse<TDashboardRecord[]>>=>{
     //TODO: 1.retrieve all records from the dashboard table with client id 
     return new Promise((resolve, reject) => {
         const db = dbCLient(dbUrl);
-        db.query.dashbaord.findMany({ where: eq(dashbaord.clientId, clientId) }).then((res:TDashboardRecord[])=>{
+        db.query.dashbaord.findMany({ where: eq(dashbaord.orgId, Number(orgId)) }).then((res:TDashboardRecord[])=>{
             resolve({status:"success",data:res})
         }).catch((e)=>{
             reject({status:"error",message:"error occured in [retrieveAllDashboardsForClient]:"+e})

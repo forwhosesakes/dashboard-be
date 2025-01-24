@@ -59,6 +59,7 @@ export const verification = pgTable("verification", {
 
 export const organization = pgTable("organization", {
     id: serial("id").primaryKey(),
+    userId: text('userId').references(()=> user.id),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     name:text("name").notNull(),
@@ -100,7 +101,7 @@ export const dashbaord = pgTable("dashboard",{
     id: serial("id").primaryKey(),
     title:text("title").notNull(),
     content:text("content"),
-    clientId: text("clientId").notNull().references(()=>user.id),
+    orgId: serial("orgId").references(()=>organization.id),
     type:text("type").notNull(),
     category:text("category"),
     theme:text("theme").default("default"),
@@ -182,15 +183,7 @@ export const operationalEntries = pgTable("operationalEntries",
     NO_VOLUNTEERS_CURRENT_QUARTER:numeric("NO_VOLUNTEERS_CURRENT_QUARTER"),
     NO_VOLUNTEERS_NEXT_QUARTER:numeric("NO_VOLUNTEERS_NEXT_QUARTER"),
     NO_VOLUNTEERS_CONT_3:numeric("NO_VOLUNTEERS_CONT_3"),
-    TOTAL_VOLUNTEERS:numeric("TOTAL_VOLUNTEERS"),
-
-
-
-
-
-
-
-
+    TOTAL_VOLUNTEERS:numeric("TOTAL_VOLUNTEERS")
 }
 
 )

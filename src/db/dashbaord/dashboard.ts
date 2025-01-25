@@ -17,6 +17,7 @@ import {
   user,
 } from "../schema";
 import { StatusResponse } from "../../types/types";
+import { getDashboardStatus } from "./utils";
 type DashboardType = "OPERATIONAL" | "CORPRATE" | "FINANCIAL";
 
 const dashboardEntryTables = {
@@ -125,7 +126,7 @@ export const createDashboard = (
   dbUrl: string
 ): Promise<StatusResponse<TDashboardRecord>> => {
   console.log("create dashbaord db:", dashboardData);
-  
+
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     db.insert(dashbaord)
@@ -143,32 +144,64 @@ export const createDashboard = (
   });
 };
 
-
-
-
-
 //!not tested
-export const retrieveAllDashboardsForClient = (orgId: string,dbUrl:string):Promise<StatusResponse<TDashboardRecord[]>>=>{
-    //TODO: 1.retrieve all records from the dashboard table with client id 
-    return new Promise((resolve, reject) => {
-        const db = dbCLient(dbUrl);
-        db.query.dashbaord.findMany({ where: eq(dashbaord.orgId, Number(orgId)) }).then((res:TDashboardRecord[])=>{
-            resolve({status:"success",data:res})
-        }).catch((e)=>{
-            reject({status:"error",message:"error occured in [retrieveAllDashboardsForClient]:"+e})
+export const retrieveAllDashboardsForClient = (
+  orgId: string,
+  dbUrl: string
+): Promise<StatusResponse<TDashboardRecord[]>> => {
+  //TODO: 1.retrieve all records from the dashboard table with client id
+  return new Promise((resolve, reject) => {
+    const db = dbCLient(dbUrl);
+    db.query.dashbaord
+      .findMany({ where: eq(dashbaord.orgId, Number(orgId)) })
+      .then((res: TDashboardRecord[]) => {
+        resolve({ status: "success", data: res });
+      })
+      .catch((e) => {
+        reject({
+          status: "error",
+          message: "error occured in [retrieveAllDashboardsForClient]:" + e,
+        });
+      });
+  });
+};
 
-        })
-    })
 
-}
+export const getDashboardsOverviewForOrg = (
+  orgId: string,
+  dbUrl: string
+): Promise<StatusResponse<any[]>> => {
+  return new Promise((resolve, reject) => {
+    const db = dbCLient(dbUrl);
+    db.query.dashbaord
+      .findMany({ where: eq(dashbaord.orgId, Number(orgId)) })
+      .then((res: TDashboardRecord[]) => {
+        const transformedResponse = res.map((record) => ({
+          id:record.id,
+          title: record.title,
+          status: getDashboardStatus({
+            entriesId: record.entriesId,
+            indicatorsId: record.indicatorsId,
+          }), 
+        }));
 
-//todo: implement this 
-export const retrieveDashboardContent = (dashboardData:TDashboard, mode:"ENTRIES"|"INDICATORS"|"ALL")=>{
-    //TODO: 1.retrieve   records from the dashboard table with client id 
-    //2. depending on the type you decide the table you are going to fetch from 
-    //3. the fetching would be diffrent if it's a general dashboard 
- 
+        resolve({ status: "success", data: transformedResponse });
+      })
+      .catch((e) => {
+        reject({
+          status: "error",
+          message: "error occured in [getDashboardsOverviewForOrg]:" + e,
+        });
+      });
+  });
+};
 
-
-
-}
+//todo: implement this
+export const retrieveDashboardContent = (
+  dashboardData: TDashboard,
+  mode: "ENTRIES" | "INDICATORS" | "ALL"
+) => {
+  //TODO: 1.retrieve   records from the dashboard table with org id
+  //2. depending on the type you decide the table you are going to fetch from
+  //3. the fetching would be diffrent if it's a general dashboard
+};

@@ -236,11 +236,13 @@ org.post("/", async (c) => {
         const orgResult = await createUpdateOrg({ ...org, userId }, dbUrl);
 
         if (orgResult.status === "success") {
-          console.log("to create dashbaord", DASHBOARD_RELATED_COLUMN);
+          console.log("orgResult", orgResult);
 
           // Create the dashboards types related to the org
           // Note: if the org has a general dashbaord, then look for the category field
-          if (orgResult.data.id) {
+          if (orgResult.data[0].id) {
+          console.log("to create dashbaord", DASHBOARD_RELATED_COLUMN);
+
             const dashboardResults = await Promise.all(
               DASHBOARD_RELATED_COLUMN.map(async (el) => {
                 try {
@@ -249,7 +251,7 @@ org.post("/", async (c) => {
 
                   return await createDashboard(
                     {
-                      orgId: orgResult.data.id,
+                      orgId: orgResult.data[0].id,
                       ...getDashboardBodyGivenSettingType(
                         el,
                         org.category ?? ""

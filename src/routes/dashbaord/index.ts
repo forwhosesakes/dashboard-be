@@ -3,6 +3,7 @@ import { initOperationalIndicators } from "./utils";
 import { OPERATIONAL_METADATA } from "../../lib/calc-metadata";
 import {
   createDashboard,
+  getDashboardsOverviewForOrg,
   saveEntriesForDashboard,
   saveIndicatorsForDashboard,
 } from "../../db/dashbaord/dashboard";
@@ -97,7 +98,7 @@ dashboard.get("/indicators/:type/:id", async (c) => {
   const dashboardType = c.req.param("type").toUpperCase() as DashboardType;
 });
 
-//todo: create dashboard
+// create dashboard
 dashboard.post("",async (c) => {
   const dashboardData = (await c.req.json()) as TDashboard;
   //todo: validate the type of dashbord data
@@ -110,7 +111,23 @@ dashboard.post("",async (c) => {
     });
 });
 
-//todo: update dashboard
+
+
+//Get dashboard overview for one org
+dashboard.get("/overview/:orgId", async (c) => {
+  const orgId = c.req.param("orgId");
+  return getDashboardsOverviewForOrg(orgId, c.env.DB_URL)
+  .then((response) => {
+    return c.json({ data: response.data });
+  })
+  .catch((e) => {
+    return c.json({ code: "API_ERROR", message: e });
+  });
+
+
+});
+
+
 //todo: delete dashboard
-//todo: get all dashboards for a given org
+
 

@@ -1,6 +1,6 @@
 {
-  "id": "873fc1d5-94f2-40f9-92d1-3a8530cdc563",
-  "prevId": "688ec9f9-28e9-4534-8d8a-af82270a0ebb",
+  "id": "01000db8-d46a-4518-8a46-e85bc766366a",
+  "prevId": "9fd714a0-da96-41c0-9b51-39ddac216796",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -750,10 +750,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "corporateIndicators_entriesId_operationalEntries_id_fk": {
-          "name": "corporateIndicators_entriesId_operationalEntries_id_fk",
+        "corporateIndicators_entriesId_corporateEntries_id_fk": {
+          "name": "corporateIndicators_entriesId_corporateEntries_id_fk",
           "tableFrom": "corporateIndicators",
-          "tableTo": "operationalEntries",
+          "tableTo": "corporateEntries",
           "columnsFrom": [
             "entriesId"
           ],
@@ -1142,8 +1142,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.operationalIndicators": {
-      "name": "operationalIndicators",
+    "public.financialIndicators": {
+      "name": "financialIndicators",
       "schema": "",
       "columns": {
         "id": {
@@ -1179,104 +1179,158 @@
           "notNull": true,
           "default": "now()"
         },
-        "OPS_PLAN_EXEC": {
-          "name": "OPS_PLAN_EXEC",
+        "FINANCIAL_PERF": {
+          "name": "FINANCIAL_PERF",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "PRJKT_PRGM_MGMT": {
-          "name": "PRJKT_PRGM_MGMT",
+        "ADMIN_EXPENSES": {
+          "name": "ADMIN_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "EFFIC_INTERNAL_OPS": {
-          "name": "EFFIC_INTERNAL_OPS",
+        "PRGRMS_EXPENSES": {
+          "name": "PRGRMS_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "VOLN_MGMT": {
-          "name": "VOLN_MGMT",
+        "FINANCIAL_SUSTAIN": {
+          "name": "FINANCIAL_SUSTAIN",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "OPS_GOALS_ACH_PERC": {
-          "name": "OPS_GOALS_ACH_PERC",
+        "DONAT_MONEY_RAISING": {
+          "name": "DONAT_MONEY_RAISING",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "PGRM_PRJKS_EXEC_PERC": {
-          "name": "PGRM_PRJKS_EXEC_PERC",
+        "ABL_COVER_OBLIG": {
+          "name": "ABL_COVER_OBLIG",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "EFFIC_PRJKS_EXEC": {
-          "name": "EFFIC_PRJKS_EXEC",
+        "DIVERSITY_INCOME_RESOURCES": {
+          "name": "DIVERSITY_INCOME_RESOURCES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "EFFITV_PRJKS_PGRM": {
-          "name": "EFFITV_PRJKS_PGRM",
+        "EFFECIENT_RESOURCE_MGMT": {
+          "name": "EFFECIENT_RESOURCE_MGMT",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "VOLN_CONTR_PRJKS_EXEC": {
-          "name": "VOLN_CONTR_PRJKS_EXEC",
+        "ADMIN_TO_TOTAL_EXPENSES": {
+          "name": "ADMIN_TO_TOTAL_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "QLY_SPEED_PROC_EXEC": {
-          "name": "QLY_SPEED_PROC_EXEC",
+        "REV_FIN_SUST_TO_TOTAL_EXPENSES": {
+          "name": "REV_FIN_SUST_TO_TOTAL_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "DOCS_ARCHIV": {
-          "name": "DOCS_ARCHIV",
+        "PRGRMS_TO_TOTAL_EXPENSES": {
+          "name": "PRGRMS_TO_TOTAL_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "VOLUN_GROWTH_RATE_QUAR": {
-          "name": "VOLUN_GROWTH_RATE_QUAR",
+        "FUND_RAISING_TO_TOTAL_EXPENSES": {
+          "name": "FUND_RAISING_TO_TOTAL_EXPENSES",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "VOLUN_SUST_PERC": {
-          "name": "VOLUN_SUST_PERC",
+        "SUST_EXPENSEES_TO_REV": {
+          "name": "SUST_EXPENSEES_TO_REV",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "PRJKT_TIMELY_COMP_PERC": {
-          "name": "PRJKT_TIMELY_COMP_PERC",
+        "SUST_RETURN_TO_ASSETS": {
+          "name": "SUST_RETURN_TO_ASSETS",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "BUDGET_COMMIT_PERC": {
-          "name": "BUDGET_COMMIT_PERC",
+        "FUND_RAISING_TO_TOTAL_DONAT": {
+          "name": "FUND_RAISING_TO_TOTAL_DONAT",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "PRJK_GOALS_ACHV_PERC": {
-          "name": "PRJK_GOALS_ACHV_PERC",
+        "CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF": {
+          "name": "CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "RECH_TARGET_AUD_PERC": {
-          "name": "RECH_TARGET_AUD_PERC",
+        "SUST_TO_TOTAL_EXPENSES": {
+          "name": "SUST_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NET_CACHE_INVEST_ADMIN_EXPENSES": {
+          "name": "NET_CACHE_INVEST_ADMIN_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DONAT_PERC": {
+          "name": "DONAT_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PLATFORM_REV_PERC": {
+          "name": "PLATFORM_REV_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRGMS_PRJKS_REV": {
+          "name": "PRGMS_PRJKS_REV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PAID_MEMBERSHIP_PERC": {
+          "name": "PAID_MEMBERSHIP_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ECO_RETURN_VOLUN": {
+          "name": "ECO_RETURN_VOLUN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RATE_REV_ANNUAL_GROWTH": {
+          "name": "RATE_REV_ANNUAL_GROWTH",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMMIT_DISC_PERC": {
+          "name": "COMMIT_DISC_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RATE_SUST_DONAT": {
+          "name": "RATE_SUST_DONAT",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
@@ -1284,9 +1338,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "operationalIndicators_dashboardId_dashboard_id_fk": {
-          "name": "operationalIndicators_dashboardId_dashboard_id_fk",
-          "tableFrom": "operationalIndicators",
+        "financialIndicators_dashboardId_dashboard_id_fk": {
+          "name": "financialIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "financialIndicators",
           "tableTo": "dashboard",
           "columnsFrom": [
             "dashboardId"
@@ -1297,10 +1351,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operationalIndicators_entriesId_operationalEntries_id_fk": {
-          "name": "operationalIndicators_entriesId_operationalEntries_id_fk",
-          "tableFrom": "operationalIndicators",
-          "tableTo": "operationalEntries",
+        "financialIndicators_entriesId_financialEntries_id_fk": {
+          "name": "financialIndicators_entriesId_financialEntries_id_fk",
+          "tableFrom": "financialIndicators",
+          "tableTo": "financialEntries",
           "columnsFrom": [
             "entriesId"
           ],
@@ -1605,6 +1659,181 @@
           "tableTo": "dashboard",
           "columnsFrom": [
             "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.operationalIndicators": {
+      "name": "operationalIndicators",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entriesId": {
+          "name": "entriesId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "OPS_PLAN_EXEC": {
+          "name": "OPS_PLAN_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJKT_PRGM_MGMT": {
+          "name": "PRJKT_PRGM_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFIC_INTERNAL_OPS": {
+          "name": "EFFIC_INTERNAL_OPS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLN_MGMT": {
+          "name": "VOLN_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OPS_GOALS_ACH_PERC": {
+          "name": "OPS_GOALS_ACH_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PGRM_PRJKS_EXEC_PERC": {
+          "name": "PGRM_PRJKS_EXEC_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFIC_PRJKS_EXEC": {
+          "name": "EFFIC_PRJKS_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFITV_PRJKS_PGRM": {
+          "name": "EFFITV_PRJKS_PGRM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLN_CONTR_PRJKS_EXEC": {
+          "name": "VOLN_CONTR_PRJKS_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "QLY_SPEED_PROC_EXEC": {
+          "name": "QLY_SPEED_PROC_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DOCS_ARCHIV": {
+          "name": "DOCS_ARCHIV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLUN_GROWTH_RATE_QUAR": {
+          "name": "VOLUN_GROWTH_RATE_QUAR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLUN_SUST_PERC": {
+          "name": "VOLUN_SUST_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJKT_TIMELY_COMP_PERC": {
+          "name": "PRJKT_TIMELY_COMP_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BUDGET_COMMIT_PERC": {
+          "name": "BUDGET_COMMIT_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJK_GOALS_ACHV_PERC": {
+          "name": "PRJK_GOALS_ACHV_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RECH_TARGET_AUD_PERC": {
+          "name": "RECH_TARGET_AUD_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "operationalIndicators_dashboardId_dashboard_id_fk": {
+          "name": "operationalIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "operationalIndicators",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "operationalIndicators_entriesId_operationalEntries_id_fk": {
+          "name": "operationalIndicators_entriesId_operationalEntries_id_fk",
+          "tableFrom": "operationalIndicators",
+          "tableTo": "operationalEntries",
+          "columnsFrom": [
+            "entriesId"
           ],
           "columnsTo": [
             "id"

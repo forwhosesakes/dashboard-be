@@ -10,11 +10,12 @@ import {
 } from "../types";
 import {
   corporateEntries,
+  corporateIndicators,
   dashbaord,
   financialEntries,
+  financialIndicators,
   operationalEntries,
   operationalIndicators,
-  user,
 } from "../schema";
 import { StatusResponse } from "../../types/types";
 import { getDashboardStatus } from "./utils";
@@ -28,8 +29,8 @@ const dashboardEntryTables = {
 
 const dashboardIndicatorTables = {
   OPERATIONAL: operationalIndicators,
-  CORPRATE: operationalIndicators,
-  FINANCIAL: operationalIndicators,
+  CORPRATE: corporateIndicators,
+  FINANCIAL: financialIndicators,
 };
 
 export const saveEntriesForDashboard = async (
@@ -42,12 +43,15 @@ export const saveEntriesForDashboard = async (
     const db = dbCLient(dbUrl);
     // check if the client exits first
     db.query.dashbaord
-      .findFirst({ where: eq(dashbaord.id, dashbaordId) })
+      .findFirst({ where: eq(dashbaord.id, dashbaordId) && eq(dashbaord.type, dashboardType.toLowerCase()) })
       .then((client) => {
         if (client) {
           //store the entries in the table [given the dashbaord type]
           db.insert(dashboardEntryTables[dashboardType])
+          
             .values({ dashbaordId, ...entries })
+            // @ts-ignore
+            .onConflictDoUpdate({target:dashboardEntryTables[dashboardType].dashbaordId,set:{...entries}})
             .returning()
             .then((record) => {
               resolve({
@@ -93,6 +97,9 @@ export const saveIndicatorsForDashboard = async (
           //store the entries in the table [given the dashbaord type]
           db.insert(dashboardIndicatorTables[dashboardType])
             .values({ dashbaordId, entriesId, ...indicators })
+            // @ts-ignore
+
+            .onConflictDoUpdate({target:dashboardEntryTables[dashboardType].dashbaordId,set:{...indicators}})
             .returning()
             .then((record) => {
               resolve({
@@ -205,3 +212,46 @@ export const retrieveDashboardContent = (
   //2. depending on the type you decide the table you are going to fetch from
   //3. the fetching would be diffrent if it's a general dashboard
 };
+export const getDashboardIndicators = (  dashbaordId: number,
+  dashboardType: DashboardType,
+  dbUrl: string):Promise<StatusResponse<any[]>>=>{
+    const db = dbCLient(dbUrl);
+    return new Promise((resolve, reject) => {
+      db.select().from(dashboardIndicatorTables[dashboardType])
+      .where(eq(dashboardIndicatorTables[dashboardType].dashbaordId, dashbaordId)).then((res)=>{
+        resolve({ status: "success", data: res });
+      }).catch((e)=>{
+        reject({
+          status: "error",
+          message: "error occured in [getDashboardIndicators]:" + e,
+        });
+      
+      })
+    })
+ 
+
+
+}
+
+
+
+export const getDashboardEntries = (  dashbaordId: number,
+  dashboardType: DashboardType,
+  dbUrl: string):Promise<StatusResponse<any[]>>=>{
+    const db = dbCLient(dbUrl);
+    return new Promise((resolve, reject) => {
+      db.select().from(dashboardEntryTables[dashboardType])
+      .where(eq(dashboardEntryTables[dashboardType].dashbaordId, dashbaordId)).then((res)=>{
+        resolve({ status: "success", data: res });
+      }).catch((e)=>{
+        reject({
+          status: "error",
+          message: "error occured in [getDashboardEntries]:" + e,
+        });
+      
+      })
+    })
+ 
+
+
+}

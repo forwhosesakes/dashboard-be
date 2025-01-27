@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { AuthVariables } from "../../types/types";
-import { TOrganization, TOrganizationRecord } from "../../db/types";
+import { TOrganization } from "../../db/types";
 import {
   createUpdateOrg,
   getLatestNOrgs,

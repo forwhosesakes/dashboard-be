@@ -1,0 +1,1 @@
+ALTER TABLE "financialIndicators" ADD COLUMN "FINANCIAL_RESOURCES_DEV" numeric;

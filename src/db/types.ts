@@ -1,5 +1,7 @@
 import {
   dashbaord,
+  financialEntries,
+  financialIndicators,
   operationalEntries,
   operationalIndicators,
   organization,
@@ -8,6 +10,9 @@ import {
 export type TOperationalEntriesRecord = typeof operationalEntries.$inferSelect;
 export type TOperationalIndicatorsRecord =
   typeof operationalIndicators.$inferInsert;
+  export type TFinancialEntriesRecord = typeof financialEntries.$inferInsert
+  export type TFinancialIndicatorsRecord = typeof financialIndicators.$inferInsert
+
 export type TDashboardRecord = typeof dashbaord.$inferSelect;
 export type TDashboard = typeof dashbaord.$inferInsert;
 export type TOrganization = typeof organization.$inferInsert;
@@ -36,8 +41,19 @@ export type TOperationalIndicators = Omit<
   "id" | "dashbaordId" | "createdAt" | "entriesId" | "updatedAt"
 >;
 
+export type TFinancialEntries = Omit<
+  TFinancialEntriesRecord,
+  "id" | "dashbaordId" | "createdAt" | "updatedAt"
+>;
+
+export type TFinancialIndicators = Omit<
+  TFinancialIndicatorsRecord,
+  "id" | "dashbaordId" | "createdAt" | "entriesId" | "updatedAt"
+>;
+
+
 export type TDashboardEntries = TOperationalEntries;
-export type TDashboardIndicators = TOperationalIndicators;
+export type TDashboardIndicators = TOperationalIndicators | TFinancialIndicators;
 export type TDASHBOARD_STATUS = "COMPLETED" | "IN_PROGRESS" | "NOT_STARTED";
 
 const DB_ERRORS = {

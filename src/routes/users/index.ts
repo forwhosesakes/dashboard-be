@@ -5,7 +5,6 @@ import { dbCLient } from "../../db/db-client";
 import { eq } from "drizzle-orm"
 import { user } from "../../db/schema"
 import { sendEmail } from "../../lib/send-email";
-import { inviteMemberTemplate } from "../../constants/email-template";
 
 
 export const users = new Hono<{

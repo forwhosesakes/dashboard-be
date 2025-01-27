@@ -4,17 +4,21 @@ import { dbCLient } from "../db-client";
 import { organization } from "../schema";
 import { PaginatedResponse, PaginationParams, TOrganization, TOrganizationOverview, TOrganizationOverviewRecord, TOrganizationRecord } from "../types";
 import { mapSettingtoDashbaordType } from "../../lib/constants";
+import { DASHBOARD_RELATED_COLUMN } from "./constants";
 
 
 
 export const createUpdateOrg = (org:TOrganization|TOrganizationRecord, dbUrl: string):Promise<StatusResponse<TOrganizationRecord | any>> =>{
+console.log("org in createUpdateOrg ", org);
 
     return new Promise((resolve, reject) => {
         const db = dbCLient(dbUrl);
 
         db.insert(organization).values(org) 
-        .onConflictDoUpdate({target:organization.id, set:{...org}})
         .returning()
+        .onConflictDoUpdate({target:organization.id, set:{...org}})
+
+
         .then((record) => {
           resolve({
             status: "success",
@@ -247,7 +251,7 @@ export const getPaginatedOrgsOverview = async (
     const result = records.map((record)=>{
     let dashboards: string[]= [];
 
-    (["financialIndicatorsSetting", "corporateIndicatorsSetting","operationalIndicatorsSetting","generalndicatorsSetting"]).forEach((el: string)=>{
+    DASHBOARD_RELATED_COLUMN.forEach((el: string)=>{
        if(Number(record[el as keyof TOrganizationOverviewRecord]) >0) {
         dashboards.push(mapSettingtoDashbaordType[el as keyof typeof mapSettingtoDashbaordType])
        }

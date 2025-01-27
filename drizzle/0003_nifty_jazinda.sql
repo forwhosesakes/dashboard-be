@@ -1,0 +1,36 @@
+CREATE TABLE "financialIndicators" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"dashboardId" serial NOT NULL,
+	"entriesId" uuid NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
+	"FINANCIAL_PERF" numeric,
+	"ADMIN_EXPENSES" numeric,
+	"PRGRMS_EXPENSES" numeric,
+	"FINANCIAL_SUSTAIN" numeric,
+	"DONAT_MONEY_RAISING" numeric,
+	"ABL_COVER_OBLIG" numeric,
+	"DIVERSITY_INCOME_RESOURCES" numeric,
+	"EFFECIENT_RESOURCE_MGMT" numeric,
+	"ADMIN_TO_TOTAL_EXPENSES" numeric,
+	"REV_FIN_SUST_TO_TOTAL_EXPENSES" numeric,
+	"PRGRMS_TO_TOTAL_EXPENSES" numeric,
+	"FUND_RAISING_TO_TOTAL_EXPENSES" numeric,
+	"SUST_EXPENSEES_TO_REV" numeric,
+	"SUST_RETURN_TO_ASSETS" numeric,
+	"FUND_RAISING_TO_TOTAL_DONAT" numeric,
+	"CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF" numeric,
+	"SUST_TO_TOTAL_EXPENSES" numeric,
+	"NET_CACHE_INVEST_ADMIN_EXPENSES" numeric,
+	"DONAT_PERC" numeric,
+	"PLATFORM_REV_PERC" numeric,
+	"PRGMS_PRJKS_REV" numeric,
+	"PAID_MEMBERSHIP_PERC" numeric,
+	"ECO_RETURN_VOLUN" numeric,
+	"RATE_REV_ANNUAL_GROWTH" numeric,
+	"COMMIT_DISC_PERC" numeric,
+	"RATE_SUST_DONAT" numeric
+);
+--> statement-breakpoint
+ALTER TABLE "financialIndicators" ADD CONSTRAINT "financialIndicators_dashboardId_dashboard_id_fk" FOREIGN KEY ("dashboardId") REFERENCES "public"."dashboard"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "financialIndicators" ADD CONSTRAINT "financialIndicators_entriesId_operationalEntries_id_fk" FOREIGN KEY ("entriesId") REFERENCES "public"."operationalEntries"("id") ON DELETE no action ON UPDATE no action;

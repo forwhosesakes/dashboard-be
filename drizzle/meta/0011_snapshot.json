@@ -1,0 +1,2276 @@
+{
+  "id": "e29991d9-5d08-4985-a5c9-a137c0c31172",
+  "prevId": "68ca0c96-4f60-4b87-b4ea-1516c50b6410",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.account": {
+      "name": "account",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "accountId": {
+          "name": "accountId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "providerId": {
+          "name": "providerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accessToken": {
+          "name": "accessToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "idToken": {
+          "name": "idToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accessTokenExpiresAt": {
+          "name": "accessTokenExpiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refreshTokenExpiresAt": {
+          "name": "refreshTokenExpiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "account_userId_user_id_fk": {
+          "name": "account_userId_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.corporateEntries": {
+      "name": "corporateEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "COMPLIANCE_ADHERENCE_PRACTICES": {
+          "name": "COMPLIANCE_ADHERENCE_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TRANSPARENCY_DISCLOSURE_PRACTICES": {
+          "name": "TRANSPARENCY_DISCLOSURE_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FINANCIAL_SAFETY_PRACTICES": {
+          "name": "FINANCIAL_SAFETY_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_SUCCESSFUL_HIRES_POST_EXP": {
+          "name": "NO_SUCCESSFUL_HIRES_POST_EXP",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_HIRES": {
+          "name": "TOTAL_HIRES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PERC_COMMIT_WORK_HOURS": {
+          "name": "PERC_COMMIT_WORK_HOURS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_EXE_PRACTICES": {
+          "name": "NO_EXE_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PLANNED_PRACTICES": {
+          "name": "NO_PLANNED_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_COMP_ELEMENTS": {
+          "name": "NO_COMP_ELEMENTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_ELEMENTS": {
+          "name": "TOTAL_ELEMENTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_TIMELY_REPORTS": {
+          "name": "NO_TIMELY_REPORTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_REQUIRED_REPORTS": {
+          "name": "NO_REQUIRED_REPORTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_GRADES_BENEFITS_SATISF": {
+          "name": "NO_GRADES_BENEFITS_SATISF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_SATIS_FORM": {
+          "name": "NO_RESPONSES_SATIS_FORM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_GRADES_EMP_SATIS": {
+          "name": "TOTAL_GRADES_EMP_SATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_EMP_SATIS": {
+          "name": "NO_RESPONSES_EMP_SATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_GEADES_PARTENERS_SATIS": {
+          "name": "TOTAL_GEADES_PARTENERS_SATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_PARTERS_FORM": {
+          "name": "NO_RESPONSES_PARTERS_FORM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_GRADES_VOL_STATIS": {
+          "name": "TOTAL_GRADES_VOL_STATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_VOL_SATIS_FORM": {
+          "name": "NO_RESPONSES_VOL_SATIS_FORM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_GRADES_DON_STATIS": {
+          "name": "TOTAL_GRADES_DON_STATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_DON_SATIS_FORM": {
+          "name": "NO_RESPONSES_DON_SATIS_FORM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_SATIS_GRADES_ORG": {
+          "name": "TOTAL_SATIS_GRADES_ORG",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_ORG_MEMBERS": {
+          "name": "NO_ORG_MEMBERS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_GRADES_COM": {
+          "name": "TOTAL_GRADES_COM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_RESPONSES_COM_SATIS": {
+          "name": "NO_RESPONSES_COM_SATIS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TASKS_ACHIEVED_TIMELY_CEO": {
+          "name": "TASKS_ACHIEVED_TIMELY_CEO",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_PLANNED_TASKS_CEO": {
+          "name": "TOTAL_PLANNED_TASKS_CEO",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AVG_EVAL_EMPS": {
+          "name": "AVG_EVAL_EMPS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AVG_RES_SATIS_FORMS_EMP": {
+          "name": "AVG_RES_SATIS_FORMS_EMP",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EMP_EVAL": {
+          "name": "EMP_EVAL",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EMP_ACHIEVMENT_PERC": {
+          "name": "EMP_ACHIEVMENT_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_EXEC_DESC": {
+          "name": "NO_EXEC_DESC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_DESC": {
+          "name": "TOTAL_DESC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_ACHIV_TARGETS": {
+          "name": "NO_ACHIV_TARGETS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_TARGETS": {
+          "name": "TOTAL_TARGETS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "corporateEntries_dashboardId_dashboard_id_fk": {
+          "name": "corporateEntries_dashboardId_dashboard_id_fk",
+          "tableFrom": "corporateEntries",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "corporateEntries_dashboardId_unique": {
+          "name": "corporateEntries_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.corporateIndicators": {
+      "name": "corporateIndicators",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entriesId": {
+          "name": "entriesId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "CORORATE_PERFORMANCE": {
+          "name": "CORORATE_PERFORMANCE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "GOVERANCE": {
+          "name": "GOVERANCE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "HR": {
+          "name": "HR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PLANNING_ORGANIZING": {
+          "name": "PLANNING_ORGANIZING",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SATIS_MEASURMENT": {
+          "name": "SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CEO_PERFORMANCE": {
+          "name": "CEO_PERFORMANCE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMPLIANCE_ADHERENCE_PRACTICES": {
+          "name": "COMPLIANCE_ADHERENCE_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TRANSPARENCY_DISCLOSURE_PRACTICES": {
+          "name": "TRANSPARENCY_DISCLOSURE_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FINANCIAL_SAFETY_PRACTICES": {
+          "name": "FINANCIAL_SAFETY_PRACTICES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RECRUITMENT": {
+          "name": "RECRUITMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EMP_PERF_PROD": {
+          "name": "EMP_PERF_PROD",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EMP_DEV_TRAIN": {
+          "name": "EMP_DEV_TRAIN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TARGETS_HIT_PERF_EVAL": {
+          "name": "TARGETS_HIT_PERF_EVAL",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "JOB_COMMITMENT": {
+          "name": "JOB_COMMITMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TRAIN_PLAN_EXEC": {
+          "name": "TRAIN_PLAN_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TRAIN_IMPACT": {
+          "name": "TRAIN_IMPACT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FOLLOWUP_OPERATIONAL_PLAN": {
+          "name": "FOLLOWUP_OPERATIONAL_PLAN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "QUALITY_OPERATIONAL_PLAN": {
+          "name": "QUALITY_OPERATIONAL_PLAN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRESENCE_OPERATIONAL_APPROVED_PLAN": {
+          "name": "PRESENCE_OPERATIONAL_APPROVED_PLAN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "GOALS_CALRITY_MEASUERABILITY": {
+          "name": "GOALS_CALRITY_MEASUERABILITY",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PROGRAMS_SELECTION": {
+          "name": "PROGRAMS_SELECTION",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRESENCE_DISCRETIONARY_BUDGETS": {
+          "name": "PRESENCE_DISCRETIONARY_BUDGETS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BENEF_SATIS_MEASURMENT": {
+          "name": "BENEF_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EMP_SATIS_MEASURMENT": {
+          "name": "EMP_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PARTENERS_SATIS_MEASURMENT": {
+          "name": "PARTENERS_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLUN_SATIS_MEASURMENT": {
+          "name": "VOLUN_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DONATORS_SATIS_MEASURMENT": {
+          "name": "DONATORS_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ADMIN_ORG_SATIS_MEASURMENT": {
+          "name": "ADMIN_ORG_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMMUNITY_SATIS_MEASURMENT": {
+          "name": "COMMUNITY_SATIS_MEASURMENT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EXEC_LEADERSHIP": {
+          "name": "EXEC_LEADERSHIP",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OPERATIONAL_PERF": {
+          "name": "OPERATIONAL_PERF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ENTERPRISE_COMMUN": {
+          "name": "ENTERPRISE_COMMUN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FOLLOWUP_BOARD_DECISION": {
+          "name": "FOLLOWUP_BOARD_DECISION",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OPERATIONAL_PLAN_ACHIVMENT_GOALS": {
+          "name": "OPERATIONAL_PLAN_ACHIVMENT_GOALS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DAILY_OPS_MGMT": {
+          "name": "DAILY_OPS_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FOLLOWUP_EMPS_PERF": {
+          "name": "FOLLOWUP_EMPS_PERF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "corporateIndicators_dashboardId_dashboard_id_fk": {
+          "name": "corporateIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "corporateIndicators",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "corporateIndicators_entriesId_corporateEntries_id_fk": {
+          "name": "corporateIndicators_entriesId_corporateEntries_id_fk",
+          "tableFrom": "corporateIndicators",
+          "tableTo": "corporateEntries",
+          "columnsFrom": [
+            "entriesId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "corporateIndicators_dashboardId_unique": {
+          "name": "corporateIndicators_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        },
+        "corporateIndicators_entriesId_unique": {
+          "name": "corporateIndicators_entriesId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "entriesId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.dashboard": {
+      "name": "dashboard",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orgId": {
+          "name": "orgId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "theme": {
+          "name": "theme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'default'"
+        },
+        "entriesId": {
+          "name": "entriesId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "indicatorsId": {
+          "name": "indicatorsId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "dashboard_orgId_organization_id_fk": {
+          "name": "dashboard_orgId_organization_id_fk",
+          "tableFrom": "dashboard",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "orgId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.financialEntries": {
+      "name": "financialEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "GENERAL_ADMINSTRATIVE_EXPENSES": {
+          "name": "GENERAL_ADMINSTRATIVE_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "GOVERENCE_EXPENSES": {
+          "name": "GOVERENCE_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PROGRAMS_EXPENSES_BOUNDED": {
+          "name": "PROGRAMS_EXPENSES_BOUNDED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PROGRAMS_EXPENSES_UNBOUNDED": {
+          "name": "PROGRAMS_EXPENSES_UNBOUNDED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PROGRAMS_EXPENSES": {
+          "name": "PROGRAMS_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "GENERAL_ADMINSTRATIVE_EXPENSES_ACT": {
+          "name": "GENERAL_ADMINSTRATIVE_EXPENSES_ACT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AWQAF_EXPENSES": {
+          "name": "AWQAF_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "INVESTMENT_EXPENSES": {
+          "name": "INVESTMENT_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUSTAINBILITY_EXPENSES": {
+          "name": "SUSTAINBILITY_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FUND_RAISING_EXPENSES": {
+          "name": "FUND_RAISING_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_EXPENSES": {
+          "name": "TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AWQAF_REVENUE": {
+          "name": "AWQAF_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "INVESTMENT_REVENUE": {
+          "name": "INVESTMENT_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUSTAINBILITY_REVENUE": {
+          "name": "SUSTAINBILITY_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BOUNDED_CHARITY": {
+          "name": "BOUNDED_CHARITY",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "UNBOUNDED_CHARITY": {
+          "name": "UNBOUNDED_CHARITY",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_CHARITY": {
+          "name": "TOTAL_CHARITY",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CASH_RELATED": {
+          "name": "CASH_RELATED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TRADED_INVESTMENTS": {
+          "name": "TRADED_INVESTMENTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUSTAIN_ASSETS_WAQFI": {
+          "name": "SUSTAIN_ASSETS_WAQFI",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUSTAIN_ASSETS_INVEST": {
+          "name": "SUSTAIN_ASSETS_INVEST",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUSTAIN_ASSETS_FIN": {
+          "name": "SUSTAIN_ASSETS_FIN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CURRENT_LIABILITIES": {
+          "name": "CURRENT_LIABILITIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BOUNDED_NET_ASSETS": {
+          "name": "BOUNDED_NET_ASSETS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AWQAF_NET_ASSETS_CASH": {
+          "name": "AWQAF_NET_ASSETS_CASH",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "GOV_PLATFORMS_REVENUE": {
+          "name": "GOV_PLATFORMS_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRGMS_PRJKS_REVENUE": {
+          "name": "PRGMS_PRJKS_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PAID_MEMBERSHIP": {
+          "name": "NO_PAID_MEMBERSHIP",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_MEMBERSHIP": {
+          "name": "TOTAL_MEMBERSHIP",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIN_VALUE_VOLUN": {
+          "name": "FIN_VALUE_VOLUN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OPERATIONAL_EXPANSES": {
+          "name": "OPERATIONAL_EXPANSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "LAST_YEAR_REVENUE": {
+          "name": "LAST_YEAR_REVENUE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_CONT_VOLUN": {
+          "name": "NO_CONT_VOLUN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_TOTAL_VOLUN_LAST_YEAR": {
+          "name": "NO_TOTAL_VOLUN_LAST_YEAR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_TOTAL_MONEY_VAT": {
+          "name": "NO_TOTAL_MONEY_VAT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "START_LIABILITIES": {
+          "name": "START_LIABILITIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "END_LIABILITIES": {
+          "name": "END_LIABILITIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "financialEntries_dashboardId_dashboard_id_fk": {
+          "name": "financialEntries_dashboardId_dashboard_id_fk",
+          "tableFrom": "financialEntries",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "financialEntries_dashboardId_unique": {
+          "name": "financialEntries_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.financialIndicators": {
+      "name": "financialIndicators",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entriesId": {
+          "name": "entriesId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "FINANCIAL_PERF": {
+          "name": "FINANCIAL_PERF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FINANCIAL_RESOURCES_DEV": {
+          "name": "FINANCIAL_RESOURCES_DEV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRGRMS_EXPENSES": {
+          "name": "PRGRMS_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FINANCIAL_SUSTAIN": {
+          "name": "FINANCIAL_SUSTAIN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ADMIN_EXPENSES": {
+          "name": "ADMIN_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DONAT_MONEY_RAISING": {
+          "name": "DONAT_MONEY_RAISING",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ABL_COVER_OBLIG": {
+          "name": "ABL_COVER_OBLIG",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DIVERSITY_INCOME_RESOURCES": {
+          "name": "DIVERSITY_INCOME_RESOURCES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFECIENT_RESOURCE_MGMT": {
+          "name": "EFFECIENT_RESOURCE_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ADMIN_TO_TOTAL_EXPENSES": {
+          "name": "ADMIN_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "REV_FIN_SUST_TO_TOTAL_EXPENSES": {
+          "name": "REV_FIN_SUST_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRGRMS_TO_TOTAL_EXPENSES": {
+          "name": "PRGRMS_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FUND_RAISING_TO_TOTAL_EXPENSES": {
+          "name": "FUND_RAISING_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUST_EXPENSEES_TO_REV": {
+          "name": "SUST_EXPENSEES_TO_REV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUST_RETURN_TO_ASSETS": {
+          "name": "SUST_RETURN_TO_ASSETS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FUND_RAISING_TO_TOTAL_DONAT": {
+          "name": "FUND_RAISING_TO_TOTAL_DONAT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF": {
+          "name": "CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SUST_TO_TOTAL_EXPENSES": {
+          "name": "SUST_TO_TOTAL_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NET_CACHE_INVEST_ADMIN_EXPENSES": {
+          "name": "NET_CACHE_INVEST_ADMIN_EXPENSES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DONAT_PERC": {
+          "name": "DONAT_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PLATFORM_REV_PERC": {
+          "name": "PLATFORM_REV_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRGMS_PRJKS_REV": {
+          "name": "PRGMS_PRJKS_REV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PAID_MEMBERSHIP_PERC": {
+          "name": "PAID_MEMBERSHIP_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ECO_RETURN_VOLUN": {
+          "name": "ECO_RETURN_VOLUN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RATE_REV_ANNUAL_GROWTH": {
+          "name": "RATE_REV_ANNUAL_GROWTH",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMMIT_DISC_PERC": {
+          "name": "COMMIT_DISC_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RATE_SUST_DONAT": {
+          "name": "RATE_SUST_DONAT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "financialIndicators_dashboardId_dashboard_id_fk": {
+          "name": "financialIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "financialIndicators",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "financialIndicators_entriesId_financialEntries_id_fk": {
+          "name": "financialIndicators_entriesId_financialEntries_id_fk",
+          "tableFrom": "financialIndicators",
+          "tableTo": "financialEntries",
+          "columnsFrom": [
+            "entriesId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "financialIndicators_dashboardId_unique": {
+          "name": "financialIndicators_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        },
+        "financialIndicators_entriesId_unique": {
+          "name": "financialIndicators_entriesId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "entriesId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.generalEntries": {
+      "name": "generalEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entryName": {
+          "name": "entryName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entryValue": {
+          "name": "entryValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "generalEntries_dashboardId_dashboard_id_fk": {
+          "name": "generalEntries_dashboardId_dashboard_id_fk",
+          "tableFrom": "generalEntries",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.generalIndicators": {
+      "name": "generalIndicators",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "indicatorName": {
+          "name": "indicatorName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "indicatorValue": {
+          "name": "indicatorValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "generalIndicators_dashboardId_dashboard_id_fk": {
+          "name": "generalIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "generalIndicators",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.operationalEntries": {
+      "name": "operationalEntries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "NO_OPERATIONAL_GOALS_ACHIEVED": {
+          "name": "NO_OPERATIONAL_GOALS_ACHIEVED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_OPERATIONAL_GOALS_PLANNED": {
+          "name": "NO_OPERATIONAL_GOALS_PLANNED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PROGRAMS_EXECUTED": {
+          "name": "NO_PROGRAMS_EXECUTED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PROGRAMS_PLANNED": {
+          "name": "NO_PROGRAMS_PLANNED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_TIMELY_ACTIVITIES": {
+          "name": "NO_TIMELY_ACTIVITIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_PLANNED_ACTIVITIES": {
+          "name": "TOTAL_PLANNED_ACTIVITIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "APPROVED_BUDGET": {
+          "name": "APPROVED_BUDGET",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PLANNED_ACTUAL_DIFF": {
+          "name": "PLANNED_ACTUAL_DIFF",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_OUTPUTS_ACHIEVED": {
+          "name": "NO_OUTPUTS_ACHIEVED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_TARGETED_OUTPUTS": {
+          "name": "TOTAL_TARGETED_OUTPUTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_ACTUAL_BENEFICIARIES": {
+          "name": "NO_ACTUAL_BENEFICIARIES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PLANNED_TARGET_NUMBER": {
+          "name": "PLANNED_TARGET_NUMBER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PROGRAMS_WITH_PARTICIPANTS": {
+          "name": "NO_PROGRAMS_WITH_PARTICIPANTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_PROGRAMS_PROJECTS": {
+          "name": "NO_PROGRAMS_PROJECTS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_TIMELY_TRANSACTIONS": {
+          "name": "NO_TIMELY_TRANSACTIONS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_TRANSACTIONS": {
+          "name": "TOTAL_TRANSACTIONS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_ARCHIVED_DOCS": {
+          "name": "NO_ARCHIVED_DOCS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_DOCS": {
+          "name": "TOTAL_DOCS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_VOLUNTEERS_CURRENT_QUARTER": {
+          "name": "NO_VOLUNTEERS_CURRENT_QUARTER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_VOLUNTEERS_NEXT_QUARTER": {
+          "name": "NO_VOLUNTEERS_NEXT_QUARTER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NO_VOLUNTEERS_CONT_3": {
+          "name": "NO_VOLUNTEERS_CONT_3",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_VOLUNTEERS": {
+          "name": "TOTAL_VOLUNTEERS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "operationalEntries_dashboardId_dashboard_id_fk": {
+          "name": "operationalEntries_dashboardId_dashboard_id_fk",
+          "tableFrom": "operationalEntries",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "operationalEntries_dashboardId_unique": {
+          "name": "operationalEntries_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.operationalIndicators": {
+      "name": "operationalIndicators",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dashboardId": {
+          "name": "dashboardId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entriesId": {
+          "name": "entriesId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "OPS_PLAN_EXEC": {
+          "name": "OPS_PLAN_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJKT_PRGM_MGMT": {
+          "name": "PRJKT_PRGM_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFIC_INTERNAL_OPS": {
+          "name": "EFFIC_INTERNAL_OPS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLN_MGMT": {
+          "name": "VOLN_MGMT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OPS_GOALS_ACH_PERC": {
+          "name": "OPS_GOALS_ACH_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PGRM_PRJKS_EXEC_PERC": {
+          "name": "PGRM_PRJKS_EXEC_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFIC_PRJKS_EXEC": {
+          "name": "EFFIC_PRJKS_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EFFITV_PRJKS_PGRM": {
+          "name": "EFFITV_PRJKS_PGRM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLN_CONTR_PRJKS_EXEC": {
+          "name": "VOLN_CONTR_PRJKS_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "QLY_SPEED_PROC_EXEC": {
+          "name": "QLY_SPEED_PROC_EXEC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DOCS_ARCHIV": {
+          "name": "DOCS_ARCHIV",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLUN_GROWTH_RATE_QUAR": {
+          "name": "VOLUN_GROWTH_RATE_QUAR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "VOLUN_SUST_PERC": {
+          "name": "VOLUN_SUST_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJKT_TIMELY_COMP_PERC": {
+          "name": "PRJKT_TIMELY_COMP_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BUDGET_COMMIT_PERC": {
+          "name": "BUDGET_COMMIT_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRJK_GOALS_ACHV_PERC": {
+          "name": "PRJK_GOALS_ACHV_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RECH_TARGET_AUD_PERC": {
+          "name": "RECH_TARGET_AUD_PERC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "operationalIndicators_dashboardId_dashboard_id_fk": {
+          "name": "operationalIndicators_dashboardId_dashboard_id_fk",
+          "tableFrom": "operationalIndicators",
+          "tableTo": "dashboard",
+          "columnsFrom": [
+            "dashboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "operationalIndicators_entriesId_operationalEntries_id_fk": {
+          "name": "operationalIndicators_entriesId_operationalEntries_id_fk",
+          "tableFrom": "operationalIndicators",
+          "tableTo": "operationalEntries",
+          "columnsFrom": [
+            "entriesId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "operationalIndicators_dashboardId_unique": {
+          "name": "operationalIndicators_dashboardId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dashboardId"
+          ]
+        },
+        "operationalIndicators_entriesId_unique": {
+          "name": "operationalIndicators_entriesId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "entriesId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.organization": {
+      "name": "organization",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "licenseNumber": {
+          "name": "licenseNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "website": {
+          "name": "website",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "neighbor": {
+          "name": "neighbor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "street": {
+          "name": "street",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "map": {
+          "name": "map",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repName": {
+          "name": "repName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repPhoneNumber": {
+          "name": "repPhoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repEmail": {
+          "name": "repEmail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "logo": {
+          "name": "logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "officialDocs": {
+          "name": "officialDocs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "operationalPlanImage": {
+          "name": "operationalPlanImage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repSpeach": {
+          "name": "repSpeach",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "licenseImage": {
+          "name": "licenseImage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contractImage": {
+          "name": "contractImage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "additionalDocs": {
+          "name": "additionalDocs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "financialIndicatorsSetting": {
+          "name": "financialIndicatorsSetting",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "operationalIndicatorsSetting": {
+          "name": "operationalIndicatorsSetting",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "corporateIndicatorsSetting": {
+          "name": "corporateIndicatorsSetting",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generalndicatorsSetting": {
+          "name": "generalndicatorsSetting",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "organization_userId_user_id_fk": {
+          "name": "organization_userId_user_id_fk",
+          "tableFrom": "organization",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ipAddress": {
+          "name": "ipAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userAgent": {
+          "name": "userAgent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impersonatedBy": {
+          "name": "impersonatedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "session_token_unique": {
+          "name": "session_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "token"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "banned": {
+          "name": "banned",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "banReason": {
+          "name": "banReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "banExpires": {
+          "name": "banExpires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subRole": {
+          "name": "subRole",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.verification": {
+      "name": "verification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

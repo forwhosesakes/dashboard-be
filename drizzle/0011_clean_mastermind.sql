@@ -1,0 +1,1 @@
+ALTER TABLE "corporateIndicators" DROP COLUMN "HIRING_QUALITY";

@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { initFinancialIndicators, initOperationalIndicators } from "./utils";
+import { initCorporateIndicators, initFinancialIndicators, initOperationalIndicators } from "./utils";
 import {
+  CORPORATE_METADATA,
   FINANCIAL_METADATA,
   OPERATIONAL_METADATA,
 } from "../../lib/calc-metadata";
@@ -75,10 +76,10 @@ dashboard.post(
 
     try {
       switch (dashboardType) {
-        case "CORPRATE":
-          indicators = initOperationalIndicators();
-          DASHBOARD_METADATA = OPERATIONAL_METADATA;
-          entriesTable = "corprateEntries";
+        case "CORPORATE":
+          indicators = initCorporateIndicators();
+          DASHBOARD_METADATA = CORPORATE_METADATA;
+          entriesTable = "corporateEntries";
           break;
         case "OPERATIONAL":
           indicators = initOperationalIndicators();
@@ -112,6 +113,8 @@ dashboard.post(
       );
 
       for (const [key, value] of Object.entries(indicators)) {
+        console.log("entries",key,"meta",DASHBOARD_METADATA[key]);
+        
         const paramsValues = DASHBOARD_METADATA[key].params.map((param) =>
           Number(entries.get(param))
         );

@@ -1,5 +1,5 @@
 import { DASHBOARD_RELATED_COLUMN } from "../../db/org/constants"
-import { TFinancialIndicators, TOperationalIndicators } from "../../db/types"
+import { TCorporateIndicators, TFinancialIndicators, TOperationalIndicators } from "../../db/types"
 
 
 export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], category?:string)=>{
@@ -94,3 +94,54 @@ export const initFinancialIndicators = ()=>{
     }
     return indicators
 }
+
+
+export const initCorporateIndicators = ()=>{
+    let indicators:TCorporateIndicators = {
+        FOLLOWUP_EMPS_PERF:(0).toPrecision(3),
+        DAILY_OPS_MGMT:(0).toPrecision(3),
+        OPERATIONAL_PLAN_ACHIVMENT_GOALS:(0).toPrecision(3),
+        FOLLOWUP_BOARD_DECISION:(0).toPrecision(3),
+        ENTERPRISE_COMMUN:(0).toPrecision(3),
+
+        COMMUNITY_SATIS_MEASURMENT:(0).toPrecision(3),
+        ADMIN_ORG_SATIS_MEASURMENT:(0).toPrecision(3),
+        DONATORS_SATIS_MEASURMENT:(0).toPrecision(3),
+        VOLUN_SATIS_MEASURMENT:(0).toPrecision(3),
+        PARTENERS_SATIS_MEASURMENT:(0).toPrecision(3),
+
+        
+        EMP_SATIS_MEASURMENT:(0).toPrecision(3),
+        BENEF_SATIS_MEASURMENT:(0).toPrecision(3),
+        QUALITY_OPERATIONAL_PLAN:(0).toPrecision(3),
+        FOLLOWUP_OPERATIONAL_PLAN:(0).toPrecision(3),
+        TRAIN_IMPACT:(0).toPrecision(3),
+        TRAIN_PLAN_EXEC:(0).toPrecision(3),
+        JOB_COMMITMENT:(0).toPrecision(3),
+        TARGETS_HIT_PERF_EVAL:(0).toPrecision(3),
+FINANCIAL_SAFETY_PRACTICES:(0).toPrecision(3),
+        TRANSPARENCY_DISCLOSURE_PRACTICES:(0).toPrecision(3),
+        COMPLIANCE_ADHERENCE_PRACTICES:(0).toPrecision(3),
+        OPERATIONAL_PERF:(0).toPrecision(3),
+        EXEC_LEADERSHIP:(0).toPrecision(3),
+        EMP_DEV_TRAIN:(0).toPrecision(3),
+        EMP_PERF_PROD:(0).toPrecision(3),
+        RECRUITMENT:(0).toPrecision(3),
+        CEO_PERFORMANCE:(0).toPrecision(3),
+        SATIS_MEASURMENT:(0).toPrecision(3),
+
+        PLANNING_ORGANIZING:(0).toPrecision(3),
+        HR:(0).toPrecision(3),
+        GOVERANCE:(0).toPrecision(3),
+        CORORATE_PERFORMANCE:(0).toPrecision(3),
+
+
+
+        
+
+    }
+    return indicators
+}
+
+
+

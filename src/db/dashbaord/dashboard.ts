@@ -19,17 +19,17 @@ import {
 } from "../schema";
 import { StatusResponse } from "../../types/types";
 import { getDashboardStatus } from "./utils";
-type DashboardType = "OPERATIONAL" | "CORPRATE" | "FINANCIAL";
+type DashboardType = "OPERATIONAL" | "CORPORATE" | "FINANCIAL";
 
 const dashboardEntryTables = {
   OPERATIONAL: operationalEntries,
-  CORPRATE: corporateEntries,
+  CORPORATE: corporateEntries,
   FINANCIAL: financialEntries,
 };
 
 const dashboardIndicatorTables = {
   OPERATIONAL: operationalIndicators,
-  CORPRATE: corporateIndicators,
+  CORPORATE: corporateIndicators,
   FINANCIAL: financialIndicators,
 };
 

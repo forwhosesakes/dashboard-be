@@ -1,4 +1,4 @@
-import { TFinancialEntries, TFinancialIndicators, TOperationalEntries, TOperationalIndicators, TOperationalIndicatorsRecord } from "../db/types"
+import { TCorporateEntries, TCorporateIndicators, TFinancialEntries, TFinancialIndicators, TOperationalEntries, TOperationalIndicators, TOperationalIndicatorsRecord } from "../db/types"
 
 
 type IndicatorMetadata<T, M> = {
@@ -343,6 +343,260 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         params:[ "NO_CONT_VOLUN", "NO_TOTAL_VOLUN_LAST_YEAR"],
         formula : (NO_CONT_VOLUN:number,NO_TOTAL_VOLUN_LAST_YEAR:number)=>NO_CONT_VOLUN/NO_TOTAL_VOLUN_LAST_YEAR*100
     },
+
+
+}
+
+
+
+
+export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndicators, TCorporateEntries>}= {
+    CORORATE_PERFORMANCE: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"الأداء المؤسسي",
+        params:["GOVERANCE","HR", "PLANNING_ORGANIZING", "SATIS_MEASURMENT","CEO_PERFORMANCE"],
+        formula : (GOVERANCE:number,HR:number,PLANNING_ORGANIZING:number,SATIS_MEASURMENT:number,CEO_PERFORMANCE:number)=>(GOVERANCE*0.12/0.4)+(HR*0.08/0.4)+(PLANNING_ORGANIZING*0.06/0.4)+(SATIS_MEASURMENT*0.1/0.4)+(CEO_PERFORMANCE*0.04/0.4)
+    },
+
+    GOVERANCE: {
+        weight: 0.12,
+        parent: "CORORATE_PERFORMANCE",
+        arabicLabel:" الحوكمة  ",
+        params:["COMPLIANCE_ADHERENCE_PRACTICES","TRANSPARENCY_DISCLOSURE_PRACTICES","FINANCIAL_SAFETY_PRACTICES"],
+        formula : (COMPLIANCE_ADHERENCE_PRACTICES:number,TRANSPARENCY_DISCLOSURE_PRACTICES:number,FINANCIAL_SAFETY_PRACTICES:number)=>(COMPLIANCE_ADHERENCE_PRACTICES*0.045/0.12)+(TRANSPARENCY_DISCLOSURE_PRACTICES*0.045/0.12) + (FINANCIAL_SAFETY_PRACTICES*0.03/0.12) 
+    },
+
+    HR: {
+        weight: 0.08,
+        parent: "CORORATE_PERFORMANCE",
+        arabicLabel:" الموارد البشرية",
+        params:["RECRUITMENT","EMP_PERF_PROD","EMP_DEV_TRAIN"],
+        formula : (RECRUITMENT:number,EMP_PERF_PROD:number,EMP_DEV_TRAIN:number)=>(RECRUITMENT*0.02/0.08)+(EMP_PERF_PROD*0.035/0.08)+(EMP_DEV_TRAIN*0.025/0.08)
+    },
+    PLANNING_ORGANIZING: {
+        weight: 0.06,
+        parent: "CORORATE_PERFORMANCE",
+        arabicLabel:"التخطيط و التنظيم",
+        params:["FOLLOWUP_OPERATIONAL_PLAN","QUALITY_OPERATIONAL_PLAN"],
+        formula : (FOLLOWUP_OPERATIONAL_PLAN:number,QUALITY_OPERATIONAL_PLAN:number)=>(FOLLOWUP_OPERATIONAL_PLAN*0.03/0.06)+(QUALITY_OPERATIONAL_PLAN*0.04/0.06)
+    },
+    SATIS_MEASURMENT: {
+        weight: 0.1,
+        parent: "CORORATE_PERFORMANCE",
+        arabicLabel:" قياس الرضا ",
+        params:["BENEF_SATIS_MEASURMENT","EMP_SATIS_MEASURMENT", "PARTENERS_SATIS_MEASURMENT","VOLUN_SATIS_MEASURMENT","DONATORS_SATIS_MEASURMENT","ADMIN_ORG_SATIS_MEASURMENT","COMMUNITY_SATIS_MEASURMENT"],
+        formula : (BENEF_SATIS_MEASURMENT:number,EMP_SATIS_MEASURMENT:number, PARTENERS_SATIS_MEASURMENT:number, VOLUN_SATIS_MEASURMENT:number,DONATORS_SATIS_MEASURMENT:number,ADMIN_ORG_SATIS_MEASURMENT:number,COMMUNITY_SATIS_MEASURMENT:number)=>(BENEF_SATIS_MEASURMENT*0.025/0.1)+(EMP_SATIS_MEASURMENT*0.02/0.1)+(PARTENERS_SATIS_MEASURMENT*0.01/0.1)+(VOLUN_SATIS_MEASURMENT*0.015/0.1)+(DONATORS_SATIS_MEASURMENT*0.015/0.1)+(ADMIN_ORG_SATIS_MEASURMENT*0.01/0.1)+(COMMUNITY_SATIS_MEASURMENT*0.005/0.1)
+    },
+    CEO_PERFORMANCE: {
+        weight: 0.04,
+        parent: "CORORATE_PERFORMANCE",
+        arabicLabel:"  أداء المدير التنفيذي ",
+        params:["EXEC_LEADERSHIP","OPERATIONAL_PERF","ENTERPRISE_COMMUN"],
+        formula : (EXEC_LEADERSHIP:number,OPERATIONAL_PERF:number,ENTERPRISE_COMMUN:number)=>(EXEC_LEADERSHIP*0.02/0.04)+(OPERATIONAL_PERF*0.015/0.04)+(ENTERPRISE_COMMUN*0.005/0.04)
+    },
+
+    COMPLIANCE_ADHERENCE_PRACTICES: {
+        weight: 0.02,
+        parent: "GOVERANCE",
+        arabicLabel:" ممارسات الامتثال و الالتزام",
+        params:["COMPLIANCE_ADHERENCE_PRACTICES"],
+        formula : (COMPLIANCE_ADHERENCE_PRACTICES:number)=>(COMPLIANCE_ADHERENCE_PRACTICES)
+    },
+    TRANSPARENCY_DISCLOSURE_PRACTICES: {
+        weight: 0.02,
+        parent: "GOVERANCE",
+        arabicLabel:" ممارسات الشفافية و الإفصاح",
+        params:["TRANSPARENCY_DISCLOSURE_PRACTICES"],
+        formula : (TRANSPARENCY_DISCLOSURE_PRACTICES:number)=>(TRANSPARENCY_DISCLOSURE_PRACTICES)
+    },
+    
+FINANCIAL_SAFETY_PRACTICES: {
+        weight: 0.02,
+        parent: "GOVERANCE",
+        arabicLabel:"   ممارسات السلامة المالية",
+        params:["FINANCIAL_SAFETY_PRACTICES"],
+        formula : (FINANCIAL_SAFETY_PRACTICES:number)=>(FINANCIAL_SAFETY_PRACTICES)
+    },
+
+
+    RECRUITMENT: {
+        weight: 0.02,
+        parent: "HR",
+        arabicLabel:"التوظيف والاستقطاب",
+        params:["NO_SUCCESSFUL_HIRES_POST_EXP","TOTAL_HIRES"],
+        formula : (NO_SUCCESSFUL_HIRES_POST_EXP:number,TOTAL_HIRES:number)=>(NO_SUCCESSFUL_HIRES_POST_EXP/TOTAL_HIRES)*100
+    },
+    EMP_PERF_PROD: {
+        weight: 0.035,
+        parent: "HR",
+        arabicLabel:"أداء وإنتاجية الموظفين",
+        params:["TARGETS_HIT_PERF_EVAL","JOB_COMMITMENT"],
+        formula : (TARGETS_HIT_PERF_EVAL:number,JOB_COMMITMENT:number)=>(TARGETS_HIT_PERF_EVAL*0.025/0.035)+(JOB_COMMITMENT*0.01/0.035)
+    },
+
+    EMP_DEV_TRAIN: {
+        weight: 0.025,
+        parent: "HR",
+        arabicLabel:"تطوير وتدريب الموظفين",
+        params:["TRAIN_PLAN_EXEC","TRAIN_IMPACT"],
+        formula : (TRAIN_PLAN_EXEC:number,TRAIN_IMPACT:number)=>(TRAIN_PLAN_EXEC*0.0125/0.025)+(TRAIN_IMPACT*0.0125/0.025)
+    },
+
+
+    TARGETS_HIT_PERF_EVAL: {
+        weight: 0.025,
+        parent: "EMP_PERF_PROD",
+        arabicLabel:" تحقيق المستهدفات و تقييم الأداء",
+        params:["EMP_EVAL","EMP_ACHIEVMENT_PERC"],
+        formula : (EMP_EVAL:number,EMP_ACHIEVMENT_PERC:number)=>((EMP_EVAL*0.6)+(EMP_ACHIEVMENT_PERC)*0.4)
+    },
+
+    JOB_COMMITMENT: {
+        weight: 0.01,
+        parent: "EMP_PERF_PROD",
+        arabicLabel:"الانضباط الوظيفي",
+        params:["PERC_COMMIT_WORK_HOURS"],
+        formula : (PERC_COMMIT_WORK_HOURS:number)=>PERC_COMMIT_WORK_HOURS
+    },
+    TRAIN_PLAN_EXEC: {
+        weight: 0.01,
+        parent: "EMP_DEV_TRAIN",
+        arabicLabel:"تنفيذ خطة التدريب",
+        params:["NO_EXE_PRACTICES", "NO_PLANNED_PRACTICES"],
+        formula : (NO_EXE_PRACTICES:number,NO_PLANNED_PRACTICES:number)=>NO_EXE_PRACTICES/NO_PLANNED_PRACTICES*100
+    },
+    TRAIN_IMPACT: {
+        weight: 0.01,
+        parent: "EMP_DEV_TRAIN",
+        arabicLabel:"تنفيذ خطة التدريب",
+        params:["AVG_EVAL_EMPS"],
+        formula : (AVG_EVAL_EMPS:number)=>AVG_EVAL_EMPS
+    },
+    FOLLOWUP_OPERATIONAL_PLAN: {
+        weight: 0.008,
+        parent: "PLANNING_ORGANIZING",
+        arabicLabel:"متابعة الخطة التشغيلية",
+        params:[ "NO_TIMELY_REPORTS", "NO_REQUIRED_REPORTS"],
+        formula : (NO_TIMELY_REPORTS:number,NO_REQUIRED_REPORTS:number)=>(NO_TIMELY_REPORTS/NO_REQUIRED_REPORTS)*100
+    },
+    QUALITY_OPERATIONAL_PLAN: {
+        weight: 0.008,
+        parent: "PLANNING_ORGANIZING",
+        arabicLabel:" جودة الخطة التشغيلية ",
+        params:[ "NO_COMP_ELEMENTS", "TOTAL_ELEMENTS"],
+        formula : (NO_COMP_ELEMENTS:number,TOTAL_ELEMENTS:number)=>(NO_COMP_ELEMENTS/TOTAL_ELEMENTS)*100
+    },
+
+    BENEF_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:"قياس رضا المستفيدين",
+        params:[ "NO_GRADES_BENEFITS_SATISF", "NO_RESPONSES_SATIS_FORM"],
+        formula : (NO_GRADES_BENEFITS_SATISF:number,NO_RESPONSES_SATIS_FORM:number )=>NO_GRADES_BENEFITS_SATISF/NO_RESPONSES_SATIS_FORM*100
+    },
+    EMP_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:"قياس رضا الموظفين",
+        params:[ "TOTAL_GRADES_EMP_SATIS", "NO_RESPONSES_EMP_SATIS"],
+        formula : (TOTAL_GRADES_EMP_SATIS:number,NO_RESPONSES_EMP_SATIS:number )=>TOTAL_GRADES_EMP_SATIS/NO_RESPONSES_EMP_SATIS*100
+    },
+    PARTENERS_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:" قياس رضا الشركاء والموردين ",
+        params:[ "TOTAL_GEADES_PARTENERS_SATIS", "NO_RESPONSES_PARTERS_FORM"],
+        formula : (TOTAL_GEADES_PARTENERS_SATIS:number,NO_RESPONSES_PARTERS_FORM:number )=>TOTAL_GEADES_PARTENERS_SATIS/NO_RESPONSES_PARTERS_FORM*100
+    },
+
+    VOLUN_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:" قياس رضا المتطوعين",
+        params:[ "TOTAL_GRADES_VOL_STATIS", "NO_RESPONSES_VOL_SATIS_FORM"],
+        formula : (TOTAL_GRADES_VOL_STATIS:number,NO_RESPONSES_VOL_SATIS_FORM:number )=>TOTAL_GRADES_VOL_STATIS/NO_RESPONSES_VOL_SATIS_FORM*100
+    },
+    DONATORS_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:" قياس رضا المتبرعين والداعمين ",
+        params:[ "TOTAL_GRADES_DON_STATIS", "NO_RESPONSES_DON_SATIS_FORM"],
+        formula : (TOTAL_GRADES_DON_STATIS:number,NO_RESPONSES_DON_SATIS_FORM:number )=>TOTAL_GRADES_DON_STATIS/NO_RESPONSES_DON_SATIS_FORM*100
+    },
+
+    ADMIN_ORG_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:" قياس رضا الجمعية العمومية ومجلس الإدارة ",
+        params:[ "TOTAL_SATIS_GRADES_ORG", "NO_ORG_MEMBERS"],
+        formula : (TOTAL_SATIS_GRADES_ORG:number,NO_ORG_MEMBERS:number )=>TOTAL_SATIS_GRADES_ORG/NO_ORG_MEMBERS*100
+    },
+
+    COMMUNITY_SATIS_MEASURMENT: {
+        weight: 0.008,
+        parent: "SATIS_MEASURMENT",
+        arabicLabel:"قياس رضا المجتمع والصورة الذهنية",
+        params:[ "TOTAL_GRADES_COM", "NO_RESPONSES_COM_SATIS"],
+        formula : (TOTAL_GRADES_COM:number,NO_RESPONSES_COM_SATIS:number )=>TOTAL_GRADES_COM/NO_RESPONSES_COM_SATIS*100
+    },
+
+
+    EXEC_LEADERSHIP: {
+        weight: 0.02,
+        parent: "CEO_PERFORMANCE",
+        arabicLabel:"القيادة التنفيذية ",
+        params:[ "FOLLOWUP_BOARD_DECISION", "OPERATIONAL_PLAN_ACHIVMENT_GOALS"],
+        formula : (FOLLOWUP_BOARD_DECISION:number,OPERATIONAL_PLAN_ACHIVMENT_GOALS:number )=>FOLLOWUP_BOARD_DECISION*0.01/0.02+OPERATIONAL_PLAN_ACHIVMENT_GOALS*0.01/0.02
+    },
+    OPERATIONAL_PERF: {
+        weight: 0.015,
+        parent: "CEO_PERFORMANCE",
+        arabicLabel:"الأداء التشغيلي  ",
+        params:[ "DAILY_OPS_MGMT", "FOLLOWUP_EMPS_PERF"],
+        formula : (DAILY_OPS_MGMT:number,FOLLOWUP_EMPS_PERF:number )=>DAILY_OPS_MGMT*0.01/0.015+FOLLOWUP_EMPS_PERF*0.01/0.015
+    },
+
+    ENTERPRISE_COMMUN: {
+        weight: 0.005,
+        parent: "CEO_PERFORMANCE",
+        arabicLabel:" التواصل المؤسسي ",
+        params:[ "AVG_RES_SATIS_FORMS_EMP"],
+        formula : (AVG_RES_SATIS_FORMS_EMP:number )=>AVG_RES_SATIS_FORMS_EMP*0.5
+    },
+    FOLLOWUP_BOARD_DECISION: {
+        weight: 0.005,
+        parent: "EXEC_LEADERSHIP",
+        arabicLabel:" متابعة تنفيذ قرارات مجلس الإدارة  ",
+        params:[ "NO_EXEC_DESC", "TOTAL_DESC"],
+        formula : (NO_EXEC_DESC:number,TOTAL_DESC:number )=>NO_EXEC_DESC/TOTAL_DESC*100
+    },
+    OPERATIONAL_PLAN_ACHIVMENT_GOALS: {
+        weight: 0.005,
+        parent: "EXEC_LEADERSHIP",
+        arabicLabel:" تحقيق مستهدفات الخطة التشغيلية ",
+        params:[ "NO_ACHIV_TARGETS", "TOTAL_TARGETS"],
+        formula : (NO_ACHIV_TARGETS:number,TOTAL_TARGETS:number )=>NO_ACHIV_TARGETS/TOTAL_TARGETS*100
+    },
+
+
+    DAILY_OPS_MGMT: {
+        weight: 0.005,
+        parent: "OPERATIONAL_PERF",
+        arabicLabel:"إدارة العمليات اليومية",
+        params:[ "TASKS_ACHIEVED_TIMELY_CEO", "TOTAL_PLANNED_TASKS_CEO"],
+        formula : (TASKS_ACHIEVED_TIMELY_CEO:number,TOTAL_PLANNED_TASKS_CEO:number )=>TASKS_ACHIEVED_TIMELY_CEO/TOTAL_PLANNED_TASKS_CEO*0.75
+    },
+
+    FOLLOWUP_EMPS_PERF: {
+        weight: 0.005,
+        parent: "OPERATIONAL_PERF",
+        arabicLabel:"متابعة أداء الموظفين  ",
+        params:[ "AVG_EVAL_EMPS"],
+        formula : (AVG_EVAL_EMPS:number )=>AVG_EVAL_EMPS*0.75
+    },
+
+
 
 
 }

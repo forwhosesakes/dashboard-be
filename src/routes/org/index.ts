@@ -162,7 +162,7 @@ org.get("/pre/:id", zValidator("param", querySchemaLRetriveOrg), async (c) => {
     }
 
     const result = await retrieveOrg(id, dbUrl);
-    // Map to HTTP status code
+    
     const statusCode =
       result.status === "success"
         ? 200
@@ -236,13 +236,9 @@ org.post("/", async (c) => {
         const orgResult = await createUpdateOrg({ ...org, userId }, dbUrl);
 
         if (orgResult.status === "success") {
-          console.log("orgResult", orgResult);
-
           // Create the dashboards types related to the org
           // Note: if the org has a general dashbaord, then look for the category field
           if (orgResult.data[0].id) {
-          console.log("to create dashbaord", DASHBOARD_RELATED_COLUMN);
-
             const dashboardResults = await Promise.all(
               DASHBOARD_RELATED_COLUMN.map(async (el) => {
                 try {

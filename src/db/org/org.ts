@@ -249,9 +249,13 @@ export const getPaginatedOrgsOverview = async (
 
     const totalPages = Math.ceil(totalCount / limit);
     const result = records.map((record)=>{
+      console.log("records:::", record);
+      
     let dashboards: string[]= [];
 
     DASHBOARD_RELATED_COLUMN.forEach((el: string)=>{
+      // console.log("dashboard::", record[el as keyof TOrganizationOverviewRecord]);
+      
        if(Number(record[el as keyof TOrganizationOverviewRecord]) >0) {
         dashboards.push(mapSettingtoDashbaordType[el as keyof typeof mapSettingtoDashbaordType])
        }

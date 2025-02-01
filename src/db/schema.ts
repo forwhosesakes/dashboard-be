@@ -371,6 +371,82 @@ export const financialIndicators = pgTable("financialIndicators", {
         RATE_SUST_DONAT:numeric("RATE_SUST_DONAT"),
 })
 
+export const mosquesEntries = pgTable("mosquesEntries", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
+
+        createdAt: timestamp('createdAt').notNull().defaultNow(),
+        updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+        NO_EXEC_CONST_REQS:numeric("NO_EXEC_CONST_REQS"),
+        TOTAL_CONST_REQS:numeric("TOTAL_CONST_REQS"),
+        NO_MOSQUES_ND_CONST:numeric("NO_MOSQUES_ND_CONST"),
+        TOTAL_REG_MOSQUES:numeric("TOTAL_REG_MOSQUES"),
+        NO_MOSQUES_COMP_CONST:numeric("NO_MOSQUES_COMP_CONST"),
+        TOTAL_MOSQUES_PLAN_CONST:numeric("TOTAL_MOSQUES_PLAN_CONST"),
+        TOTAL_ANNUAL_EXPANSES_MOSQUES:numeric("TOTAL_ANNUAL_EXPANSES_MOSQUES"),
+        NO_SERV_MOSQUES:numeric("NO_SERV_MOSQUES"),
+        NO_RESV_COMPL_MOSQUES:numeric("NO_RESV_COMPL_MOSQUES"),
+        NO_EXEC_PRJKS_MOSQUES:numeric("NO_EXEC_PRJKS_MOSQUES"),
+})
+export const mosquesIndicators = pgTable("mosquesIndicators", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
+
+        entriesId: uuid("entriesId").notNull().references(()=>mosquesEntries.id).unique(),
+        createdAt: timestamp('createdAt').notNull().defaultNow(),
+        updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+        PERC_COMP_REQS_MOSQUES:numeric("PERC_COMP_REQS_MOSQUES"),
+        PERC_COMP_ND_MOSQUES:numeric("PERC_COMP_ND_MOSQUES"),
+        PERC_PRJK_PG_MOSQUES:numeric("PERC_PRJK_PG_MOSQUES"),
+        AVG_COMP_EXP_ANN_MOSQUES:numeric("AVG_COMP_EXP_ANN_MOSQUES"),
+        AVG_COMP_MOSQUES:numeric("AVG_COMP_MOSQUES"),
+})
+
+
+export const orphansEntries = pgTable("orphansEntries", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
+
+        createdAt: timestamp('createdAt').notNull().defaultNow(),
+        updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+        NO_ADOPTED_ORPHANS:numeric("NO_ADOPTED_ORPHANS"),
+        TOTAL_TARGETED_ORPHANS:numeric("TOTAL_TARGETED_ORPHANS"),
+        TOTAL_MONTHLY_ADOP_EXP:numeric("TOTAL_MONTHLY_ADOP_EXP"),
+        NO_ORPHANS_PRGM:numeric("NO_ORPHANS_PRGM"),
+        TOTAL_ORPHANS_QUAL_PRGM:numeric("TOTAL_ORPHANS_QUAL_PRGM"),
+        TOTAL_ANNUAL_EXP_ORPHANS:numeric("TOTAL_ANNUAL_EXP_ORPHANS"),
+        NO_BENF_ORPHANS:numeric("NO_BENF_ORPHANS"),
+        NO_STD_ORPHANS:numeric("NO_STD_ORPHANS"),
+        TOTAL_ORPHANS_STD_AGE:numeric("TOTAL_ORPHANS_STD_AGE"),
+        NO_ORPHANS_STD_UNI:numeric("NO_ORPHANS_STD_UNI"),
+
+
+
+        TOTAL_ORPHANS_AGE_UNI:numeric("TOTAL_ORPHANS_AGE_UNI"),
+        TOTAL_MARKS_ORPHANS:numeric("TOTAL_MARKS_ORPHANS"),
+        NO_GEN_EDU_ORPHANS:numeric("NO_GEN_EDU_ORPHANS"),
+        NO_HLTH_ORPHANS:numeric("NO_HLTH_ORPHANS"),
+        TOTAL_ORPHANS:numeric("TOTAL_ORPHANS"),
+
+})
+export const orphansIndicators = pgTable("orphansIndicators", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
+
+        entriesId: uuid("entriesId").notNull().references(()=>orphansEntries.id).unique(),
+        createdAt: timestamp('createdAt').notNull().defaultNow(),
+        updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+        ORPHANS_COV_PERC:numeric("PERC_COMP_REQS_MOSQUES"),
+        TOTAL_ORPHANS:numeric("TOTAL_ORPHANS"),
+        MON_AVG_ADOP_ORPHANS:numeric("MON_AVG_ADOP_ORPHANS"),
+        PERC_ORPHANS_BENF_SRV:numeric("PERC_ORPHANS_BENF_SRV"),
+        AVG_ANNUAL_EXP_ORPHANS:numeric("AVG_ANNUAL_EXP_ORPHANS"),
+        PERC_ORPHANS_GEN_EDU:numeric("PERC_ORPHANS_GEN_EDU"),
+        PERC_ORPHANS_UNI_EDU:numeric("PERC_ORPHANS_UNI_EDU"),
+        AVG_ORPHANS_MARKS:numeric("AVG_ORPHANS_MARKS"),
+        HLTH_CVG:numeric("HLTH_CVG"),
+        
+})
 
 export const generalEntries = pgTable("generalEntries",{
     id: uuid("id").primaryKey().defaultRandom(),

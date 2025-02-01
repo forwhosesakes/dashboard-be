@@ -1,4 +1,4 @@
-import { TCorporateEntries, TCorporateIndicators, TFinancialEntries, TFinancialIndicators, TOperationalEntries, TOperationalIndicators, TOperationalIndicatorsRecord } from "../db/types"
+import { TCorporateEntries, TCorporateIndicators, TFinancialEntries, TFinancialIndicators, TMosquesEntries, TMosquesIndicators, TOperationalEntries, TOperationalIndicators, TOperationalIndicatorsRecord, TOrphansEntries, TOrphansIndicators } from "../db/types"
 
 
 type IndicatorMetadata<T, M> = {
@@ -602,3 +602,126 @@ FINANCIAL_SAFETY_PRACTICES: {
 }
 
 
+
+export const ORPHANS_METADATA :{[key:string]:IndicatorMetadata<TOrphansIndicators, TOrphansEntries>}= {
+    ORPHANS_COV_PERC: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"نسبة تغطية كفالة الأيتام ",
+        params:["NO_ADOPTED_ORPHANS","TOTAL_TARGETED_ORPHANS"],
+        formula : (NO_ADOPTED_ORPHANS:number,TOTAL_TARGETED_ORPHANS:number)=>(NO_ADOPTED_ORPHANS/TOTAL_TARGETED_ORPHANS*100)
+    },
+
+
+    TOTAL_ORPHANS: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"عدد الأيتام المكفولين ",
+        params:["TOTAL_ORPHANS"],
+        formula : (TOTAL_ORPHANS:number)=>(TOTAL_ORPHANS)
+    },
+
+    MON_AVG_ADOP_ORPHANS: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:" متوسط تكلفة الكفالة الشهرية للأيتام",
+        params:["TOTAL_MONTHLY_ADOP_EXP","TOTAL_ORPHANS"],
+        formula : (TOTAL_MONTHLY_ADOP_EXP:number,TOTAL_ORPHANS:number)=>TOTAL_MONTHLY_ADOP_EXP/TOTAL_ORPHANS*100
+    },
+    PERC_ORPHANS_BENF_SRV: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:" نسبة الأيتام المستفيدين من البرامج التأهيلية   ",
+        params:["NO_ORPHANS_PRGM","TOTAL_ORPHANS_QUAL_PRGM"],
+        formula : (NO_ORPHANS_PRGM:number,TOTAL_ORPHANS_QUAL_PRGM:number)=>NO_ORPHANS_PRGM/TOTAL_ORPHANS_QUAL_PRGM*100
+    },
+    AVG_ANNUAL_EXP_ORPHANS: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"معدل التكلفة السنوية للخدمات المقدمة لكل يتيم ",
+        params:["TOTAL_ANNUAL_EXP_ORPHANS","NO_BENF_ORPHANS"],
+        formula : (TOTAL_ANNUAL_EXP_ORPHANS:number,NO_BENF_ORPHANS:number)=>TOTAL_ANNUAL_EXP_ORPHANS/NO_BENF_ORPHANS
+    },
+
+
+
+    PERC_ORPHANS_GEN_EDU: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:" نسبة الأيتام في التعليم العام",
+        params:["NO_STD_ORPHANS","TOTAL_ORPHANS_STD_AGE"],
+        formula : (NO_STD_ORPHANS:number,TOTAL_ORPHANS_STD_AGE:number)=>NO_STD_ORPHANS/TOTAL_ORPHANS_STD_AGE*100
+    },
+
+    PERC_ORPHANS_UNI_EDU: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"نسبة الأيتام في التعليم الجامعي",
+        params:["NO_ORPHANS_STD_UNI","TOTAL_ORPHANS_AGE_UNI"],
+        formula : (NO_ORPHANS_STD_UNI:number,TOTAL_ORPHANS_AGE_UNI:number)=>NO_ORPHANS_STD_UNI/TOTAL_ORPHANS_AGE_UNI*100
+    },
+
+
+    AVG_ORPHANS_MARKS: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"معدل التحصيل الدراسي للأيتام (متوسط المعدلات)",
+        params:["TOTAL_MARKS_ORPHANS","NO_GEN_EDU_ORPHANS"],
+        formula : (TOTAL_MARKS_ORPHANS:number,NO_GEN_EDU_ORPHANS:number)=>TOTAL_MARKS_ORPHANS/NO_GEN_EDU_ORPHANS
+    },
+
+    HLTH_CVG: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"معدل التحصيل الدراسي للأيتام (متوسط المعدلات)",
+        params:["NO_HLTH_ORPHANS","TOTAL_ORPHANS"],
+        formula : (NO_HLTH_ORPHANS:number,TOTAL_ORPHANS:number)=>NO_HLTH_ORPHANS/TOTAL_ORPHANS*100
+    },
+}
+
+
+export const MOSQUES_METADATA :{[key:string]:IndicatorMetadata<TMosquesIndicators, TMosquesEntries>}= {
+    PERC_COMP_REQS_MOSQUES: {
+
+
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"نسبة تغطية طلبات الصيانة    ",
+        params:["NO_EXEC_CONST_REQS","TOTAL_CONST_REQS"],
+        formula : (NO_EXEC_CONST_REQS:number,TOTAL_CONST_REQS:number)=>NO_EXEC_CONST_REQS/TOTAL_CONST_REQS*100
+    },
+    PERC_COMP_ND_MOSQUES: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"نسبة المساجد المحتاجة للترميم  ",
+        params:["NO_MOSQUES_ND_CONST","TOTAL_REG_MOSQUES"],
+        formula : (NO_MOSQUES_ND_CONST:number,TOTAL_REG_MOSQUES:number)=>NO_MOSQUES_ND_CONST/TOTAL_REG_MOSQUES
+    },
+
+    PERC_PRJK_PG_MOSQUES: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"نسبة إنجاز مشاريع البناء  ",
+        params:["NO_MOSQUES_COMP_CONST","TOTAL_MOSQUES_PLAN_CONST"],
+        formula : (NO_MOSQUES_COMP_CONST:number,TOTAL_MOSQUES_PLAN_CONST:number)=> NO_MOSQUES_COMP_CONST/TOTAL_MOSQUES_PLAN_CONST
+    },
+
+    AVG_COMP_EXP_ANN_MOSQUES: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"متوسط تكلفة الصيانة السنوية لكل مسجد",
+        params:["TOTAL_ANNUAL_EXPANSES_MOSQUES","NO_SERV_MOSQUES"],
+        formula : (TOTAL_ANNUAL_EXPANSES_MOSQUES:number,NO_SERV_MOSQUES:number)=> TOTAL_ANNUAL_EXPANSES_MOSQUES/NO_SERV_MOSQUES
+    },
+
+    AVG_COMP_MOSQUES: {
+        weight: 0.4,
+        parent: "ROOT",
+        arabicLabel:"معدل الشكاوى",
+        params:["NO_RESV_COMPL_MOSQUES","NO_EXEC_PRJKS_MOSQUES"],
+        formula : (NO_RESV_COMPL_MOSQUES:number,NO_EXEC_PRJKS_MOSQUES:number)=> NO_RESV_COMPL_MOSQUES/NO_EXEC_PRJKS_MOSQUES
+    },
+
+
+
+}

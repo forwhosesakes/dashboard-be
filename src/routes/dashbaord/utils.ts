@@ -1,5 +1,5 @@
-import { DASHBOARD_RELATED_COLUMN } from "../../db/org/constants"
-import { TCorporateIndicators, TFinancialIndicators, TOperationalIndicators } from "../../db/types"
+import { DASHBOARD_RELATED_COLUMN } from "../../db/constants"
+import { TCorporateIndicators, TFinancialIndicators, TMosquesIndicators, TOperationalIndicators, TOrphansIndicators } from "../../db/types"
 
 
 export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], category?:string)=>{
@@ -30,6 +30,8 @@ switch (settingType) {
 
 }
 }
+
+
 
 export const initOperationalIndicators = ()=>{
     let indicators:TOperationalIndicators = {
@@ -96,6 +98,9 @@ export const initFinancialIndicators = ()=>{
 }
 
 
+
+
+
 export const initCorporateIndicators = ()=>{
     let indicators:TCorporateIndicators = {
         FOLLOWUP_EMPS_PERF:(0).toPrecision(3),
@@ -143,5 +148,31 @@ FINANCIAL_SAFETY_PRACTICES:(0).toPrecision(3),
     return indicators
 }
 
+export const initOrphansIndicators = ()=>{
+    let indicators:TOrphansIndicators = {
+        TOTAL_ORPHANS:(0).toPrecision(3),
+        ORPHANS_COV_PERC:(0).toPrecision(3),
+        MON_AVG_ADOP_ORPHANS:(0).toPrecision(3),
+        PERC_ORPHANS_BENF_SRV:(0).toPrecision(3),
+        AVG_ANNUAL_EXP_ORPHANS:(0).toPrecision(3),
 
+        PERC_ORPHANS_GEN_EDU:(0).toPrecision(3),
+        PERC_ORPHANS_UNI_EDU:(0).toPrecision(3),
+        AVG_ORPHANS_MARKS:(0).toPrecision(3),
+        HLTH_CVG:(0).toPrecision(3),
 
+    }
+    return indicators
+}
+
+export const initMosquesIndicators = ()=>{
+    let indicators:TMosquesIndicators = {
+        PERC_COMP_REQS_MOSQUES:(0).toPrecision(3),
+        PERC_COMP_ND_MOSQUES:(0).toPrecision(3),
+        PERC_PRJK_PG_MOSQUES:(0).toPrecision(3),
+        AVG_COMP_EXP_ANN_MOSQUES:(0).toPrecision(3),
+        AVG_COMP_MOSQUES:(0).toPrecision(3),
+
+    }
+    return indicators
+}

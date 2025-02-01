@@ -4,7 +4,7 @@ import { dbCLient } from "../db-client";
 import { organization } from "../schema";
 import { PaginatedResponse, PaginationParams, TOrganization, TOrganizationOverview, TOrganizationOverviewRecord, TOrganizationRecord } from "../types";
 import { mapSettingtoDashbaordType } from "../../lib/constants";
-import { DASHBOARD_RELATED_COLUMN } from "./constants";
+import { DASHBOARD_RELATED_COLUMN } from "../constants";
 
 
 

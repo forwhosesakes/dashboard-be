@@ -4,9 +4,13 @@ import {
   dashbaord,
   financialEntries,
   financialIndicators,
+  mosquesEntries,
+  mosquesIndicators,
   operationalEntries,
   operationalIndicators,
   organization,
+  orphansEntries,
+  orphansIndicators,
 } from "./schema";
 
 export type TOperationalEntriesRecord = typeof operationalEntries.$inferSelect;
@@ -18,6 +22,12 @@ export type TOperationalIndicatorsRecord =
   export type TCorporateEntriesRecord = typeof corporateEntries.$inferInsert
   export type TCorporateIndicatorsRecord = typeof corporateIndicators.$inferInsert
 
+
+  export type TOrphansEntriesRecord = typeof orphansEntries.$inferInsert
+  export type TOrphansIndicatorsRecord = typeof orphansIndicators.$inferInsert
+
+  export type TMosquesEntriesRecord = typeof mosquesEntries.$inferInsert
+  export type TMosquesIndicatorsRecord = typeof mosquesIndicators.$inferInsert
 
 export type TDashboardRecord = typeof dashbaord.$inferSelect;
 export type TDashboard = typeof dashbaord.$inferInsert;
@@ -67,9 +77,28 @@ export type TCorporateIndicators = Omit<
   "id" | "dashbaordId" | "createdAt" | "entriesId" | "updatedAt"
 >;
 
+export type TOrphansEntries = Omit<
+  TOrphansEntriesRecord,
+  "id" | "dashbaordId" | "createdAt" | "updatedAt"
+>;
 
-export type TDashboardEntries = TOperationalEntries;
-export type TDashboardIndicators = TOperationalIndicators | TFinancialIndicators | TCorporateIndicators;
+export type TOrphansIndicators = Omit<
+  TOrphansIndicatorsRecord,
+  "id" | "dashbaordId" | "createdAt" | "entriesId" | "updatedAt"
+>;
+export type TMosquesEntries = Omit<
+  TMosquesEntriesRecord,
+  "id" | "dashbaordId" | "createdAt" | "updatedAt"
+>;
+
+export type TMosquesIndicators = Omit<
+  TMosquesIndicatorsRecord,
+  "id" | "dashbaordId" | "createdAt" | "entriesId" | "updatedAt"
+>;
+
+
+export type TDashboardEntries = TOperationalEntries | TCorporateEntries | TFinancialEntries | TOrphansEntries | TMosquesEntries;
+export type TDashboardIndicators = TOperationalIndicators | TFinancialIndicators | TCorporateIndicators | TOrphansIndicators | TMosquesIndicators;
 export type TDASHBOARD_STATUS = "COMPLETED" | "IN_PROGRESS" | "NOT_STARTED";
 
 const DB_ERRORS = {

@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { auth } from "../../lib/auth";
-import { DASHBOARD_RELATED_COLUMN } from "../../db/org/constants";
+import { DASHBOARD_RELATED_COLUMN } from "../../db/constants";
 import { createDashboard } from "../../db/dashbaord/dashboard";
 import { getDashboardBodyGivenSettingType } from "../dashbaord/utils";
 

@@ -1,4 +1,4 @@
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { dbCLient } from "../db-client";
 import {
   TDashboard,
@@ -45,116 +45,150 @@ const dashboardIndicatorTables = {
 };
 // save entries for the three type
 export const saveEntriesForDashboard = async (
-  dashbaordId: number,
+  orgId: number,
   entries: TDashboardEntries,
   dashboardType: Exclude<DashboardType, "GENERAL">,
   dbUrl: string
 ): Promise<StatusResponse<TOperationalEntriesRecord | any>> => {
-  return new Promise((resolve, reject) => {
-    const db = dbCLient(dbUrl);
-    // check if the client exits first
-    db.query.dashbaord
-      .findFirst({
-        where:
-          eq(dashbaord.id, dashbaordId) &&
-          eq(dashbaord.type, dashboardType.toLowerCase()),
-      })
-      .then((client) => {
-        if (client) {
-          //store the entries in the table [given the dashbaord type]
-          db.insert(dashboardEntryTables[dashboardType])
+  const db = dbCLient(dbUrl);
 
-            .values({ dashbaordId, ...entries })
-            .onConflictDoUpdate({
-              target: dashboardEntryTables[dashboardType].dashbaordId,
-              // @ts-ignore
-              set: { ...entries },
-            })
-            .returning()
-            .then((record) => {
-              resolve({
-                status: "success",
-                data: record,
-              });
-            })
-            .catch((e: any) => {
-              reject({
-                status: "error",
-                message: e,
-              });
-            });
-        } else
-          reject({
-            status: "error",
-            message: "no dashboard is here",
-          });
-      })
-      .catch((e) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+    
+      const currentDashboardRec = await db
+        .select()
+        .from(dashbaord)
+        .where(
+          and(
+            eq(dashbaord.orgId, orgId),
+            sql`UPPER(${dashbaord.type}) = UPPER(${dashboardType})`
+          )
+        );
+      
+      if (currentDashboardRec.length === 0) {
         reject({
           status: "error",
-          message: e,
+          message: "NO_SUCH_DASHBOARD",
         });
+        return;
+      }
+
+      // check if the client exists first
+      const client = await db.query.dashbaord
+        .findFirst({
+          where: and(
+            eq(dashbaord.id, currentDashboardRec[0].id),
+            eq(dashbaord.type, dashboardType.toLowerCase())
+          ),
+        });
+
+      if (!client) {
+        reject({
+          status: "error",
+          message: "no dashboard is here",
+        });
+        return;
+      }
+
+      // store the entries in the table [given the dashboard type]
+      const record = await db
+        .insert(dashboardEntryTables[dashboardType])
+        .values({ dashbaordId: currentDashboardRec[0].id, ...entries })
+        .onConflictDoUpdate({
+          target: dashboardEntryTables[dashboardType].dashbaordId,
+          // @ts-ignore
+          set: { ...entries },
+        })
+        .returning();
+
+      resolve({
+        status: "success",
+        data: record,
       });
+      
+    } catch (error: any) {
+      reject({
+        status: "error",
+        message: error,
+      });
+    }
   });
 };
 
 // save entries for the general dashboards with categories
 export const saveEntriesForGeneralDashboard = async (
-  dashbaordId: number,
+  orgId: number,
   entries: TDashboardEntries,
   categoryType: CategoryType,
   dbUrl: string
 ): Promise<
   StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>
 > => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const db = dbCLient(dbUrl);
-    // check if the client exits first
-    db.query.dashbaord
-      .findFirst({
-        where:
-          eq(dashbaord.id, dashbaordId) &&
-          eq(dashbaord.category, categoryType.toLowerCase()),
-      })
-      .then((rec) => {
-        console.log("rec::::::", rec);
 
-        if (rec) {
-          //store the entries in the table [given the dashbaord type]
-          console.log("entries", entries);
-          db.insert(dashboardEntryTables[categoryType])
+    try {
+      const currentDashboardRec = await db
+        .select()
+        .from(dashbaord)
+        .where(
+          and(
+            eq(dashbaord.orgId, orgId),
+            isNotNull(dashbaord.category),
+            sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+          )
+        );
 
-            .values({ dashbaordId, ...entries })
-            .onConflictDoUpdate({
-              target: dashboardEntryTables[categoryType].dashbaordId,
-              // @ts-ignore
-              set: { ...entries },
-            })
-            .returning()
-            .then((record) => {
-              resolve({
-                status: "success",
-                data: record,
-              });
-            })
-            .catch((e: any) => {
-              reject({
-                status: "error",
-                message: e,
-              });
-            });
-        } else
-          reject({
-            status: "error",
-            message: "DASHBOARD_NOT_FOUND",
-          });
-      })
-      .catch((e) => {
+      if (currentDashboardRec.length === 0) {
         reject({
           status: "error",
-          message: e,
+          message: "NO_SUCH_DASHBOARD",
         });
+        return;
+      }
+
+      // check if the client exists first
+      const rec = await db.query.dashbaord
+        .findFirst({
+          where: and(
+            eq(dashbaord.id, currentDashboardRec[0].id),
+            eq(dashbaord.category, categoryType.toLowerCase())
+          ),
+        });
+
+      console.log("rec::::::", rec);
+
+      if (!rec) {
+        reject({
+          status: "error",
+          message: "DASHBOARD_NOT_FOUND",
+        });
+        return;
+      }
+
+      //store the entries in the table [given the dashboard type]
+      console.log("entries", entries);
+      const record = await db
+        .insert(dashboardEntryTables[categoryType])
+        .values({ dashbaordId: currentDashboardRec[0].id, ...entries })
+        .onConflictDoUpdate({
+          target: dashboardIndicatorTables[categoryType].dashbaordId,
+          // @ts-ignore
+          set: { ...entries },
+        })
+        .returning();
+
+      resolve({
+        status: "success",
+        data: record,
       });
+
+    } catch (error: any) {
+      reject({
+        status: "error",
+        message: error,
+      });
+    }
   });
 };
 
@@ -168,6 +202,9 @@ export const saveIndicatorsForDashboard = async (
 ): Promise<StatusResponse<TOperationalIndicatorsRecord>> => {
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
+    console.log("saveIndicatorsForDashboard:dashbaordId",dashbaordId);
+    
+
     // check if the client exits first
     db.query.dashbaord
       .findFirst({ where: eq(dashbaord.id, dashbaordId) })
@@ -178,7 +215,7 @@ export const saveIndicatorsForDashboard = async (
             .values({ dashbaordId, entriesId, ...indicators })
 
             .onConflictDoUpdate({
-              target: dashboardEntryTables[dashboardType].dashbaordId,
+              target: dashboardIndicatorTables[dashboardType].dashbaordId ,
               // @ts-ignore
               set: { ...indicators },
             })
@@ -336,26 +373,35 @@ export const getDashboardsOverviewForOrg = (
   });
 };
 
-//todo: implement this
-export const retrieveDashboardContent = (
-  dashboardData: TDashboard,
-  mode: "ENTRIES" | "INDICATORS" | "ALL"
-) => {
-  //TODO: 1.retrieve   records from the dashboard table with org id
-  //2. depending on the type you decide the table you are going to fetch from
-  //3. the fetching would be diffrent if it's a general dashboard
-};
 export const getDashboardIndicators = (
-  dashbaordId: number,
+  orgId: number,
   dashboardType: Exclude<DashboardType, "GENERAL">,
   dbUrl: string
 ): Promise<StatusResponse<any[]>> => {
   const db = dbCLient(dbUrl);
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    const currentDashboardRec = await db
+      .select()
+      .from(dashbaord)
+      .where(
+        and(
+          eq(dashbaord.orgId, orgId),
+          sql`UPPER(${dashbaord.type}) = UPPER(${dashboardType})`
+        )
+      );
+    if (currentDashboardRec.length == 0) {
+      reject({
+        status: "error",
+        message: "NO_SUCH_DASHBOARD",
+      });
+    }
     db.select()
       .from(dashboardIndicatorTables[dashboardType])
       .where(
-        eq(dashboardIndicatorTables[dashboardType].dashbaordId, dashbaordId)
+        eq(
+          dashboardIndicatorTables[dashboardType].dashbaordId,
+          currentDashboardRec[0].id
+        )
       )
       .then((res) => {
         resolve({ status: "success", data: res });
@@ -370,39 +416,48 @@ export const getDashboardIndicators = (
 };
 
 export const getDashboardEntries = async (
-  dashbaordId: number,
+  orgId: number,
   dashboardType: DashboardType,
   dbUrl: string
 ): Promise<StatusResponse<any[]>> => {
   const db = dbCLient(dbUrl);
-  let categoryType = null;
-
-  //todo: if the dashboard type is general then find the category
-  if (dashboardType === "GENERAL") {
+  return new Promise(async (resolve, reject) => {
+    let categoryType = null;
+    const condition =
+      dashboardType === "GENERAL"
+        ? isNotNull(dashbaord.category)
+        : sql`UPPER(${dashbaord.type}) = UPPER(${dashboardType})`;
     const currentDashboardRec = await db
       .select()
       .from(dashbaord)
-      .where(and(eq(dashbaord.id, dashbaordId), isNotNull(dashbaord.category)));
+      .where(and(eq(dashbaord.orgId, orgId), condition));
 
-    categoryType = currentDashboardRec.length
-      ? (currentDashboardRec[0].category
-          ?.toString()
-          .toLocaleUpperCase() as CategoryType)
-      : null;
-    if (categoryType === null) return { status: "success", data: [] };
-  }
+    console.log("current dashboard", currentDashboardRec);
+    if (currentDashboardRec.length == 0) {
+      reject({
+        status: "error",
+        message: "NO_SUCH_DASHBOARD",
+      });
+    }
+    if (dashboardType === "GENERAL") {
+      categoryType = currentDashboardRec[0].category
+        ? (currentDashboardRec[0].category
+            ?.toString()
+            .toLocaleUpperCase() as CategoryType)
+        : null;
+      if (categoryType === null) resolve({ status: "success", data: [] });
+    }
 
-  const entryTable =
-    dashboardType === "GENERAL" && categoryType !== null
-      ? dashboardEntryTables[categoryType]
-      : dashboardEntryTables[
-          dashboardType as Exclude<DashboardType, "GENERAL">
-        ];
+    const entryTable =
+      dashboardType === "GENERAL" && categoryType !== null
+        ? dashboardEntryTables[categoryType]
+        : dashboardEntryTables[
+            dashboardType as Exclude<DashboardType, "GENERAL">
+          ];
 
-  return new Promise((resolve, reject) => {
     db.select()
       .from(entryTable)
-      .where(eq(entryTable.dashbaordId, dashbaordId))
+      .where(eq(entryTable.dashbaordId, currentDashboardRec[0].id))
       .then((res) => {
         resolve({ status: "success", data: res });
       })
@@ -416,7 +471,6 @@ export const getDashboardEntries = async (
 };
 
 export const getGeneralDashboardIndicatorsForOneOrg = async (
-  dashbaordId: number,
   orgId: number,
   dbUrl: string
 ): Promise<StatusResponse<any>> => {
@@ -437,8 +491,6 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
       .where(eq(dashbaord.orgId, orgId));
     console.log("finResult:", finResult);
     if (finResult.length) {
-      console.log("yay????");
-
       generalIndicators = { ...generalIndicators, ...finResult[0] };
     }
 
@@ -481,7 +533,13 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     const currentDashboardRec = await db
       .select()
       .from(dashbaord)
-      .where(and(eq(dashbaord.id, dashbaordId), isNotNull(dashbaord.category)));
+      .where(
+        and(
+          eq(dashbaord.orgId, orgId),
+          sql`UPPER(${dashbaord.type}) = UPPER("GENERAL")`,
+          isNotNull(dashbaord.category)
+        )
+      );
 
     const category =
       currentDashboardRec.length &&
@@ -497,7 +555,12 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
       const categoryIndicators = await db
         .select()
         .from(indicatorsTablesCategory[category])
-        .where(eq(indicatorsTablesCategory[category].dashbaordId, dashbaordId));
+        .where(
+          eq(
+            indicatorsTablesCategory[category].dashbaordId,
+            currentDashboardRec[0].id
+          )
+        );
       if (categoryIndicators) {
         generalIndicators = {
           ...generalIndicators,

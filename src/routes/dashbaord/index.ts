@@ -63,12 +63,7 @@ const paramsGeneralSchemaGetIndicators = z.object({
     .regex(/^\d+$/, { message: "ID must be numeric" }) // Only match numeric strings
     .transform((val) => parseInt(val))
     .refine((val) => val > 0, { message: "ID must be a positive number" }),
-    dashboardId: z
-    .string()
-    .regex(/^\d+$/, { message: "ID must be numeric" }) // Only match numeric strings
-    .transform((val) => parseInt(val))
-    .refine((val) => val > 0, { message: "ID must be a positive number" }),
- 
+
 });
 
 export const dashboard = new Hono<{
@@ -77,14 +72,14 @@ export const dashboard = new Hono<{
 }>();
 dashboard.get("/", (c) => c.json({ data: "Hello dashbaord" }));
 
-//get entries for a specific dashboard
+//get entries for a specific org
 dashboard.get(
   "/entries/:type/:id",
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
-    const { id: dashbaordId, type } = c.req.valid("param");
+    const { id: orgId, type } = c.req.valid("param");
     const dashboardType = type.toUpperCase()  as DashboardType
-    return getDashboardEntries(Number(dashbaordId), dashboardType, c.env.DB_URL)
+    return getDashboardEntries(Number(orgId), dashboardType, c.env.DB_URL)
       .then((response) => {
         return c.json({ data: response.data });
       })
@@ -95,13 +90,13 @@ dashboard.get(
   }
 );
 
-// upload entries for one dashbaord
+// upload entries for one dashbaord given org Id
 dashboard.post(
   "/entries/:type/:id",
   zValidator("param", paramsSchemaGetIndicators),
   zValidator("query", querySchemaGetIndicators),
   async (c) => {
-    const { id: dashbaordId, type } = c.req.valid("param");
+    const { id: orgId, type } = c.req.valid("param");
     const { category } = c.req.valid("query");
 
     const dashboardType = type.toUpperCase() as DashboardType;
@@ -150,14 +145,14 @@ dashboard.post(
       let entriesRecord;
       if (dashboardType === "GENERAL" && category) {
         entriesRecord = await saveEntriesForGeneralDashboard(
-          Number(dashbaordId),
+          Number(orgId),
           entriesObject,
           category,
           c.env.DB_URL
         );
       } else {
         entriesRecord = await saveEntriesForDashboard(
-          Number(dashbaordId),
+          Number(orgId),
           entriesObject,
           dashboardType as Exclude<DashboardType, "GENERAL">,
           c.env.DB_URL
@@ -184,7 +179,7 @@ dashboard.post(
       let indicatorRecords;
       if (dashboardType === "GENERAL" && category) {
         indicatorRecords = await saveIndicatorsForGeneralDashboard(
-          Number(dashbaordId),
+          Number(entriesRecord.data[0].dashbaordId),
           entriesRecord.data[0].id,
           indicators,
           category,
@@ -193,7 +188,7 @@ dashboard.post(
       }
       else {
         indicatorRecords = await saveIndicatorsForDashboard(
-          Number(dashbaordId),
+          Number(entriesRecord.data[0].dashbaordId),
           entriesRecord.data[0].id,
           indicators,
           dashboardType as Exclude<DashboardType, "GENERAL">,
@@ -212,18 +207,18 @@ dashboard.post(
     }
   }
 );
-//get indicators for a specific dashboard
+//get indicators for a specific dashboard given org Id
 dashboard.get(
   "/indicators/:type/:id",
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
-    const { id: dashbaordId, type } = c.req.valid("param");
+    const { id: orgId, type } = c.req.valid("param");
     const dashboardType = type.toUpperCase() as Exclude<
       DashboardType,
       "GENERAL"
     >;
     return getDashboardIndicators(
-      Number(dashbaordId),
+      Number(orgId),
       dashboardType,
       c.env.DB_URL
     )
@@ -237,9 +232,9 @@ dashboard.get(
 );
 
 //get general indicators for one dashbaord given the orginzation 
-dashboard.get("/general/:orgId/:dashboardId",  zValidator("param",paramsGeneralSchemaGetIndicators), async (c) => {
-  const { dashboardId, orgId } = c.req.valid("param")
-  return getGeneralDashboardIndicatorsForOneOrg(dashboardId, orgId, c.env.DB_URL)
+dashboard.get("/general/:orgId",  zValidator("param",paramsGeneralSchemaGetIndicators), async (c) => {
+  const {  orgId } = c.req.valid("param")
+  return getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
   .then((response) => {
     return c.json({ data: response.data });
   })

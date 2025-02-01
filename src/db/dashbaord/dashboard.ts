@@ -100,11 +100,20 @@ export const saveEntriesForDashboard = async (
           set: { ...entries },
         })
         .returning();
+      
 
-      resolve({
-        status: "success",
-        data: record,
-      });
+        db.update(dashbaord)
+        .set({ entriesId: record[0].id }).
+        where( 
+          eq(dashbaord.id, currentDashboardRec[0].id),
+        ).then(()=>{
+          resolve({
+            status: "success",
+            data: record,
+          });
+        })
+
+   
       
     } catch (error: any) {
       reject({
@@ -177,11 +186,18 @@ export const saveEntriesForGeneralDashboard = async (
           set: { ...entries },
         })
         .returning();
+        db.update(dashbaord)
+        .set({ entriesId: record[0].id }).
+        where( and(
+          eq(dashbaord.id, currentDashboardRec[0].id),
+        )).then(()=>{
+          resolve({
+            status: "success",
+            data: record,
+          });
+        })
 
-      resolve({
-        status: "success",
-        data: record,
-      });
+    
 
     } catch (error: any) {
       reject({
@@ -221,10 +237,18 @@ export const saveIndicatorsForDashboard = async (
             })
             .returning()
             .then((record) => {
-              resolve({
-                status: "success",
-                data: record,
-              });
+
+              db.update(dashbaord)
+              .set({ indicatorsId: record[0].id }).
+              where( and(
+                eq(dashbaord.id, dashbaordId),
+              )).then(()=>{
+                resolve({
+                  status: "success",
+                  data: record,
+                });
+              })
+            
             })
             .catch((e: any) => {
               reject({
@@ -274,10 +298,17 @@ export const saveIndicatorsForGeneralDashboard = async (
             })
             .returning()
             .then((record) => {
-              resolve({
-                status: "success",
-                data: record,
-              });
+              db.update(dashbaord)
+              .set({ indicatorsId: record[0].id }).
+              where( 
+                eq(dashbaord.id, dashbaordId),
+              ).then(()=>{
+                resolve({
+                  status: "success",
+                  data: record,
+                });
+              })
+             
             })
             .catch((e: any) => {
               reject({
@@ -353,9 +384,12 @@ export const getDashboardsOverviewForOrg = (
     db.query.dashbaord
       .findMany({ where: eq(dashbaord.orgId, Number(orgId)) })
       .then((res: TDashboardRecord[]) => {
+        console.log("record::::", res);
+          
         const transformedResponse = res.map((record) => ({
           id: record.id,
           title: record.title,
+      
           status: getDashboardStatus({
             entriesId: record.entriesId,
             indicatorsId: record.indicatorsId,

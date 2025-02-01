@@ -376,16 +376,37 @@ export const getDashboardIndicators = (
   });
 };
 
-export const getDashboardEntries = (
+export const getDashboardEntries = async (
   dashbaordId: number,
-  dashboardType: Exclude<DashboardType, "GENERAL">,
+  dashboardType: DashboardType,
   dbUrl: string
 ): Promise<StatusResponse<any[]>> => {
   const db = dbCLient(dbUrl);
+  let categoryType = null
+
+  //todo: if the dashboard type is general then find the category
+  if( dashboardType==="GENERAL"){
+    const currentDashboardRec = await db
+    .select()
+    .from(dashbaord)
+    .where(and(eq(dashbaord.id, dashbaordId), isNotNull(dashbaord.category)));
+
+    categoryType=
+    currentDashboardRec.length ?
+    (currentDashboardRec[0].category?.toString().toLocaleUpperCase()) as CategoryType:null;
+  }
+
+
+  const entryTable = dashboardType==="GENERAL" && categoryType !== null? dashboardEntryTables[categoryType]: dashboardEntryTables[dashboardType as Exclude<DashboardType,"GENERAL">]
+
+  
+  
+  
   return new Promise((resolve, reject) => {
+
     db.select()
-      .from(dashboardEntryTables[dashboardType])
-      .where(eq(dashboardEntryTables[dashboardType].dashbaordId, dashbaordId))
+      .from(entryTable)
+      .where(eq(entryTable.dashbaordId, dashbaordId))
       .then((res) => {
         resolve({ status: "success", data: res });
       })

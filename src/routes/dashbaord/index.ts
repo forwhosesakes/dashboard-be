@@ -83,10 +83,7 @@ dashboard.get(
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
     const { id: dashbaordId, type } = c.req.valid("param");
-    const dashboardType = type.toUpperCase() as Exclude<
-      DashboardType,
-      "GENERAL"
-    >;
+    const dashboardType = type.toUpperCase()  as DashboardType
     return getDashboardEntries(Number(dashbaordId), dashboardType, c.env.DB_URL)
       .then((response) => {
         return c.json({ data: response.data });

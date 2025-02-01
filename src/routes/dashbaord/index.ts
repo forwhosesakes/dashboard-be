@@ -89,6 +89,7 @@ dashboard.get(
         return c.json({ data: response.data });
       })
       .catch((e) => {
+        console.log("error in getting entries endpoint", e);   
         return c.json({ code: "API_ERROR", message: e });
       });
   }

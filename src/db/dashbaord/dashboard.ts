@@ -32,23 +32,23 @@ const dashboardEntryTables = {
   FINANCIAL: financialEntries,
   //TODO: Remove these later
   MOSQUES: mosquesEntries,
-  ORPHANS: orphansEntries
+  ORPHANS: orphansEntries,
 };
 
 const dashboardIndicatorTables = {
   OPERATIONAL: operationalIndicators,
   CORPORATE: corporateIndicators,
   FINANCIAL: financialIndicators,
-    //TODO: Remove these later
-    MOSQUES: mosquesIndicators,
-    ORPHANS: orphansIndicators
+  //TODO: Remove these later
+  MOSQUES: mosquesIndicators,
+  ORPHANS: orphansIndicators,
 };
-// save entries for the three type 
+// save entries for the three type
 export const saveEntriesForDashboard = async (
   dashbaordId: number,
   entries: TDashboardEntries,
-  dashboardType: Exclude<DashboardType, "GENERAL"> ,
-  dbUrl: string,
+  dashboardType: Exclude<DashboardType, "GENERAL">,
+  dbUrl: string
 ): Promise<StatusResponse<TOperationalEntriesRecord | any>> => {
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
@@ -67,7 +67,7 @@ export const saveEntriesForDashboard = async (
             .values({ dashbaordId, ...entries })
             .onConflictDoUpdate({
               target: dashboardEntryTables[dashboardType].dashbaordId,
-            // @ts-ignore
+              // @ts-ignore
               set: { ...entries },
             })
             .returning()
@@ -98,16 +98,15 @@ export const saveEntriesForDashboard = async (
   });
 };
 
-
-
-
 // save entries for the general dashboards with categories
 export const saveEntriesForGeneralDashboard = async (
   dashbaordId: number,
   entries: TDashboardEntries,
-  categoryType: CategoryType  ,
-  dbUrl: string,
-): Promise<StatusResponse<TOrphansIndicatorsRecord|TMosquesIndicatorsRecord | any>> => {
+  categoryType: CategoryType,
+  dbUrl: string
+): Promise<
+  StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>
+> => {
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     // check if the client exits first
@@ -119,16 +118,16 @@ export const saveEntriesForGeneralDashboard = async (
       })
       .then((rec) => {
         console.log("rec::::::", rec);
-        
+
         if (rec) {
           //store the entries in the table [given the dashbaord type]
-          console.log("entries",entries);
+          console.log("entries", entries);
           db.insert(dashboardEntryTables[categoryType])
 
             .values({ dashbaordId, ...entries })
             .onConflictDoUpdate({
               target: dashboardEntryTables[categoryType].dashbaordId,
-            // @ts-ignore
+              // @ts-ignore
               set: { ...entries },
             })
             .returning()
@@ -159,9 +158,7 @@ export const saveEntriesForGeneralDashboard = async (
   });
 };
 
-
-
-// save indicators for the three type 
+// save indicators for the three type
 export const saveIndicatorsForDashboard = async (
   dashbaordId: number,
   entriesId: string,
@@ -179,11 +176,10 @@ export const saveIndicatorsForDashboard = async (
           //store the entries in the table [given the dashbaord type]
           db.insert(dashboardIndicatorTables[dashboardType])
             .values({ dashbaordId, entriesId, ...indicators })
-           
 
             .onConflictDoUpdate({
               target: dashboardEntryTables[dashboardType].dashbaordId,
-               // @ts-ignore
+              // @ts-ignore
               set: { ...indicators },
             })
             .returning()
@@ -214,7 +210,6 @@ export const saveIndicatorsForDashboard = async (
   });
 };
 
-
 // save indicators for the general dashboard
 
 export const saveIndicatorsForGeneralDashboard = async (
@@ -234,11 +229,10 @@ export const saveIndicatorsForGeneralDashboard = async (
           //store the entries in the table [given the dashbaord type]
           db.insert(dashboardIndicatorTables[categoryType])
             .values({ dashbaordId, entriesId, ...indicators })
-           
 
             .onConflictDoUpdate({
               target: dashboardEntryTables[categoryType].dashbaordId,
-               // @ts-ignore
+              // @ts-ignore
               set: { ...indicators },
             })
             .returning()
@@ -291,7 +285,6 @@ export const createDashboard = (
       });
   });
 };
-
 
 export const retrieveAllDashboardsForClient = (
   orgId: string,
@@ -382,28 +375,31 @@ export const getDashboardEntries = async (
   dbUrl: string
 ): Promise<StatusResponse<any[]>> => {
   const db = dbCLient(dbUrl);
-  let categoryType = null
+  let categoryType = null;
 
   //todo: if the dashboard type is general then find the category
-  if( dashboardType==="GENERAL"){
+  if (dashboardType === "GENERAL") {
     const currentDashboardRec = await db
-    .select()
-    .from(dashbaord)
-    .where(and(eq(dashbaord.id, dashbaordId), isNotNull(dashbaord.category)));
+      .select()
+      .from(dashbaord)
+      .where(and(eq(dashbaord.id, dashbaordId), isNotNull(dashbaord.category)));
 
-    categoryType=
-    currentDashboardRec.length ?
-    (currentDashboardRec[0].category?.toString().toLocaleUpperCase()) as CategoryType:null;
+    categoryType = currentDashboardRec.length
+      ? (currentDashboardRec[0].category
+          ?.toString()
+          .toLocaleUpperCase() as CategoryType)
+      : null;
+    if (categoryType === null) return { status: "success", data: [] };
   }
 
+  const entryTable =
+    dashboardType === "GENERAL" && categoryType !== null
+      ? dashboardEntryTables[categoryType]
+      : dashboardEntryTables[
+          dashboardType as Exclude<DashboardType, "GENERAL">
+        ];
 
-  const entryTable = dashboardType==="GENERAL" && categoryType !== null? dashboardEntryTables[categoryType]: dashboardEntryTables[dashboardType as Exclude<DashboardType,"GENERAL">]
-
-  
-  
-  
   return new Promise((resolve, reject) => {
-
     db.select()
       .from(entryTable)
       .where(eq(entryTable.dashbaordId, dashbaordId))
@@ -442,7 +438,7 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     console.log("finResult:", finResult);
     if (finResult.length) {
       console.log("yay????");
-      
+
       generalIndicators = { ...generalIndicators, ...finResult[0] };
     }
 
@@ -489,25 +485,27 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
 
     const category =
       currentDashboardRec.length &&
-      (currentDashboardRec[0].category?.toString().toLocaleUpperCase()) as CategoryType;
-
+      (currentDashboardRec[0].category
+        ?.toString()
+        .toLocaleUpperCase() as CategoryType);
 
     const indicatorsTablesCategory = {
       MOSQUES: mosquesIndicators,
       ORPHANS: orphansIndicators,
     };
     if (category === "MOSQUES" || category === "ORPHANS") {
-
-      
       const categoryIndicators = await db
         .select()
         .from(indicatorsTablesCategory[category])
         .where(eq(indicatorsTablesCategory[category].dashbaordId, dashbaordId));
       if (categoryIndicators) {
-        generalIndicators = { ...generalIndicators, category_data:{category,...categoryIndicators[0]} };
+        generalIndicators = {
+          ...generalIndicators,
+          category_data: { category, ...categoryIndicators[0] },
+        };
       }
     }
-console.log("generalIndicators::",generalIndicators);
+    console.log("generalIndicators::", generalIndicators);
 
     return { status: "success", data: generalIndicators };
   } catch (e) {

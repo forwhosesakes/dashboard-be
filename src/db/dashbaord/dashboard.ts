@@ -563,19 +563,24 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
       generalIndicators = { ...generalIndicators, ...opResult[0] };
     }
 
-    //todo: check if the dashboard has any category
-    const currentDashboardRec = await db
-      .select()
-      .from(dashbaord)
-      .where(
-        and(
-          eq(dashbaord.orgId, orgId),
-          sql`UPPER(${dashbaord.type}) = UPPER("GENERAL")`,
-          isNotNull(dashbaord.category)
-        )
-      );
 
-    const category =
+    console.log("generalIndicators::",generalIndicators);
+    
+    try {
+      const whereCondition = and(
+          eq(dashbaord.orgId, orgId),
+          isNotNull(dashbaord.category)
+      );
+      
+      console.log("Where condition:", whereCondition);
+      
+      const currentDashboardRec = await db
+          .select()
+          .from(dashbaord)
+          .where(whereCondition);
+          
+      console.log("currentDashboardRec::", currentDashboardRec);
+      const category =
       currentDashboardRec.length &&
       (currentDashboardRec[0].category
         ?.toString()
@@ -602,6 +607,15 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
         };
       }
     }
+      
+  } catch (error:any) {
+   console.log("error:::", error);
+   
+      throw error;
+  }
+   
+
+   
     console.log("generalIndicators::", generalIndicators);
 
     return { status: "success", data: generalIndicators };
@@ -617,3 +631,6 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
   //     corporateIndicatorsSetting:organization.corporateIndicatorsSetting}).from(organization).where(  eq(organization.id, orgId),)
   //     const { financialIndicatorsSetting, operationalIndicatorsSetting,corporateIndicatorsSetting } = result[0];
 };
+
+
+

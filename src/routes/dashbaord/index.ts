@@ -38,8 +38,7 @@ const querySchemaGetIndicators = z.object({
         errorMap: () => ({ message: "Invalid category type" }),
       })
     )
-    .optional()
-
+    .optional(),
 });
 const paramsSchemaGetIndicators = z.object({
   id: z
@@ -63,7 +62,6 @@ const paramsGeneralSchemaGetIndicators = z.object({
     .regex(/^\d+$/, { message: "ID must be numeric" }) // Only match numeric strings
     .transform((val) => parseInt(val))
     .refine((val) => val > 0, { message: "ID must be a positive number" }),
-
 });
 
 export const dashboard = new Hono<{
@@ -78,13 +76,13 @@ dashboard.get(
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
     const { id: orgId, type } = c.req.valid("param");
-    const dashboardType = type.toUpperCase()  as DashboardType
+    const dashboardType = type.toUpperCase() as DashboardType;
     return getDashboardEntries(Number(orgId), dashboardType, c.env.DB_URL)
       .then((response) => {
         return c.json({ data: response.data });
       })
       .catch((e) => {
-        console.log("error in getting entries endpoint", e);   
+        console.log("error in getting entries endpoint", e);
         return c.json({ code: "API_ERROR", message: e });
       });
   }
@@ -185,8 +183,7 @@ dashboard.post(
           category,
           c.env.DB_URL
         );
-      }
-      else {
+      } else {
         indicatorRecords = await saveIndicatorsForDashboard(
           Number(entriesRecord.data[0].dashbaordId),
           entriesRecord.data[0].id,
@@ -194,10 +191,8 @@ dashboard.post(
           dashboardType as Exclude<DashboardType, "GENERAL">,
           c.env.DB_URL
         );
-
       }
 
-   
       console.log("data:  ", entries);
       console.log("indicators:  ", indicators);
       return c.json({ indicators: indicatorRecords });
@@ -213,15 +208,31 @@ dashboard.get(
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
     const { id: orgId, type } = c.req.valid("param");
-    const dashboardType = type.toUpperCase() as Exclude<
-      DashboardType,
-      "GENERAL"
-    >;
-    return getDashboardIndicators(
-      Number(orgId),
-      dashboardType,
-      c.env.DB_URL
-    )
+    const dashboardType = type.toUpperCase() as DashboardType;
+    try {
+      const res =
+        dashboardType === "GENERAL"
+          ? await getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
+          : await getDashboardIndicators(
+              Number(orgId),
+              dashboardType as Exclude<DashboardType, "GENERAL">,
+              c.env.DB_URL
+            );
+
+      return c.json({ data: res.data });
+    } catch (e) {
+      return c.json({ code: "API_ERROR", message: e });
+    }
+  }
+);
+
+//get general indicators for one dashbaord given the orginzation
+dashboard.get(
+  "/general/:orgId",
+  zValidator("param", paramsGeneralSchemaGetIndicators),
+  async (c) => {
+    const { orgId } = c.req.valid("param");
+    return getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
       .then((response) => {
         return c.json({ data: response.data });
       })
@@ -230,20 +241,6 @@ dashboard.get(
       });
   }
 );
-
-//get general indicators for one dashbaord given the orginzation 
-dashboard.get("/general/:orgId",  zValidator("param",paramsGeneralSchemaGetIndicators), async (c) => {
-  const {  orgId } = c.req.valid("param")
-  return getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
-  .then((response) => {
-    return c.json({ data: response.data });
-  })
-  .catch((e) => {
-    return c.json({ code: "API_ERROR", message: e });
-  });
-
-
-})
 
 // create dashboard
 dashboard.post("", async (c) => {

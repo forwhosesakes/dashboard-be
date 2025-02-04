@@ -343,6 +343,14 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         params:[ "NO_CONT_VOLUN", "NO_TOTAL_VOLUN_LAST_YEAR"],
         formula : (NO_CONT_VOLUN:number,NO_TOTAL_VOLUN_LAST_YEAR:number)=>NO_CONT_VOLUN/NO_TOTAL_VOLUN_LAST_YEAR*100
     },
+    TOTAL_TAX_REFUND: {
+        weight: 0.02,
+        parent: "ROOT",
+        arabicLabel:"إجمالي المبالغ المستردة من الضريبة  ",
+        params:[ "TOTAL_TAX_REFUND"],
+        formula : (TOTAL_TAX_REFUND:number)=>TOTAL_TAX_REFUND
+    },
+    
 
 
 }

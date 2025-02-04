@@ -58,6 +58,7 @@ export const initOperationalIndicators = ()=>{
 
 export const initFinancialIndicators = ()=>{
     let indicators:TFinancialIndicators = {
+        TOTAL_TAX_REFUND:(0).toPrecision(3),
         ADMIN_TO_TOTAL_EXPENSES:(0).toPrecision(3),
         REV_FIN_SUST_TO_TOTAL_EXPENSES:(0).toPrecision(3),
         PRGRMS_TO_TOTAL_EXPENSES:(0).toPrecision(3),
@@ -89,6 +90,7 @@ export const initFinancialIndicators = ()=>{
         ADMIN_EXPENSES:(0).toPrecision(3),
         FINANCIAL_RESOURCES_DEV:(0).toPrecision(3),
         FINANCIAL_PERF:(0).toPrecision(3),
+        
 
 
         

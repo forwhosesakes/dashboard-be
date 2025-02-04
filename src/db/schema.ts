@@ -316,18 +316,7 @@ export const financialEntries = pgTable("financialEntries", {
     NO_TOTAL_MONEY_VAT:numeric("NO_TOTAL_MONEY_VAT"),
     START_LIABILITIES:numeric("START_LIABILITIES"),
     END_LIABILITIES:numeric("END_LIABILITIES"),
-
-
-   
- 
-
-
-
-
-
-
-                   
-
+    TOTAL_TAX_REFUND:numeric("TOTAL_TAX_REFUND")
 })
 
 
@@ -369,6 +358,7 @@ export const financialIndicators = pgTable("financialIndicators", {
         RATE_REV_ANNUAL_GROWTH:numeric("RATE_REV_ANNUAL_GROWTH"),
         COMMIT_DISC_PERC:numeric("COMMIT_DISC_PERC"),
         RATE_SUST_DONAT:numeric("RATE_SUST_DONAT"),
+        TOTAL_TAX_REFUND:numeric("TOTAL_TAX_REFUND")
 })
 
 export const mosquesEntries = pgTable("mosquesEntries", {

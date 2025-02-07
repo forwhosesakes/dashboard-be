@@ -6,6 +6,7 @@ import {
   getLatestNOrgs,
   getPaginatedOrgs,
   getPaginatedOrgsOverview,
+  removeOrganization,
   retrieveOrg,
 } from "../../db/org/org";
 import { z } from "zod";
@@ -183,6 +184,47 @@ org.get("/pre/:id", zValidator("param", querySchemaLRetriveOrg), async (c) => {
     );
   }
 });
+
+
+org.delete("/pre/:id",zValidator("param",querySchemaLRetriveOrg),async (c)=>{
+  try {
+    // Get and validate query parameters
+    const { id } = c.req.valid("param");
+    const dbUrl = c.env.DB_URL;
+
+    if (!dbUrl) {
+      return c.json(
+        {
+          status: "error",
+          message: "Database configuration missing",
+        },
+        500
+      );
+    }
+
+    const result = await removeOrganization(id, dbUrl);
+    
+    const statusCode =
+      result.status === "success"
+        ? 200
+        : result.status === "warning"
+        ? 400
+        : 500;
+
+    return c.json(result, statusCode);
+  } catch (error) {
+    console.error("Error fetching single organization:", error);
+
+    return c.json(
+      {
+        status: "error",
+        message: "Failed to fetch single organization",
+      },
+      500
+    );
+  }
+
+})
 // ?Endpoint for create update orginization
 // todo: add validation schema for the body you idiot
 

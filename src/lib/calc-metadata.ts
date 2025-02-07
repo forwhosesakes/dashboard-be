@@ -349,10 +349,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         arabicLabel:"إجمالي المبالغ المستردة من الضريبة  ",
         params:[ "TOTAL_TAX_REFUND"],
         formula : (TOTAL_TAX_REFUND:number)=>TOTAL_TAX_REFUND
-    },
-    
-
-
+    }
 }
 
 

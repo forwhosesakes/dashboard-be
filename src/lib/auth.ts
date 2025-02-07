@@ -31,9 +31,9 @@ export const auth = (env: Env) =>
           }),
     },
     user: {
-      // deleteUser:{
-      //   enabled:true,
-      // },
+      deleteUser:{
+        enabled:true,
+      },
       additionalFields: {
         subRole: {
           type: "string",

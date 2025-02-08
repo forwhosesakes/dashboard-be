@@ -305,6 +305,69 @@ export const getPaginatedOrgsOverview = async (
   }
 };
 
+export const getOrgByUserId = async (
+  userId: string,
+  dbUrl: string
+): Promise<StatusResponse<TOrganizationRecord>> => {
+  if (!dbUrl) {
+    return {
+      status: "error",
+      message: "Database URL is required",
+    };
+  }
+
+  if (typeof userId !== "string") {
+    return {
+      status: "error",
+      message: "User ID must be a string",
+    };
+  }
+  try {
+    const db = dbCLient(dbUrl);
+
+    const record = await db.query.organization.findFirst({
+      where: eq(organization.userId, userId),
+    });
+
+    if (!record) {
+      return {
+        status: "warning",
+        message: `No organization found with User ID: ${userId}`,
+      };
+    }
+
+    return {
+      status: "success",
+      data: record,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("connection")) {
+        return {
+          status: "error",
+          message: "Database connection failed",
+        };
+      }
+
+      if (error.message.includes("timeout")) {
+        return {
+          status: "error",
+          message: "Database query timed out",
+        };
+      }
+      return {
+        status: "error",
+        message: error.message,
+      };
+    }
+    return {
+      status: "error",
+      message: "An unexpected error occured",
+    };
+  }
+};
+
+
 export const removeOrganization = async (orgId: number, dbUrl: string) => {
   try {
     const db = dbCLient(dbUrl);

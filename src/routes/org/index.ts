@@ -8,6 +8,7 @@ import {
   getPaginatedOrgsOverview,
   removeOrganization,
   retrieveOrg,
+  getOrgByUserId,
 } from "../../db/org/org";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
@@ -163,7 +164,7 @@ org.get("/pre/:id", zValidator("param", querySchemaLRetriveOrg), async (c) => {
     }
 
     const result = await retrieveOrg(id, dbUrl);
-    
+
     const statusCode =
       result.status === "success"
         ? 200
@@ -413,3 +414,47 @@ org.get("/", zValidator("query", querySchemaPaginatedOrgs), async (c) => {
     );
   }
 });
+
+const querySchemaGetOrgByUserId = z.object({
+  userId: z.string(),
+});
+org.get(
+  "getOrgByUserId/:userId",
+  zValidator("param", querySchemaGetOrgByUserId),
+  async (c) => {
+    try {
+      const { userId } = c.req.valid("param");
+      const dbUrl = c.env.DB_URL;
+
+      if (!dbUrl) {
+        return c.json(
+          {
+            status: "error",
+            message: "Database configuration missing",
+          },
+          500
+        );
+      }
+      const result = await getOrgByUserId(userId, dbUrl);
+
+      const statusCode =
+        result.status === "success"
+          ? 200
+          : result.status === "warning"
+          ? 400
+          : 500;
+
+      return c.json(result, statusCode);
+    } catch (error) {
+      console.error("Error fetching single organization by user ID: ", error);
+
+      return c.json(
+        {
+          status: "error",
+          message: "Failed to fetch single organization by user ID",
+        },
+        500
+      );
+    }
+  }
+);

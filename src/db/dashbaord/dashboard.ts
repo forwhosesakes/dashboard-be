@@ -473,17 +473,23 @@ export const getDashboardEntries = async (
         message: "NO_SUCH_DASHBOARD",
       });
     }
+
     if (dashboardType === "GENERAL") {
       categoryType = currentDashboardRec[0].category
         ? (currentDashboardRec[0].category
             ?.toString()
-            .toLocaleUpperCase() as CategoryType)
+            .toLocaleUpperCase() as CategoryType | "NONE")
         : null;
-      if (categoryType === null) resolve({ status: "success", data: [] });
+        console.log("we should be here:::", categoryType)
+
+      if (categoryType === null || categoryType === "NONE") {
+    console.log("we should be here:::", categoryType)
+
+        resolve({ status: "success", data: [] });}
     }
 
     const entryTable =
-      dashboardType === "GENERAL" && categoryType !== null
+      dashboardType === "GENERAL" && categoryType !== null && categoryType !== "NONE"
         ? dashboardEntryTables[categoryType]
         : dashboardEntryTables[
             dashboardType as Exclude<DashboardType, "GENERAL">

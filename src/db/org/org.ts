@@ -28,7 +28,6 @@ import {
 } from "../types";
 import { mapSettingtoDashbaordType } from "../../lib/constants";
 import { DASHBOARD_RELATED_COLUMN } from "../constants";
-import { auth } from "../../lib/auth";
 
 export const createUpdateOrg = (
   org: TOrganization | TOrganizationRecord,
@@ -41,8 +40,35 @@ export const createUpdateOrg = (
 
     db.insert(organization)
       .values(org)
+      .onConflictDoUpdate({ target: organization.id, 
+        set: {
+          name: org.name,
+          email: org.email,
+          phoneNumber: org.phoneNumber,
+          type: org.type,
+          category: org.category,
+          licenseNumber: org.licenseNumber,
+          website: org.website,
+          address: org.address,
+          city: org.city,
+          neighbor: org.neighbor,
+          street: org.street,
+          map: org.map,
+          repName: org.repName,
+          repPhoneNumber: org.repPhoneNumber,
+          repEmail: org.repEmail,
+          logo: org.logo,
+          officialDocs: org.officialDocs,
+          operationalPlanImage: org.operationalPlanImage,
+          repSpeach: org.repSpeach,
+          licenseImage: org.licenseImage,
+          contractImage: org.contractImage,
+          additionalDocs: org.additionalDocs,
+          updatedAt: new Date() // Make sure to update the timestamp
+        }
+      })
       .returning()
-      .onConflictDoUpdate({ target: organization.id, set: { ...org } })
+
 
       .then((record) => {
         resolve({
@@ -62,7 +88,7 @@ export const createUpdateOrg = (
 export const retrieveOrg = async (
   orgId: number,
   dbUrl: string
-): Promise<StatusResponse<TOrganizationRecord>> => {
+): Promise<StatusResponse<TOrganizationRecord|any>> => {
   // Input validation
   if (!dbUrl) {
     return {
@@ -83,17 +109,21 @@ export const retrieveOrg = async (
     const record = await db.query.organization.findFirst({
       where: eq(organization.id, orgId),
     });
-
+ 
     if (!record) {
       return {
         status: "warning",
         message: `No organization found with ID: ${orgId}`,
       };
     }
+    const res = {...record,financialIndicatorsSetting:Number(record?.financialIndicatorsSetting),
+      corporateIndicatorsSetting:Number(record?.corporateIndicatorsSetting),
+      operationalIndicatorsSetting:Number(record?.operationalIndicatorsSetting),
+     }
 
     return {
       status: "success",
-      data: record,
+      data: res,
     };
   } catch (error) {
     if (error instanceof Error) {

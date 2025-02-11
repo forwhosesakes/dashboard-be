@@ -234,6 +234,8 @@ org.post("/", async (c) => {
     const org = await c.req.json<TOrganization & { password: string }>();
     const dbUrl = c.env.DB_URL;
     let userId = null;
+    console.log("org to be added/updated::", org)
+
 
     if (!dbUrl) {
       return c.json(
@@ -247,6 +249,20 @@ org.post("/", async (c) => {
 
     if (org.id) {
       //TODO: update org
+      const orgResult = await createUpdateOrg({ ...org }, dbUrl);
+   
+      const statusCode =
+      orgResult.status === "success"
+        ? org.id
+          ? 200
+          : 201 // 201 for create, 200 for update
+        : orgResult.status === "warning"
+        ? 400
+        : 500;
+
+    return c.json(orgResult, statusCode);
+
+
     } else {
       if (!org.email) {
         return c.json(
@@ -285,8 +301,11 @@ org.post("/", async (c) => {
             const dashboardResults = await Promise.all(
               DASHBOARD_RELATED_COLUMN.map(async (el) => {
                 try {
-                  const value = Number(orgResult.data[el]);
-                  if (value <= 0) return null;
+                  const value = Number(orgResult.data[0][el]);
+                  console.log("dashboard value flag:::", value);
+                  console.log("orgResult.data::", orgResult.data[0][el]);
+                  
+                  if (value <= 0 && el!=="generalndicatorsSetting" ) return { status: 'success', data: [] };
 
                   return await createDashboard(
                     {

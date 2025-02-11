@@ -1,5 +1,5 @@
 
-import { pgTable, text, serial, timestamp, boolean, numeric, uuid, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, numeric, uuid, integer, uniqueIndex } from "drizzle-orm/pg-core";
 
 			
 export const user = pgTable("user", {
@@ -95,6 +95,10 @@ export const organization = pgTable("organization", {
     operationalIndicatorsSetting:numeric("operationalIndicatorsSetting"),
     corporateIndicatorsSetting:numeric("corporateIndicatorsSetting"),
     generalndicatorsSetting:numeric("generalndicatorsSetting"),
+                }, (table) => {
+                    return {
+                      idIdx: uniqueIndex('org_id_idx').on(table.id),
+                    }
                 }) 
 
 export const dashbaord = pgTable("dashboard",{

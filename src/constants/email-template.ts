@@ -1,4 +1,4 @@
-export const resetTemplate =(resetUrl:string)=> `<!DOCTYPE html>
+export const resetTemplate = (resetUrl: string) => `<!DOCTYPE html>
 <html dir="rtl">
 <head>
     <meta name="x-apple-disable-message-reformatting">
@@ -39,8 +39,8 @@ export const resetTemplate =(resetUrl:string)=> `<!DOCTYPE html>
         }
     </style>
 </head>
-<body style="font-family: sans-serif; margin: 0; padding: 0;">
-<div class="outer-container" style="width:70%; margin-left:auto; margin-right:auto; background: #D0D7DE1C;">
+<body style="font-family: 'notosansarabic', sans-serif; margin: 0; padding: 0; background-color: #f8f9fa;">
+<div class="outer-container" style="width:70%; margin-left:auto; margin-right:auto; background: #ffffff; padding: 2rem 0;">
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" class="inner-table" style="width:70%; margin-left:auto; margin-right:auto;">
         <tr>
             <td align="center" class="content-padding" style="padding: 2rem 1rem;">
@@ -48,16 +48,16 @@ export const resetTemplate =(resetUrl:string)=> `<!DOCTYPE html>
                 <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/pngLogo.png" alt="" class="logo-image" width="176" height="176" style="display: block; margin: 0 auto;">
+                            <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="176"  style="display: block; margin: 0 auto;">
                         </td>
                     </tr>
                 </table>
 
-                <!-- Blue Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #0D3151; border-radius: 0.5rem;">
+                <!-- Green Container -->
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #00AE84; border-radius: 12px; margin-top: 1rem;">
                     <tr>
-                        <td style="padding:0.5rem;">
-                            <h1 style="color:#8BC53F; text-align: center; margin: 0.5rem 0;">
+                        <td style="padding: 1rem;">
+                            <h1 style="color: white; text-align: center; margin: 0.5rem 0; font-size: 1.5rem;">
                                 إعادة تعيين كلمة المرور
                             </h1>
                         </td>
@@ -65,22 +65,35 @@ export const resetTemplate =(resetUrl:string)=> `<!DOCTYPE html>
                 </table>
 
                 <!-- Main Content Section -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-top: 1rem;">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); margin-top: 1.5rem; border: 1px solid #edf2f7;">
                     <tr>
-                        <td class="main-content" style="padding: 2rem;">
-                            <p style="color: #4B5563; text-align: center; margin-bottom: 1.5rem; font-size: 1.125rem;">
+                        <td class="main-content" style="padding: 2.5rem;">
+                            <p style="color: #4B5563; text-align: center; margin-bottom: 2rem; font-size: 1.125rem; line-height: 1.6;">
                                 لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بك. اضغط على الزر
                                 أدناه لإعادة تعيينها.
                             </p>
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="center">
-                                        <a href="${resetUrl}" style="font-size: 1.125rem; background-color: #0D3151; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; display: inline-block; margin-bottom: 3rem;">
+                                        <a href="${resetUrl}" style="
+                                            font-size: 1.125rem;
+                                            background-color: #00AE84;
+                                            color: white;
+                                            padding: 0.875rem 2rem;
+                                            border-radius: 8px;
+                                            text-decoration: none;
+                                            display: inline-block;
+                                            margin-bottom: 2rem;
+                                            font-weight: 500;
+                                            transition: background-color 0.2s ease;">
                                             إعادة تعيين كلمة المرور
                                         </a>
                                     </td>
                                 </tr>
                             </table>
+                            <p style="color: #718096; text-align: center; font-size: 0.875rem; margin-top: 1rem;">
+                                إذا لم تقم بطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني.
+                            </p>
                         </td>
                     </tr>
                 </table>  
@@ -89,10 +102,9 @@ export const resetTemplate =(resetUrl:string)=> `<!DOCTYPE html>
     </table>
 </div>
 </body>
-</html>`
+</html>`;
 
-
-export const resetOTPTemplate =(otp:string)=> `<!DOCTYPE html>
+export const resetOTPTemplate = (otp: string) => `<!DOCTYPE html>
 <html dir="rtl">
 <head>
     <meta name="x-apple-disable-message-reformatting">
@@ -104,7 +116,7 @@ export const resetOTPTemplate =(otp:string)=> `<!DOCTYPE html>
             font-weight: 400;
             font-style: normal;
         }
-
+        
         /* Add responsive styles */
         @media screen and (max-width: 600px) {
             .outer-container {
@@ -133,216 +145,73 @@ export const resetOTPTemplate =(otp:string)=> `<!DOCTYPE html>
         }
     </style>
 </head>
-<body style="font-family: sans-serif; margin: 0; padding: 0;">
-<div class="outer-container" style="width:70%; margin-left:auto; margin-right:auto; background: #D0D7DE1C;">
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" class="inner-table" style="width:70%; margin-left:auto; margin-right:auto;">
-        <tr>
-            <td align="center" class="content-padding" style="padding: 2rem 1rem;">
-                <!-- Logo -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/pngLogo.png" alt="" class="logo-image" width="176" height="176" style="display: block; margin: 0 auto;">
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Blue Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #0D3151; border-radius: 0.5rem;">
-                    <tr>
-                        <td style="padding:0.5rem;">
-                            <h1 style="color:#8BC53F; text-align: center; margin: 0.5rem 0;">
-                               رمز التحقق لإعادة تعيين كلمة المرور 
-                            </h1>
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Main Content Section -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-top: 1rem;">
-                    <tr>
-                        <td class="main-content" style="padding: 2rem;">
-                            <p style="color: #4B5563; text-align: center; margin-bottom: 1.5rem; font-size: 1.125rem;">
-                                لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بك.اليك رمز التحقق لحسابك.
-                            </p>
-                            <h2  style="font-size: 1.125rem; background-color: #0D3151; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; display: inline-block; margin-bottom: 3rem;">${otp}</h2>
-                           
-                        </td>
-                    </tr>
-                </table>  
-            </td>
-        </tr>
-    </table>
-</div>
+<body style="font-family: 'notosansarabic', sans-serif; margin: 0; padding: 0; background-color: #f8f9fa;">
+    <div class="outer-container" style="width:70%; margin-left:auto; margin-right:auto; background: #ffffff; padding: 2rem 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" class="inner-table" style="width:70%; margin-left:auto; margin-right:auto;">
+            <tr>
+                <td align="center" class="content-padding" style="padding: 2rem 1rem;">
+                    <!-- Logo -->
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tr>
+                            <td style="text-align: center; padding: 16px;">
+                                <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="176" 
+                style="display: block; margin: 0 auto;">
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <!-- Green Container -->
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #00AE84; border-radius: 12px; margin-top: 1rem;">
+                        <tr>
+                            <td style="padding: 1rem;">
+                                <h1 style="color: white; text-align: center; margin: 0.5rem 0; font-size: 1.5rem;">
+                                    رمز التحقق لإعادة تعيين كلمة المرور
+                                </h1>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <!-- Main Content Section -->
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); margin-top: 1.5rem; border: 1px solid #edf2f7;">
+                        <tr>
+                            <td class="main-content" style="padding: 2rem;">
+                                <p style="color: #4B5563; text-align: center; margin-bottom: 2rem; font-size: 1.125rem; line-height: 1.6;">
+                                    لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بك. اليك رمز التحقق لحسابك.
+                                </p>
+                                <div style="text-align: center;">
+                                    <span style="
+                                        font-size: 1.5rem;
+                                        background-color: #00AE84;
+                                        color: white;
+                                        padding: 0.75rem 2rem;
+                                        border-radius: 8px;
+                                        text-decoration: none;
+                                        display: inline-block;
+                                        margin-bottom: 2rem;
+                                        font-weight: bold;
+                                        letter-spacing: 2px;
+                                    ">${otp}</span>
+                                </div>
+                                <p style="color: #718096; text-align: center; font-size: 0.875rem; margin-top: 2rem;">
+                                    إذا لم تقم بطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
-</html>`
+</html>`;
 
-
-export const statusTemplate = (props: { status: string; name: string }) => `<!DOCTYPE html>
-<html dir="rtl">
-<head>
-    <meta name="x-apple-disable-message-reformatting">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @font-face {
-            font-family: 'notosansarabic';
-            src: url('https://fonts.gstatic.com/s/notosansarabic/v28/nwpCtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlj4wv4rqxzLI.woff2') format('woff2');
-            font-weight: 400;
-            font-style: normal;
-        }
-
-        /* Add responsive styles */
-        @media screen and (max-width: 600px) {
-            .outer-container {
-                width: 95% !important;
-            }
-            .inner-table {
-                width: 100% !important;
-            }
-            .logo-image {
-                width: 120px !important;
-                height: 120px !important;
-            }
-            .content-padding {
-                padding: 1rem !important;
-            }
-            .main-content {
-                padding: 1rem !important;
-            }
-            .partners-image {
-                height: auto !important;
-            }
-            .colored-drop {
-                width: 42px !important;
-                height: 27px !important;
-            }
-        }
-    </style>
-</head>
-<body style="font-family: sans-serif; margin: 0; padding: 0;">
-<div class="outer-container" style="width:70%; margin-left:auto; margin-right:auto; background: #D0D7DE1C;">
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" class="inner-table" style="width:70%; margin-left:auto; margin-right:auto;">
-        <tr>
-            <td align="center" class="content-padding" style="padding: 2rem 1rem;">
-                <!-- Logo -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/pngLogo.png" alt="" class="logo-image" width="176" height="176" style="display: block; margin: 0 auto;">
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Blue Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #0D3151; border-radius: 0.5rem;">
-                    <tr>
-                        <td style="padding:0.5rem;">
-                            <h1 style="color:#8BC53F; text-align: center; margin: 0.5rem 0;">
-                                حالة الطلب
-                            </h1>
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Main Content Section -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-top: 1rem;">
-                    <tr>
-                        <td class="main-content" style="padding: 2rem;">
-                            ${props.status !== "accepted" ? `
-                            <h1 style="font-size: 1.5rem; text-align: center; font-weight: bold; color: #0D3151; margin-bottom: 1rem;">
-                                بشأن طلب الالتحاق ببرنامج هندسة القيم
-                            </h1>
-                            ` : ''}
-
-                            <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black; margin-bottom: 1rem;">
-                                عزيزي/عزيزتي ${props.name}،
-                            </p>
-
-                            ${props.status === "denied" ? `
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black; margin-bottom: 1rem;">
-                                    نشكرك على اهتمامك ببرنامج هندسة القيم وتقديم طلب الالتحاق بنا. لقد تلقينا عددًا كبيرًا من الطلبـــات المؤهــلــة، ممــا جــعــل عملية الاختيار صعبة للغاية.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black; margin-bottom: 1rem;">
-                                    بعد دراسة طلبك بعناية، قررنا في هذه المرحلة عدم قبولك في البرنامج. ندرك أن هذا القرار قد يكون مخيباً للآمال، ونود أن نعبر عن تقديرنا لاهتمامك ببرنامجنا.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black;">
-                                    نحن نؤمن بإمكاناتك ونتمنى لك كل التوفيق في مسيرتك المهنية.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: #8BC53F; margin-bottom: 1rem;">
-                                    مع خالص التحيات، برنامج هندسة القيم
-                                </p>
-                            ` : `
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black;">
-                                    يسعدنا جدًا إخبارك بقبولك في برنامج هندسة القيم. لقد أظهرت سجلك الأكاديمي وخبرتك السابقة اهتمامًا قويًا بهذا المجال،
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black;">
-                                    ونحن على ثقة بأنك ستكون إضافة قيمة لبرنامجنا.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black;">
-                                    يرجى الاطلاع على التفاصيل الإدارية المتعلقة بالتسجيل والدفع في المرفقات.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: black;">
-                                    نتطلع لرؤيتك بيننا.
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: #8BC53F; margin-bottom: 1rem;">
-                                    مع خالص التحيات،
-                                </p>
-                                <p style="font-size: 1rem; text-align: center; font-weight: bold; color: #8BC53F; margin-bottom: 1rem;">
-                                    برنامج قيم
-                                </p>
-                            `}
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Colored Drop Image -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/coloreddrop.png" alt="" class="colored-drop" width="56" height="36.5" style="display: block; margin: 0 auto;">
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Clip Path Image -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/clipPath.png" alt="" width="100%" style="display: block; margin: 0 auto; height: auto;">
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- Footer Section -->
-                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: white;">
-                    <tr>
-                        <td style="text-align: center; padding: 16px;">
-                            <img src="https://admin.qyam.org/images/allPartners.png" alt="" class="partners-image" width="600" height="105" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div style="height: 2px; background-color: #0D3151; margin: 1rem 0;"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center; color: #0D3151; font-size: 0.75rem; padding-bottom: 1rem;">
-                            © جميع الحقوق محفوظة لجمعية أفاق الخفجي.
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-</body>
-</html>`
-
-
-
-
-export const inviteMemberTemplate = (props: { name: string, email: string, password: string }) => `<!DOCTYPE html>
-<html dir="rtl">
+export const addNewOrgTemplate = (props: {
+    name: string;
+    email: string;
+    password: string;
+  }) =>  `
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -350,77 +219,254 @@ export const inviteMemberTemplate = (props: { name: string, email: string, passw
         @media screen and (max-width: 600px) {
             .outer-container {
                 width: 95% !important;
-                padding: 1rem !important;
+                padding: 1.5rem !important;
             }
+        }
+                @font-face {
+            font-family: 'notosansarabic';
+            src: url('https://fonts.gstatic.com/s/notosansarabic/v28/nwpCtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlj4wv4rqxzLI.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
         }
     </style>
 </head>
-<body style="font-family: sans-serif; margin: 0; padding: 0; background-color: #f5f5f5;">
-    <div class="outer-container" style="
+<body style="
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+">
+    <div  style="
         width: 70%;
         margin: 2rem auto;
-        background: #D0D7DE1C;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        background: white;
+        padding: 2.5rem;
         text-align: right;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     ">
-        <h1 style="
-            color: #0D3151;
-            margin-bottom: 1.5rem;
+    <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="80" height="40">
+
+        <div style="
             width: 100%;
-        ">مرحباً ${props.name}</h1>
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #00AE84;
+            padding-bottom: 1rem;
+        ">
+            <h1 style="
+                color: #00AE84;
+                margin: 0;
+                font-size: 1.8rem;
+                font-weight: 600;
+            "> ${props.name} مرحباً</h1>
+        </div>
         
         <p style="
             margin: 0.5rem 0;
             width: 100%;
             font-size: 16px;
-            line-height: 1.5;
+            line-height: 1.6;
+        ">تمت إضافة الجمعية إلى نظام لوح معلومات كدان٫ تفاصيل الحساب هي:</p>
+        
+        <div style="
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align:right;
+            margin: 1.5rem;
+            width: 90%;
+            border: 1px solid #edf2f7;
+        ">
+            <p style="margin: 0.5rem 0;">
+            <strong style="color: #00AE84">${props.email}</strong>
+            البريد الإلكتروني: </p>
+            <div style="text-align:right;
+                display:inline-block;">
+            <span style="
+                background-color: #00AE84;
+                color: white;
+                padding: 0.5rem;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
+                font-size: 16px;
+                text-align: center;
+                margin: 0.5rem 0;
+                letter-spacing: 1px;
+            ">${props.password}</span>
+                    <span style="margin: 1rem 0 0.5rem;">كلمة المرور المؤقتة:</span>
+
+                </div>
+        
+        </div>
+        
+        <p style="
+            color: #ef4444;
+            font-weight: 600;
+            margin: 1rem 0;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #fef2f2;
+            border-radius: 6px;
+            border: 1px solid #fee2e2;
+        ">يرجى تغيير كلمة المرور عند أول تسجيل دخول</p>
+        
+        <a href="#" style="
+            display: inline-block;
+            background-color: #00AE84;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        ">تسجيل الدخول</a>
+        
+        <div style="
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #edf2f7;
+            width: 100%;
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+        ">
+            © جميع الحقوق محفوظة ${new Date().getFullYear()}
+        </div>
+    </div>
+</body>
+</html>`;
+
+export const inviteMemberTemplate = (props: {
+  name: string;
+  email: string;
+  password: string;
+}) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width: 600px) {
+            .outer-container {
+                width: 95% !important;
+                padding: 1.5rem !important;
+            }
+        }
+                @font-face {
+            font-family: 'notosansarabic';
+            src: url('https://fonts.gstatic.com/s/notosansarabic/v28/nwpCtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlj4wv4rqxzLI.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body style="
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+">
+    <div  style="
+        width: 70%;
+        margin: 2rem auto;
+        background: white;
+        padding: 2.5rem;
+        text-align: right;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    ">
+    <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="80" height="40">
+
+        <div style="
+            width: 100%;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #00AE84;
+            padding-bottom: 1rem;
+        ">
+            <h1 style="
+                color: #00AE84;
+                margin: 0;
+                font-size: 1.8rem;
+                font-weight: 600;
+            "> ${props.name} مرحباً</h1>
+        </div>
+        
+        <p style="
+            margin: 0.5rem 0;
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.6;
         ">تم إضافتك كعضو في الفريق. تفاصيل حسابك هي:</p>
         
         <div style="
             background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 6px;
-            margin: 1rem 0;
-            width: 100%;
-            border: 1px solid #e9ecef;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align:right;
+            margin: 1.5rem;
+            width: 90%;
+            border: 1px solid #edf2f7;
         ">
-            <p style="margin: 0.5rem 0;">البريد الإلكتروني: <strong>${props.email}</strong></p>
-            <p style="margin: 0.5rem 0;">كلمة المرور المؤقتة:</p>
-            <p style="
-                background-color: #0D3151;
+            <p style="margin: 0.5rem 0;">
+            <strong style="color: #00AE84">${props.email}</strong>
+            البريد الإلكتروني: </p>
+            <div style="text-align:right;
+                display:inline-block;">
+            <span style="
+                background-color: #00AE84;
                 color: white;
-                padding: 0.75rem;
-                border-radius: 4px;
-                font-family: monospace;
+                padding: 0.5rem;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
                 font-size: 16px;
                 text-align: center;
-                margin: 1rem 0;
-            ">${props.password}</p>
+                margin: 0.5rem 0;
+                letter-spacing: 1px;
+            ">${props.password}</span>
+                    <span style="margin: 1rem 0 0.5rem;">كلمة المرور المؤقتة:</span>
+
+                </div>
+        
         </div>
         
         <p style="
-            color: #dc3545;
-            font-weight: bold;
-            margin-top: 1rem;
+            color: #ef4444;
+            font-weight: 600;
+            margin: 1rem 0;
             width: 100%;
+            padding: 0.75rem;
+            background-color: #fef2f2;
+            border-radius: 6px;
+            border: 1px solid #fee2e2;
         ">يرجى تغيير كلمة المرور عند أول تسجيل دخول</p>
         
+        <a href="#" style="
+            display: inline-block;
+            background-color: #00AE84;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        ">تسجيل الدخول</a>
+        
         <div style="
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 2px solid #e9ecef;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #edf2f7;
             width: 100%;
             text-align: center;
-            color: #6c757d;
+            color: #718096;
             font-size: 14px;
         ">
-            © جميع الحقوق محفوظة
+            © جميع الحقوق محفوظة ${new Date().getFullYear()}
         </div>
     </div>
 </body>
-</html>`
+</html>`;

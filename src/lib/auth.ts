@@ -12,8 +12,8 @@ export const auth = (env: Env) =>
       "http://localhost:3000",
       "https://dev.dashboard-fe-aa2.pages.dev",
       "https://dashboard-fe-aa2.pages.dev",
-      "https://chokichoki.org",
-      "https://dev.chokichoki.org",
+      "https://kedan-dashboard.org",
+      "https://dev.kedan-dashboard.org",
     ],
     advanced: {
       ...(Number(env.LOCAL)

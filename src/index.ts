@@ -16,7 +16,7 @@ app.get('/', (c) => {
 app.use(
 	"*", // or replace with "*" to enable cors for all routes
 	cors({
-		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://chokichoki.org", "https://dev.chokichoki.org"], // replace with your origin
+		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://kedan-dashboard.org", "https://dev.kedan-dashboard.org/login"], // replace with your origin
 		allowHeaders: ["Content-Type", "Authorization"],
 		allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"], // Added more methods
 		exposeHeaders: ["Content-Length", "X-Total-Count", "X-Page", "X-Pages", "X-Has-More"], 
@@ -27,7 +27,7 @@ app.use(
 
 app.use("/users/*",
 	cors({
-		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://chokichoki.org", "https://dev.chokichoki.org"], // replace with your origin
+		origin: ["http://localhost:5173","https://dev.dashboard-fe-aa2.pages.dev","https://debug.dashboard-fe-aa2.pages.dev/", "https://kedan-dashboard.org", "https://dev.kedan-dashboard.org"], // replace with your origin
 		allowHeaders: ["Content-Type", "Authorization"],
 		allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"], // Added more methods
 		exposeHeaders: ["Content-Length", "X-Total-Count", "X-Page", "X-Pages", "X-Has-More"], 

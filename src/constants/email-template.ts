@@ -48,7 +48,7 @@ export const resetTemplate = (resetUrl: string) => `<!DOCTYPE html>
                 <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
                         <td style="text-align: center; padding: 16px;">
-                            <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="176"  style="display: block; margin: 0 auto;">
+                            <img src="https://kedan-dashboard.org/logo.png" alt="" class="logo-image" width="176"  style="display: block; margin: 0 auto;">
                         </td>
                     </tr>
                 </table>
@@ -154,7 +154,7 @@ export const resetOTPTemplate = (otp: string) => `<!DOCTYPE html>
                     <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                         <tr>
                             <td style="text-align: center; padding: 16px;">
-                                <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="176" 
+                                <img src=https://kedan-dashboard.org/logo.png" alt="" class="logo-image" width="176" 
                 style="display: block; margin: 0 auto;">
                             </td>
                         </tr>
@@ -246,7 +246,7 @@ export const addNewOrgTemplate = (props: {
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     ">
-    <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="80" height="40">
+    <img src="https://kedan-dashboard.org/logo.png" alt="" class="logo-image" width="80" height="40">
 
         <div style="
             width: 100%;
@@ -379,7 +379,7 @@ export const inviteMemberTemplate = (props: {
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     ">
-    <img src="https://chokichoki.org/logo.png" alt="" class="logo-image" width="80" height="40">
+    <img src="https://kedan-dashboard.org/logo.png" alt="" class="logo-image" width="80" height="40">
 
         <div style="
             width: 100%;

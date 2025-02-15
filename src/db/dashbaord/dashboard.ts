@@ -16,6 +16,7 @@ import {
   dashbaord,
   financialEntries,
   financialIndicators,
+  governanceEntries,
   mosquesEntries,
   mosquesIndicators,
   operationalEntries,
@@ -43,6 +44,177 @@ const dashboardIndicatorTables = {
   MOSQUES: mosquesIndicators,
   ORPHANS: orphansIndicators,
 };
+
+
+
+type GovernanceType = 
+  | "COMPLIANCE_ADHERENCE_PRACTICES"
+  | "FINANCIAL_SAFETY_PRACTICES"
+  | "TRANSPARENCY_DISCLOSURE_PRACTICES";
+
+  export const saveGovernanceEntries = async (
+    orgId: number,
+    responses: Record<string, number>,
+    type: GovernanceType,
+    dbUrl: string
+  ): Promise<StatusResponse<any>> => {
+    return new Promise(async (resolve, reject) => {
+      const db = dbCLient(dbUrl);
+  
+      try {
+        // Calculate total score
+        const totalScore = Object.values(responses).reduce((sum, value) => sum + value, 0);
+  
+        // Find the general dashboard for this organization
+        const currentDashboard = await db
+          .select()
+          .from(dashbaord)
+          .where(
+            and(
+              eq(dashbaord.orgId, orgId),
+              isNotNull(dashbaord.category),
+              sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+            )
+          );
+  
+        if (currentDashboard.length === 0) {
+          reject({
+            status: "error",
+            message: "NO_SUCH_DASHBOARD",
+          });
+          return;
+        }
+  
+        const dashboardId = currentDashboard[0].id;
+  
+        // Get or create corporate entries
+        const existingEntry = await db.query.corporateEntries.findFirst({
+          where: eq(corporateEntries.dashbaordId, dashboardId)
+        });
+  
+        let corporateEntryId;
+  
+        if (!existingEntry) {
+          const [newEntry] = await db.insert(corporateEntries).values({
+            dashbaordId: dashboardId,
+            [type]: totalScore,
+          }).returning({ id: corporateEntries.id });
+          
+          corporateEntryId = newEntry.id;
+        } else {
+          corporateEntryId = existingEntry.id;
+          await db.update(corporateEntries)
+            .set({ [type]: totalScore })
+            .where(eq(corporateEntries.dashbaordId, dashboardId));
+        }
+        //todo: update teh governce value as well
+  
+        // Update or create corporate indicators
+        await db.insert(corporateIndicators)
+          .values({
+            dashbaordId: dashboardId,
+            entriesId: corporateEntryId,
+            [type]: totalScore,
+          })
+          .onConflictDoUpdate({
+            target: corporateIndicators.dashbaordId,
+            set: { 
+              [type]: totalScore,
+            }
+          });
+  
+        // Store raw responses in governance entries
+        const governanceRecord = await db.insert(governanceEntries)
+          .values({
+            dashbaordId: dashboardId,
+            entriesId: corporateEntryId,
+            [type]: JSON.stringify(responses)
+          })
+          .returning();
+  
+        // Update dashboard with entries ID
+        await db.update(dashbaord)
+          .set({ entriesId: governanceRecord[0].id })
+          .where(eq(dashbaord.id, dashboardId));
+  
+        resolve({
+          status: "success",
+          data: {
+            score: totalScore,
+            entries: governanceRecord[0]
+          }
+        });
+  
+      } catch (error: any) {
+        reject({
+          status: "error",
+          message: error,
+        });
+      }
+    });
+  };
+  
+  export const getGovernanceEntries = async (
+    orgId: number,
+    type: GovernanceType,
+    dbUrl: string
+  ): Promise<StatusResponse<any>> => {
+    return new Promise(async (resolve, reject) => {
+      const db = dbCLient(dbUrl);
+  
+      try {
+        // Find the general dashboard for this organization
+        const currentDashboard = await db
+          .select()
+          .from(dashbaord)
+          .where(
+            and(
+              eq(dashbaord.orgId, orgId),
+              isNotNull(dashbaord.category),
+              sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+            )
+          );
+  
+        if (currentDashboard.length === 0) {
+          reject({
+            status: "error",
+            message: "NO_SUCH_DASHBOARD",
+          });
+          return;
+        }
+  
+        const dashboardId = currentDashboard[0].id;
+  
+        // Get governance entries content
+        const governanceEntry = await db.query.governanceEntries.findFirst({
+          where: and(
+            eq(governanceEntries.dashbaordId, dashboardId),
+            sql`${governanceEntries[type]} IS NOT NULL`
+          )
+        });
+  
+        if (!governanceEntry) {
+          resolve({
+            status: "success",
+            data: null
+          });
+          return;
+        }
+  
+        resolve({
+          status: "success",
+          data: governanceEntry[type]
+        });
+  
+      } catch (error: any) {
+        reject({
+          status: "error",
+          message: error,
+        });
+      }
+    });
+  };
+  
 // save entries for the three type
 export const saveEntriesForDashboard = async (
   orgId: number,

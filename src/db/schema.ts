@@ -211,6 +211,17 @@ export const corporateIndicators = pgTable("corporateIndicators", {
         FOLLOWUP_EMPS_PERF:numeric("FOLLOWUP_EMPS_PERF"),
 })
 
+export const governanceEntries = pgTable("governanceEntries", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
+    entriesId: uuid("entriesId").notNull().references(()=>corporateEntries.id).unique(),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+    COMPLIANCE_ADHERENCE_PRACTICES:text("COMPLIANCE_ADHERENCE_PRACTICES"),
+    FINANCIAL_SAFETY_PRACTICES:text("FINANCIAL_SAFETY_PRACTICES"),
+    TRANSPARENCY_DISCLOSURE_PRACTICES:text("TRANSPARENCY_DISCLOSURE_PRACTICES"),
+})
+
 
 export const operationalEntries = pgTable("operationalEntries",
 {  id: uuid("id").primaryKey().defaultRandom(),
@@ -464,5 +475,5 @@ export const generalIndicators = pgTable("generalIndicators",{
 
 
 export const schema = {user,session,account,verification,operationalIndicators,organization,
-    operationalEntries,corporateEntries,financialEntries,generalEntries,generalIndicators,dashbaord
+    operationalEntries,corporateEntries,financialEntries,generalEntries,generalIndicators,dashbaord, corporateIndicators, governanceEntries
 }

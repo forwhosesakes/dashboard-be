@@ -19,8 +19,10 @@ import {
   getDashboardIndicators,
   getDashboardsOverviewForOrg,
   getGeneralDashboardIndicatorsForOneOrg,
+  getGovernanceEntries,
   saveEntriesForDashboard,
   saveEntriesForGeneralDashboard,
+  saveGovernanceEntries,
   saveIndicatorsForDashboard,
   saveIndicatorsForGeneralDashboard,
 } from "../../db/dashbaord/dashboard";
@@ -28,6 +30,31 @@ import { AuthVariables, DashboardType } from "../../types/types";
 import { TDashboard } from "../../db/types";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+
+
+
+const VALID_GOVERNANCE_TYPES = [
+  "COMPLIANCE_ADHERENCE_PRACTICES",
+  "FINANCIAL_SAFETY_PRACTICES",
+  "TRANSPARENCY_DISCLOSURE_PRACTICES"
+] as const;
+
+// Custom transformer for case-insensitive type validation
+const governanceTypeSchema = z.string()
+  .transform(val => val.toUpperCase())
+  .refine(val => VALID_GOVERNANCE_TYPES.includes(val as any), {
+    message: "Invalid governance type"
+  })
+  .transform(val => val as typeof VALID_GOVERNANCE_TYPES[number]);
+// Params schema
+const govParamsSchema = z.object({
+  id: z.string(),
+  type: governanceTypeSchema
+});
+
+const govBodySchema = z.object({
+  responses: z.record(z.string(), z.number())
+});
 
 const querySchemaGetIndicators = z.object({
   category: z
@@ -69,7 +96,57 @@ export const dashboard = new Hono<{
   Bindings: Env;
 }>();
 dashboard.get("/", (c) => c.json({ data: "Hello dashbaord" }));
+// upload entries for governance form in corporate dashboard
+dashboard.post(
+  "/entries/governance/:id/:type",
+  zValidator("param", govParamsSchema),
+  zValidator("json", govBodySchema),
+  async (c) => {
+    try {
+      const { id, type } = c.req.valid("param");
+      const { responses } = c.req.valid("json");
 
+      const result = await saveGovernanceEntries(
+        parseInt(id),
+        responses,
+        type,
+        c.env.DB_URL
+      );
+
+      return c.json(result);
+    } catch (error: any) {
+      return c.json({
+        status: "error",
+        message: error.message || 'Failed to process governance form data'
+      }, 500);
+    }
+  }
+);
+
+// GET endpoint
+dashboard.get(
+  "/entries/governance/:id/:type",
+  zValidator("param", govParamsSchema),
+  async (c) => {
+
+    try {
+      const { id:orgId, type } = c.req.valid("param");
+
+      const result = await getGovernanceEntries(
+        Number(orgId),
+        type,
+        c.env.DB_URL
+      );
+
+      return c.json(result);
+    } catch (error: any) {
+      return c.json({
+        status: "error",
+        message: error.message || 'Failed to fetch governance data'
+      }, 500);
+    }
+  }
+);
 //get entries for a specific org
 dashboard.get(
   "/entries/:type/:id",
@@ -202,6 +279,7 @@ dashboard.post(
     }
   }
 );
+
 //get indicators for a specific dashboard given org Id
 dashboard.get(
   "/indicators/:type/:id",

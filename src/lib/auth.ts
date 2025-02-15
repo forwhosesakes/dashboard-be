@@ -26,7 +26,7 @@ export const auth = (env: Env) =>
         : {
             crossSubDomainCookies: {
               enabled: true,
-              domain: "https://kedan-dashboard.org",
+              domain: "kedan-dashboard.org",
             },
           }),
     },

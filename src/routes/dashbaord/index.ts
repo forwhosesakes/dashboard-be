@@ -98,7 +98,7 @@ export const dashboard = new Hono<{
 dashboard.get("/", (c) => c.json({ data: "Hello dashbaord" }));
 // upload entries for governance form in corporate dashboard
 dashboard.post(
-  "/entries/governance/:id/:type",
+  "governance/entries/:id/:type",
   zValidator("param", govParamsSchema),
   zValidator("json", govBodySchema),
   async (c) => {
@@ -125,7 +125,7 @@ dashboard.post(
 
 // GET endpoint
 dashboard.get(
-  "/entries/governance/:id/:type",
+  "/governance/entries/:id/:type",
   zValidator("param", govParamsSchema),
   async (c) => {
 

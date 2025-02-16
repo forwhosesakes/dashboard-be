@@ -9,6 +9,14 @@ type IndicatorMetadata<T, M> = {
     formula: (...params:number[])=>number
 }
 export const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata<TOperationalIndicators, TOperationalEntries>} = {
+   
+    OPERATIONAL_PERFORMANCE: {
+        weight: 0.30,
+        parent: "ROOT",
+        arabicLabel:"تنفيذ الخطة التشغيلية",
+        params:["OPS_PLAN_EXEC","PRJKT_PRGM_MGMT","EFFIC_INTERNAL_OPS","EFFIC_INTERNAL_OPS" ],
+        formula : (OPS_PLAN_EXEC:number,PRJKT_PRGM_MGMT:number,EFFIC_INTERNAL_OPS:number,VOLN_MGMT:number)=>(OPS_PLAN_EXEC*0.08/0.3)+(PRJKT_PRGM_MGMT*0.1/0.3)+(EFFIC_INTERNAL_OPS*0.07/0.3)+(VOLN_MGMT*0.05/0.3)
+    },
     OPS_PLAN_EXEC: {
         weight: 0.08,
         parent: "ROOT",
@@ -141,12 +149,21 @@ export const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata<TOperationalIn
 
 
 export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndicators, TFinancialEntries>}= {
+    TOTAL_FINANCIAL_PEFORMANCE:{
+        weight: 0.30,
+        parent: "ROOT",
+        arabicLabel:"الأداء المالي",
+        params:["FINANCIAL_PERF","FINANCIAL_RESOURCES_DEV"],
+        formula : (FINANCIAL_PERF:number,FINANCIAL_RESOURCES_DEV:number)=>(FINANCIAL_PERF*0.16/0.3)+(FINANCIAL_RESOURCES_DEV*0.14/0.3)
+   
+    },
     FINANCIAL_PERF: {
         weight: 0.16,
         parent: "ROOT",
         arabicLabel:"الأداء المالي",
         params:["ADMIN_EXPENSES","PRGRMS_EXPENSES", "FINANCIAL_SUSTAIN", "DONAT_MONEY_RAISING","ABL_COVER_OBLIG"],
         formula : (ADMIN_EXPENSES:number,PRGRMS_EXPENSES:number,FINANCIAL_SUSTAIN:number,DONAT_MONEY_RAISING:number,ABL_COVER_OBLIG:number)=>(ADMIN_EXPENSES*0.032/0.16)+(PRGRMS_EXPENSES*0.07/0.16)+(FINANCIAL_SUSTAIN*0.02/0.16)+(DONAT_MONEY_RAISING*0.018/0.16)+(ABL_COVER_OBLIG*0.02/0.16)
+   
     },
 
     FINANCIAL_RESOURCES_DEV: {

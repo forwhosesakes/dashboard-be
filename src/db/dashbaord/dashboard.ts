@@ -124,18 +124,22 @@ type GovernanceType =
           });
   
         // Store raw responses in governance entries
-        const governanceRecord = await db.insert(governanceEntries)
-          .values({
-            dashbaordId: dashboardId,
-            entriesId: corporateEntryId,
-            [type]: JSON.stringify(responses)
-          })
-          .returning();
-  
-        // Update dashboard with entries ID
-        await db.update(dashbaord)
-          .set({ entriesId: governanceRecord[0].id })
-          .where(eq(dashbaord.id, dashboardId));
+     // Store raw responses in governance entries with onConflictDoUpdate
+     const governanceRecord = await db.insert(governanceEntries)
+     .values({
+       dashbaordId: dashboardId,
+       entriesId: corporateEntryId,
+       [type]: JSON.stringify(responses)
+     })
+     .onConflictDoUpdate({
+       target: governanceEntries.dashbaordId,
+       set: { 
+         [type]: JSON.stringify(responses),
+         entriesId: corporateEntryId
+       }
+     })
+     .returning();
+     
   
         resolve({
           status: "success",
@@ -687,7 +691,7 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
   dbUrl: string
 ): Promise<StatusResponse<any>> => {
   const db = dbCLient(dbUrl);
-  let generalIndicators = {};
+  let generalIndicators:any = {};
 
   try {
     //todo: check if the org has financial dashboard
@@ -697,6 +701,7 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
         ECO_RETURN_VOLUN: financialIndicators.ECO_RETURN_VOLUN,
         FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
         ADMIN_EXPENSES: financialIndicators.ADMIN_EXPENSES,
+        TOTAL_FINANCIAL_PEFORMANCE:financialIndicators.TOTAL_FINANCIAL_PEFORMANCE
       })
       .from(financialIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))
@@ -713,6 +718,8 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
         CORPORATE_PERFORMANCE: corporateIndicators.CORORATE_PERFORMANCE,
         VOLUN_SATIS_MEASURMENT: corporateIndicators.VOLUN_SATIS_MEASURMENT,
         BENEF_SATIS_MEASURMENT: corporateIndicators.BENEF_SATIS_MEASURMENT,
+        GOVERANCE: corporateIndicators.GOVERANCE,
+
         ADMIN_ORG_SATIS_MEASURMENT:
           corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
       })
@@ -732,32 +739,28 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
         PRJKT_PRGM_MGMT: operationalIndicators.PRJKT_PRGM_MGMT,
         EFFIC_INTERNAL_OPS: operationalIndicators.EFFIC_INTERNAL_OPS,
         VOLN_MGMT: operationalIndicators.VOLN_MGMT,
+        OPERATIONAL_PERFORMANCE:operationalIndicators.OPERATIONAL_PERFORMANCE
       })
       .from(operationalIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, operationalIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
-    console.log("opResult:", opResult);
     if (opResult.length) {
       generalIndicators = { ...generalIndicators, ...opResult[0] };
     }
+//TODO: should be the weights saved in the org table
+generalIndicators.GENERAL_PERFORMANCE = Number(generalIndicators.OPERATIONAL_PERFORMANCE)*0.3 + Number(generalIndicators.TOTAL_FINANCIAL_PEFORMANCE)*0.3 + Number(generalIndicators.CORPORATE_PERFORMANCE)*0.4 
 
-
-    console.log("generalIndicators::",generalIndicators);
-    
     try {
       const whereCondition = and(
           eq(dashbaord.orgId, orgId),
           isNotNull(dashbaord.category)
       );
       
-      console.log("Where condition:", whereCondition);
-      
       const currentDashboardRec = await db
           .select()
           .from(dashbaord)
           .where(whereCondition);
           
-      console.log("currentDashboardRec::", currentDashboardRec);
       const category =
       currentDashboardRec.length &&
       (currentDashboardRec[0].category
@@ -791,12 +794,9 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
    
       throw error;
   }
-   
+  
 
-   
-    console.log("generalIndicators::", generalIndicators);
-
-    return { status: "success", data: generalIndicators };
+    return { status: "success", data: [generalIndicators] };
   } catch (e) {
     return {
       status: "error",

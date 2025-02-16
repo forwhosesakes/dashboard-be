@@ -16,6 +16,7 @@ import { auth } from "../../lib/auth";
 import { DASHBOARD_RELATED_COLUMN } from "../../db/constants";
 import { createDashboard } from "../../db/dashbaord/dashboard";
 import { getDashboardBodyGivenSettingType } from "../dashbaord/utils";
+import { sendEmail } from "../../lib/send-email";
 
 export const org = new Hono<{
   Variables: AuthVariables;
@@ -273,10 +274,11 @@ org.post("/", async (c) => {
           500
         );
       }
+      const tempPass= crypto.randomUUID()
       await auth(c.env).api.signUpEmail({
         body: {
           email: org.email,
-          password: crypto.randomUUID(),
+          password: tempPass,
           name: org.name,
           role: "user",
         },
@@ -335,6 +337,19 @@ org.post("/", async (c) => {
               );
             }
           }
+
+
+
+          // send welcoming email
+
+
+             
+                await sendEmail({
+                  to: org.email,
+                  subject: "  نرحب بانضمام جمعيتكم إلى كدان! ",
+                  template: "member-invite",
+                  props: { name:org.name, email:org.email, password:tempPass },
+                }, c.env.RESEND_API, c.env.MAIN_EMAIL);
         } else {
           return c.json(
             {

@@ -11,7 +11,7 @@ const getResendObject = (key: string) => {
   return resend;
 };
 
-type EmailTemplate = "password-reset" | "contact" | "password-reset-otp" |"member-invite";
+type EmailTemplate = "password-reset" | "contact" | "password-reset-otp" |"member-invite" |"org-join";
 
 interface SendEmailProps {
   to: string | string[];
@@ -41,6 +41,12 @@ export const sendEmail = async (
         // @ts-ignore
         emailComponent = inviteMemberTemplate(props)
         break;
+
+        case "org-join":
+        // @ts-ignore
+          emailComponent = inviteClientTemplate(props)
+          break;
+
     default:
       throw new Error(`Unknown email template: ${template}`);
   }

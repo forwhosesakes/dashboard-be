@@ -470,3 +470,137 @@ export const inviteMemberTemplate = (props: {
     </div>
 </body>
 </html>`;
+
+
+
+export const inviteClientTemplate = (props: {
+    name: string;
+    email: string;
+    password: string;
+  }) => `
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+          @media screen and (max-width: 600px) {
+              .outer-container {
+                  width: 95% !important;
+                  padding: 1.5rem !important;
+              }
+          }
+          @font-face {
+              font-family: 'notosansarabic';
+              src: url('https://fonts.gstatic.com/s/notosansarabic/v28/nwpCtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlj4wv4rqxzLI.woff2') format('woff2');
+              font-weight: 400;
+              font-style: normal;
+          }
+      </style>
+  </head>
+  <body style="
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #2c3e50;
+  ">
+      <div style="
+          width: 70%;
+          margin: 2rem auto;
+          background: white;
+          padding: 2.5rem;
+          text-align: right;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      ">
+          <img src="https://kedan-dashboard.org/logo.png" alt="" class="logo-image" width="80" height="40">
+  
+          <div style="
+              width: 100%;
+              margin-bottom: 2rem;
+              border-bottom: 3px solid #00AE84;
+              padding-bottom: 1rem;
+          ">
+              <h1 style="
+                  color: #00AE84;
+                  margin: 0;
+                  font-size: 1.8rem;
+                  font-weight: 600;
+              ">مرحباً ${props.name}</h1>
+          </div>
+          
+          <p style="
+              margin: 0.5rem 0;
+              width: 100%;
+              font-size: 16px;
+              line-height: 1.6;
+          ">تمت إضافتكم ${props.name} كجمعية جديدة في النظام. تفاصيل الحساب هي:</p>
+          
+          <div style="
+              background-color: #f8f9fa;
+              padding: 1.5rem;
+              border-radius: 8px;
+              text-align: right;
+              margin: 1.5rem;
+              width: 90%;
+              border: 1px solid #edf2f7;
+          ">
+              <p style="margin: 0.5rem 0;">
+                  <strong style="color: #00AE84">${props.email}</strong>
+                  البريد الإلكتروني: 
+              </p>
+              <div style="text-align: right;
+                  display: inline-block;">
+                  <span style="
+                      background-color: #00AE84;
+                      color: white;
+                      padding: 0.5rem;
+                      border-radius: 6px;
+                      font-family: 'Courier New', monospace;
+                      font-size: 16px;
+                      text-align: center;
+                      margin: 0.5rem 0;
+                      letter-spacing: 1px;
+                  ">${props.password}</span>
+                  <span style="margin: 1rem 0 0.5rem;">كلمة المرور المؤقتة:</span>
+              </div>
+          </div>
+          
+          <p style="
+              color: #ef4444;
+              font-weight: 600;
+              margin: 1rem 0;
+              width: 100%;
+              padding: 0.75rem;
+              background-color: #fef2f2;
+              border-radius: 6px;
+              border: 1px solid #fee2e2;
+          ">يرجى تغيير كلمة المرور عند أول تسجيل دخول</p>
+          
+          <a href="#" style="
+              display: inline-block;
+              background-color: #00AE84;
+              color: white;
+              text-decoration: none;
+              padding: 0.75rem 2rem;
+              border-radius: 6px;
+              margin-top: 1.5rem;
+              font-weight: 500;
+              transition: background-color 0.2s ease;
+          ">تسجيل الدخول</a>
+          
+          <div style="
+              margin-top: 3rem;
+              padding-top: 1.5rem;
+              border-top: 1px solid #edf2f7;
+              width: 100%;
+              text-align: center;
+              color: #718096;
+              font-size: 14px;
+          ">
+              © جميع الحقوق محفوظة ${new Date().getFullYear()}
+          </div>
+      </div>
+  </body>
+  </html>`;

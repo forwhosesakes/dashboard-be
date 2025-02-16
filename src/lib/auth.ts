@@ -9,6 +9,7 @@ export const auth = (env: Env) =>
   betterAuth({
     trustedOrigins: [
       "http://localhost:5173",
+      "http://localhost:5174",
       "http://localhost:3000",
       "https://dev.dashboard-fe-aa2.pages.dev",
       "https://dashboard-fe-aa2.pages.dev",
@@ -26,7 +27,7 @@ export const auth = (env: Env) =>
         : {
             crossSubDomainCookies: {
               enabled: true,
-              domain: "kedan-dashboard.org",
+              domain: env.BETTER_AUTH_URL,
             },
           }),
     },

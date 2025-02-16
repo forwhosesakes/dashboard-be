@@ -52,6 +52,7 @@ export const initOperationalIndicators = ()=>{
         EFFIC_INTERNAL_OPS:(0).toPrecision(3),
         PRJKT_PRGM_MGMT:(0).toPrecision(3),
         OPS_PLAN_EXEC:(0).toPrecision(3),
+        OPERATIONAL_PERFORMANCE:(0).toPrecision(3)
     }
     return indicators
 }
@@ -81,7 +82,6 @@ export const initFinancialIndicators = ()=>{
         COMMIT_DISC_PERC:(0).toPrecision(3),
         RATE_SUST_DONAT:(0).toPrecision(3),
         EFFECIENT_RESOURCE_MGMT:(0).toPrecision(3),
-
         DIVERSITY_INCOME_RESOURCES:(0).toPrecision(3),
         ABL_COVER_OBLIG:(0).toPrecision(3),
         DONAT_MONEY_RAISING:(0).toPrecision(3),
@@ -90,11 +90,7 @@ export const initFinancialIndicators = ()=>{
         ADMIN_EXPENSES:(0).toPrecision(3),
         FINANCIAL_RESOURCES_DEV:(0).toPrecision(3),
         FINANCIAL_PERF:(0).toPrecision(3),
-        
-
-
-        
-
+        TOTAL_FINANCIAL_PEFORMANCE:(0).toPrecision(3),
     }
     return indicators
 }

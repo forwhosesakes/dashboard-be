@@ -686,6 +686,83 @@ export const getDashboardEntries = async (
   });
 };
 
+//Removes entries and indicators record for a dashboard (given orginzation and type)
+export const removeEntriesAndIndicators= async(orgId: number,
+  dashboardType: DashboardType,
+  dbUrl: string) :Promise<StatusResponse<any[]>>=>{
+    try {
+  const db = dbCLient(dbUrl);
+  
+      // First get the dashboard ID for this org and type
+      const dashboard = await db.select().from(dashbaord)
+        .where(and(eq(dashbaord.orgId,orgId),eq(dashbaord.type, dashboardType)))
+
+        .limit(1);
+  
+      if (!dashboard || dashboard.length === 0) {
+        throw new Error(`No dashboard found for organization ${orgId} with type ${dashboardType}`);
+      }
+  
+      const dashboardId = dashboard[0].id;
+  
+      // Delete entries and indicators based on dashboard type
+      switch (dashboardType.toLowerCase()) {
+        case 'corporate':
+          // Delete indicators first due to foreign key constraint
+          await db.delete(corporateIndicators)
+            .where(eq(corporateIndicators.dashbaordId, dashboardId));
+          // Then delete entries
+          await db.delete(corporateEntries)
+            .where(eq(corporateEntries.dashbaordId, dashboardId));
+            
+          break;
+        
+        case 'operational':
+          await db.delete(operationalIndicators)
+            .where(eq(operationalIndicators.dashbaordId, dashboardId));
+          await db.delete(operationalEntries)
+            .where(eq(operationalEntries.dashbaordId, dashboardId));
+          break;
+        
+        case 'financial':
+          await db.delete(financialIndicators)
+            .where(eq(financialIndicators.dashbaordId, dashboardId));
+          await db.delete(financialEntries)
+            .where(eq(financialEntries.dashbaordId, dashboardId));
+          break;
+        
+        case 'mosques':
+          await db.delete(mosquesIndicators)
+            .where(eq(mosquesIndicators.dashbaordId, dashboardId));
+          await db.delete(mosquesEntries)
+            .where(eq(mosquesEntries.dashbaordId, dashboardId));
+          break;
+        
+        case 'orphans':
+          await db.delete(orphansIndicators)
+            .where(eq(orphansIndicators.dashbaordId, dashboardId));
+          await db.delete(orphansEntries)
+            .where(eq(orphansEntries.dashbaordId, dashboardId));
+          break;
+     
+        
+        default:
+          throw new Error(`Unsupported dashboard type: ${dashboardType}`);
+      }
+  
+      return {
+        status: "success",
+        message: `Successfully removed ${dashboardType} entries and indicators for organization ${orgId}`
+      };
+  
+    } catch (e) {
+   
+      throw e instanceof Error ? e : new Error("Unknown error occurred");
+    }
+           
+
+}
+
 export const getGeneralDashboardIndicatorsForOneOrg = async (
   orgId: number,
   dbUrl: string

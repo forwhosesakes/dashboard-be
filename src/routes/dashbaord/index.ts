@@ -20,6 +20,7 @@ import {
   getDashboardsOverviewForOrg,
   getGeneralDashboardIndicatorsForOneOrg,
   getGovernanceEntries,
+  removeEntriesAndIndicators,
   saveEntriesForDashboard,
   saveEntriesForGeneralDashboard,
   saveGovernanceEntries,
@@ -54,6 +55,35 @@ const govParamsSchema = z.object({
 
 const govBodySchema = z.object({
   responses: z.record(z.string(), z.number())
+});
+
+// Reuse the existing parameter validation schema
+const deleteParamsSchema = z.object({
+  id: z
+    .string()
+    .regex(/^\d+$/, { message: "ID must be numeric" })
+    .transform((val) => parseInt(val))
+    .refine((val) => val > 0, { message: "ID must be a positive number" }),
+  type: z
+    .string()
+    .transform((val) => val.toUpperCase())
+    .pipe(
+      z.enum(["OPERATIONAL", "FINANCIAL", "CORPORATE", "GENERAL", "MOSQUES", "ORPHANS"], {
+        errorMap: () => ({ message: "Invalid dashboard type" }),
+      })
+    ),
+});
+
+const querySchemaDelete = z.object({
+  category: z
+    .string()
+    .transform((val) => val?.toUpperCase())
+    .pipe(
+      z.enum(["ORPHANS", "MOSQUES"], {
+        errorMap: () => ({ message: "Invalid category type" }),
+      })
+    )
+    .optional(),
 });
 
 const querySchemaGetIndicators = z.object({
@@ -317,6 +347,38 @@ dashboard.get(
       .catch((e) => {
         return c.json({ code: "API_ERROR", message: e });
       });
+  }
+);
+
+dashboard.delete(
+  "/entries/:type/:id",
+  zValidator("param", deleteParamsSchema),
+  zValidator("query", querySchemaDelete),
+  async (c) => {
+    try {
+      const { id: orgId, type } = c.req.valid("param");
+      const { category } = c.req.valid("query");
+      
+      // Handle GENERAL type with categories
+      const dashboardType = type.toLowerCase() as DashboardType;
+    
+
+      const result = await removeEntriesAndIndicators(
+         orgId,
+         dashboardType,
+        c.env.DB_URL
+      );
+
+      return c.json(result);
+      
+    } catch (error: any) {
+      console.error("Error deleting entries and indicators:", error);
+      
+      return c.json({
+        success: false,
+        message: error instanceof Error ? error.message : 'An error occurred while deleting entries and indicators'
+      }, 400);
+    }
   }
 );
 

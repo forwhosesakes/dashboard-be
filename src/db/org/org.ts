@@ -9,6 +9,7 @@ import {
   financialIndicators,
   generalEntries,
   generalIndicators,
+  governanceEntries,
   mosquesEntries,
   mosquesIndicators,
   operationalEntries,
@@ -438,7 +439,11 @@ export const removeOrganization = async (orgId: number, dbUrl: string) => {
               .catch(e => console.error('Failed to delete orphans indicators:', e)),
             db.delete(generalIndicators)
               .where(eq(generalIndicators.dashbaordId, dashboard.id))
+              .catch(e => console.error('Failed to delete general indicators:', e)),
+              db.delete(governanceEntries)
+              .where(eq(governanceEntries.dashbaordId, dashboard.id))
               .catch(e => console.error('Failed to delete general indicators:', e))
+
           ]);
 
           await Promise.all([

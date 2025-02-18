@@ -72,8 +72,7 @@ type GovernanceType =
           .where(
             and(
               eq(dashbaord.orgId, orgId),
-              isNotNull(dashbaord.category),
-              sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+              sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
             )
           );
   
@@ -102,24 +101,39 @@ type GovernanceType =
           
           corporateEntryId = newEntry.id;
         } else {
+          console.log("are we here chat??????????????????")
           corporateEntryId = existingEntry.id;
-          await db.update(corporateEntries)
+        const d  =await db.update(corporateEntries)
             .set({ [type]: totalScore })
-            .where(eq(corporateEntries.dashbaordId, dashboardId));
+            .where(eq(corporateEntries.dashbaordId, dashboardId)).returning();
+
+            console.log("are we here chat??????????????????",d)
         }
-        //todo: update teh governce value as well
+        //todo: update thW governce value as well IN THE corporate indicators tablem it should be current governance value - old total + new total
   
+
+        const existingIndicators = await db.query.corporateIndicators.findFirst({
+          where: eq(corporateIndicators.dashbaordId, dashboardId)
+        });
+
+        const oldTotal = existingIndicators?Number(existingIndicators[type as GovernanceType]): 0
+
+        const newGovToatal = Number(existingIndicators?.GOVERANCE) + totalScore -oldTotal
+      
         // Update or create corporate indicators
         await db.insert(corporateIndicators)
           .values({
             dashbaordId: dashboardId,
             entriesId: corporateEntryId,
             [type]: totalScore,
+            GOVERANCE:newGovToatal.toString()
           })
           .onConflictDoUpdate({
             target: corporateIndicators.dashbaordId,
             set: { 
               [type]: totalScore,
+            GOVERANCE:newGovToatal.toString()
+
             }
           });
   
@@ -675,6 +689,7 @@ export const getDashboardEntries = async (
       .from(entryTable)
       .where(eq(entryTable.dashbaordId, currentDashboardRec[0].id))
       .then((res) => {
+        console.log("getDashboardEntries::", res)
         resolve({ status: "success", data: res });
       })
       .catch((e) => {

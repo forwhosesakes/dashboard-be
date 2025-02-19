@@ -269,7 +269,7 @@ org.post("/", async (c) => {
         return c.json(
           {
             status: "error",
-            message: "No email was provided",
+            message: "NO_PROVIDED_EMAIL",
           },
           500
         );
@@ -277,7 +277,7 @@ org.post("/", async (c) => {
       const tempPass= crypto.randomUUID()
       await auth(c.env).api.signUpEmail({
         body: {
-          email: org.email,
+          email: org.email.toLowerCase(),
           password: tempPass,
           name: org.name,
           role: "user",
@@ -288,7 +288,7 @@ org.post("/", async (c) => {
 
       const userResult = await ctx.adapter.findOne({
         model: "user",
-        where: [{ value: org.email, field: "email" }],
+        where: [{ value: org.email.toLowerCase(), field: "email" }],
       });
       const userId = (userResult as any).id;
 

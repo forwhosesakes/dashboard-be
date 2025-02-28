@@ -149,37 +149,21 @@ export const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata<TOperationalIn
 
 
 export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndicators, TFinancialEntries>}= {
-    TOTAL_FINANCIAL_PEFORMANCE:{
-        weight: 0.30,
-        parent: "ROOT",
-        arabicLabel:"الأداء المالي",
-        params:["FINANCIAL_PERF","FINANCIAL_RESOURCES_DEV"],
-        formula : (FINANCIAL_PERF:number,FINANCIAL_RESOURCES_DEV:number)=>(FINANCIAL_PERF*0.16/0.3)+(FINANCIAL_RESOURCES_DEV*0.14/0.3)
-   
-    },
+
     FINANCIAL_PERF: {
         weight: 0.16,
         parent: "ROOT",
         arabicLabel:"الأداء المالي",
         params:["ADMIN_EXPENSES","PRGRMS_EXPENSES", "FINANCIAL_SUSTAIN", "DONAT_MONEY_RAISING","ABL_COVER_OBLIG"],
-        formula : (ADMIN_EXPENSES:number,PRGRMS_EXPENSES:number,FINANCIAL_SUSTAIN:number,DONAT_MONEY_RAISING:number,ABL_COVER_OBLIG:number)=>(ADMIN_EXPENSES*0.032/0.16)+(PRGRMS_EXPENSES*0.07/0.16)+(FINANCIAL_SUSTAIN*0.02/0.16)+(DONAT_MONEY_RAISING*0.018/0.16)+(ABL_COVER_OBLIG*0.02/0.16)
-   
-    },
-
-    FINANCIAL_RESOURCES_DEV: {
-        weight: 0.14,
-        parent: "FINANCIAL_PERF",
-        arabicLabel:"تنمية الموارد المالية ",
-        params:["DIVERSITY_INCOME_RESOURCES","EFFECIENT_RESOURCE_MGMT"],
-        formula : (DIVERSITY_INCOME_RESOURCES:number,EFFECIENT_RESOURCE_MGMT:number)=>(DIVERSITY_INCOME_RESOURCES*0.08/0.14)+(EFFECIENT_RESOURCE_MGMT*0.06/0.14)
+        formula : (ADMIN_EXPENSES:number,PRGRMS_EXPENSES:number,FINANCIAL_SUSTAIN:number,DONAT_MONEY_RAISING:number,ABL_COVER_OBLIG:number)=>(ADMIN_EXPENSES*0.2)+(PRGRMS_EXPENSES*0.4)+(FINANCIAL_SUSTAIN*0.1)+(DONAT_MONEY_RAISING*0.1)+(ABL_COVER_OBLIG*0.15)
     },
 
     ADMIN_EXPENSES: {
         weight: 0.032,
         parent: "FINANCIAL_PERF",
-        arabicLabel:"مصاريف إدارية",
+        arabicLabel:"المصاريف الإدارية والعمومية",
         params:["ADMIN_TO_TOTAL_EXPENSES","REV_FIN_SUST_TO_TOTAL_EXPENSES"],
-        formula : (ADMIN_TO_TOTAL_EXPENSES:number,REV_FIN_SUST_TO_TOTAL_EXPENSES:number)=>(ADMIN_TO_TOTAL_EXPENSES*0.026/0.032)+(REV_FIN_SUST_TO_TOTAL_EXPENSES*0.006/0.032)
+        formula : (ADMIN_TO_TOTAL_EXPENSES:number,REV_FIN_SUST_TO_TOTAL_EXPENSES:number)=>(ADMIN_TO_TOTAL_EXPENSES*0.8)+(REV_FIN_SUST_TO_TOTAL_EXPENSES*0.2)
     },
     PRGRMS_EXPENSES: {
         weight: 0.07,
@@ -193,14 +177,14 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         parent: "FINANCIAL_PERF",
         arabicLabel:"الاستدامة المالية ",
         params:["SUST_TO_TOTAL_EXPENSES","SUST_EXPENSEES_TO_REV", "SUST_RETURN_TO_ASSETS"],
-        formula : (SUST_TO_TOTAL_EXPENSES:number,SUST_EXPENSEES_TO_REV:number, SUST_RETURN_TO_ASSETS:number)=>(SUST_TO_TOTAL_EXPENSES*0.006/0.02)+(SUST_EXPENSEES_TO_REV*0.006/0.02)+(SUST_RETURN_TO_ASSETS*0.008/0.02)
+        formula : (SUST_TO_TOTAL_EXPENSES:number,SUST_EXPENSEES_TO_REV:number, SUST_RETURN_TO_ASSETS:number)=>(SUST_TO_TOTAL_EXPENSES*0.3)+(SUST_EXPENSEES_TO_REV*0.3)+(SUST_RETURN_TO_ASSETS*0.4)
     },
     DONAT_MONEY_RAISING: {
         weight: 0.018,
         parent: "FINANCIAL_PERF",
         arabicLabel:"جمع الأموال و التبرعات  ",
-        params:["FUND_RAISING_TO_TOTAL_EXPENSES","DONAT_MONEY_RAISING"],
-        formula : (FUND_RAISING_TO_TOTAL_EXPENSES:number,DONAT_MONEY_RAISING:number)=>(FUND_RAISING_TO_TOTAL_EXPENSES*0.008/0.018)+(DONAT_MONEY_RAISING*0.009/0.018)
+        params:["FUND_RAISING_TO_TOTAL_EXPENSES","FUND_RAISING_TO_TOTAL_DONAT"],
+        formula : (FUND_RAISING_TO_TOTAL_EXPENSES:number,FUND_RAISING_TO_TOTAL_DONAT:number)=>(FUND_RAISING_TO_TOTAL_EXPENSES*0.5)+(FUND_RAISING_TO_TOTAL_DONAT*0.5)
     },
 
     ABL_COVER_OBLIG: {
@@ -208,157 +192,220 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         parent: "FINANCIAL_PERF",
         arabicLabel:" قدرة الجمعية على تغطية التزاماتها المستقبلية ",
         params:["CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF","NET_CACHE_INVEST_ADMIN_EXPENSES"],
-        formula : (CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF:number,NET_CACHE_INVEST_ADMIN_EXPENSES:number)=>(CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF*0.012/0.02)+(NET_CACHE_INVEST_ADMIN_EXPENSES*0.008/0.02)
+        formula : (CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF:number,NET_CACHE_INVEST_ADMIN_EXPENSES:number)=>(CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF*0.7)+(NET_CACHE_INVEST_ADMIN_EXPENSES*0.3)
     },
-
-
-    DIVERSITY_INCOME_RESOURCES: {
-        weight: 0.08,
-        parent: "FINANCIAL_RESOURCES_DEV",
-        arabicLabel:" تنوع مصادر الدخل ",
-        params:["DONAT_PERC","PLATFORM_REV_PERC", "PRGMS_PRJKS_REV","PAID_MEMBERSHIP_PERC","ECO_RETURN_VOLUN"],
-        formula : (DONAT_PERC:number,PLATFORM_REV_PERC:number, PRGMS_PRJKS_REV:number,PAID_MEMBERSHIP_PERC:number,ECO_RETURN_VOLUN:number)=>(DONAT_PERC*0.02/0.08)+(PLATFORM_REV_PERC*0.011/0.08)+(PRGMS_PRJKS_REV*0.02/0.08)+(PAID_MEMBERSHIP_PERC*0.015/0.08)+(ECO_RETURN_VOLUN*0.01/0.08)
-    },
-    EFFECIENT_RESOURCE_MGMT: {
-        weight: 0.06,
-        parent: "FINANCIAL_RESOURCES_DEV",
-        arabicLabel:"كفاءة إدارة الموارد",
-        params:["RATE_REV_ANNUAL_GROWTH","COMMIT_DISC_PERC", "RATE_SUST_DONAT"],
-        formula : (RATE_REV_ANNUAL_GROWTH:number,COMMIT_DISC_PERC:number, RATE_SUST_DONAT:number)=>(RATE_REV_ANNUAL_GROWTH*0.02/0.06)+(COMMIT_DISC_PERC*0.02/0.06)+(RATE_SUST_DONAT*0.02/0.06)
-    },
-
     ADMIN_TO_TOTAL_EXPENSES: {
-        weight: 0.026,
+        weight: 0.8,
         parent: "ADMIN_EXPENSES",
-        arabicLabel:"المصاريف الإدارية إلى اجمالي المصاريف",
+        arabicLabel:"المصاريف الإدارية والعمومية إلى اجمالي المصاريف",
         params:["GENERAL_ADMINSTRATIVE_EXPENSES","TOTAL_EXPENSES"],
-        formula : (GENERAL_ADMINSTRATIVE_EXPENSES:number,TOTAL_EXPENSES:number)=>(GENERAL_ADMINSTRATIVE_EXPENSES/(TOTAL_EXPENSES))*100
+        formula : (GENERAL_ADMINSTRATIVE_EXPENSES:number,TOTAL_EXPENSES:number)=>{
+            const res = (GENERAL_ADMINSTRATIVE_EXPENSES/(TOTAL_EXPENSES)) * 100
+            console.log("Calculating ADMIN_TO_TOTAL_EXPENSES .....");
+            console.log("Parameters:");
+            console.log("GENERAL_ADMINSTRATIVE_EXPENSES:::",GENERAL_ADMINSTRATIVE_EXPENSES);
+            console.log("TOTAL_EXPENSES:::",TOTAL_EXPENSES);
+            console.log("res::", res);
+            
+            if (res >=25) return 0
+            else if (res>=15) return (100 - 10*(res-15))
+            else  return 100
+            }
     },
-
-
     REV_FIN_SUST_TO_TOTAL_EXPENSES: {
         weight: 0.006,
         parent: "ADMIN_EXPENSES",
-        arabicLabel:"عوائد الاستدامة المالية إلى المصاريف الإدارية",
-        params:["SUSTAINBILITY_REVENUE","GENERAL_ADMINSTRATIVE_EXPENSES"],
-        formula : (SUSTAINBILITY_REVENUE:number,GENERAL_ADMINSTRATIVE_EXPENSES:number)=>(SUSTAINBILITY_REVENUE/GENERAL_ADMINSTRATIVE_EXPENSES)*100
+        arabicLabel:"عوائد الاستدامة المالية إلى المصاريف الإدارية والعمومية",
+        params:["TOTAL_SUSTAINABILITY_RETURNS","TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES","GENERAL_ADMINSTRATIVE_EXPENSES"],
+        formula : (TOTAL_SUSTAINABILITY_RETURNS:number,TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:number,GENERAL_ADMINSTRATIVE_EXPENSES:number)=>{
+            console.log("Calculating REV_FIN_SUST_TO_TOTAL_EXPENSES .....");
+            console.log("Parameters:");
+            console.log("TOTAL_SUSTAINABILITY_RETURNS:::",TOTAL_SUSTAINABILITY_RETURNS);
+            console.log("TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:::",TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES);
+            console.log("GENERAL_ADMINSTRATIVE_EXPENSES:::",GENERAL_ADMINSTRATIVE_EXPENSES);
+                        
+            const res = ((TOTAL_SUSTAINABILITY_RETURNS-TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES)/GENERAL_ADMINSTRATIVE_EXPENSES)*100
+
+            console.log("Formula result:", res);
+            
+        if(res>=100)
+            return 100
+        else if (res<=0)
+            return 0
+        else 
+            return res  //TODO: but in percent    
+        }
     },
 
     PRGRMS_TO_TOTAL_EXPENSES: {
         weight: 0.07,
         parent: "PRGRMS_EXPENSES",
         arabicLabel:"مصاريف البرامج والأنشطة إلى اجمالي المصاريف",
-        params:["PROGRAMS_EXPENSES","GENERAL_ADMINSTRATIVE_EXPENSES_ACT", "TOTAL_EXPENSES"],
-        formula : (PROGRAMS_EXPENSES:number,GENERAL_ADMINSTRATIVE_EXPENSES_ACT:number,TOTAL_EXPENSES:number)=>(PROGRAMS_EXPENSES+GENERAL_ADMINSTRATIVE_EXPENSES_ACT)/TOTAL_EXPENSES*100
+        params:["PROGRAMS_EXPENSES","ADMINISTRATIVE_EXPENSES_CHARGED_TO_THE_ACTIVITY", "TOTAL_EXPENSES"],
+        formula : (PROGRAMS_EXPENSES:number,ADMINISTRATIVE_EXPENSES_CHARGED_TO_THE_ACTIVITY:number,TOTAL_EXPENSES:number)=>{
+            console.log("Calculating PRGRMS_TO_TOTAL_EXPENSES .....");
+            console.log("Parameters:");
+            console.log("PROGRAMS_EXPENSES:::",PROGRAMS_EXPENSES);
+            console.log("ADMINISTRATIVE_EXPENSES_CHARGED_TO_THE_ACTIVITY:::",ADMINISTRATIVE_EXPENSES_CHARGED_TO_THE_ACTIVITY);
+            console.log("TOTAL_EXPENSES:::",TOTAL_EXPENSES);
+            const res = (PROGRAMS_EXPENSES + ADMINISTRATIVE_EXPENSES_CHARGED_TO_THE_ACTIVITY)/TOTAL_EXPENSES * 100
+
+
+            console.log("res::",res);
+            
+            if (res>80) return 100
+            else if (res >= 41 && res <=80) return 2.5*(res-40)
+            else return 0
+        }
     },
     SUST_TO_TOTAL_EXPENSES: {
         weight: 0.006,
         parent: "FINANCIAL_SUSTAIN",
         arabicLabel:"مصاريف الاستدامة إلى اجمالي المصاريف",
-        params:["SUSTAINBILITY_EXPENSES", "TOTAL_EXPENSES"],
-        formula : (SUSTAINBILITY_EXPENSES:number,TOTAL_EXPENSES:number)=>SUSTAINBILITY_EXPENSES/TOTAL_EXPENSES*100
+        params:["TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES", "TOTAL_EXPENSES"],
+        formula : (TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:number,TOTAL_EXPENSES:number)=>{
+            
+            
+            const res= TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES/TOTAL_EXPENSES*100
+
+            console.log("Calculating SUST_TO_TOTAL_EXPENSES .....");
+            console.log("Parameters:");
+            console.log("TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:::",TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES);
+            console.log("TOTAL_EXPENSES:::",TOTAL_EXPENSES);
+            console.log("res::", res);
+            
+            if (res < 5) return 100
+            else if (res >=5 && res <10) return (100 - 20*(res-5))
+            else return 0 
+
+        
+        }
     },
     SUST_EXPENSEES_TO_REV: {
         weight: 0.006,
         parent: "FINANCIAL_SUSTAIN",
-        arabicLabel:"مصاريف الاستدامة إلى عوائد الاستدامة",
-        params:["SUSTAINBILITY_EXPENSES", "AWQAF_REVENUE", "INVESTMENT_REVENUE"],
-        formula : (SUSTAINBILITY_EXPENSES:number,AWQAF_REVENUE:number,INVESTMENT_REVENUE:number, )=>SUSTAINBILITY_EXPENSES/(AWQAF_REVENUE+INVESTMENT_REVENUE)*100
+        arabicLabel:"نسبة مصاريف الاستدامة إلى عوائد الاستدامة ",
+        params:["TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES", "TOTAL_SUSTAINABILITY_RETURNS"],
+        formula : (TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:number,TOTAL_SUSTAINABILITY_RETURNS:number )=>{
+            
+            const res = (TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES/(TOTAL_SUSTAINABILITY_RETURNS))*100
+
+
+            console.log("Calculating SUST_EXPENSEES_TO_REV .....");
+            console.log("Parameters:");
+            console.log("TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES:::",TOTAL_FINANCIAL_SUSTAINABILITY_EXPENSES);
+            console.log("TOTAL_SUSTAINABILITY_RETURNS:::",TOTAL_SUSTAINABILITY_RETURNS);
+            console.log("res::", res);
+            
+            if (res<10) return 100
+            else if (res>=10 && res <20) return (100 - 10*(res-10))
+             else return 0
+        }
     },
     SUST_RETURN_TO_ASSETS: {
         weight: 0.008,
         parent: "FINANCIAL_SUSTAIN",
-        arabicLabel:"العائد من الاستدامة إلى اجمالي أصول الاستدامة",
-        params:[ "AWQAF_REVENUE", "INVESTMENT_REVENUE", "SUSTAIN_ASSETS_WAQFI","SUSTAIN_ASSETS_INVEST"],
-        formula : (AWQAF_REVENUE:number,INVESTMENT_REVENUE:number,SUSTAIN_ASSETS_WAQFI:number,SUSTAIN_ASSETS_INVEST:number )=>(AWQAF_REVENUE+INVESTMENT_REVENUE)/(SUSTAIN_ASSETS_WAQFI+SUSTAIN_ASSETS_INVEST)*100
+        arabicLabel:"نسبة عوائد الاستدامة إلى إجمالي أصول الاستدامة",
+        params:[ "TOTAL_SUSTAINABILITY_RETURNS", "TOTAL_SUSTAINABILITY_ASSETS"],
+        formula : (TOTAL_SUSTAINABILITY_RETURNS:number,TOTAL_SUSTAINABILITY_ASSETS:number )=>{
+            const res = TOTAL_SUSTAINABILITY_RETURNS/TOTAL_SUSTAINABILITY_ASSETS * 100
+
+            console.log("Calculating SUST_RETURN_TO_ASSETS .....");
+            console.log("Parameters:");
+            console.log("TOTAL_SUSTAINABILITY_RETURNS:::",TOTAL_SUSTAINABILITY_RETURNS);
+            console.log("TOTAL_SUSTAINABILITY_ASSETS:::",TOTAL_SUSTAINABILITY_ASSETS);
+            console.log("res::", res);
+            
+            if(res <=0) return 0
+            else if(res >=7.5) return 100
+            else return ((res/7.5)*100)
+
+        }
     },
     FUND_RAISING_TO_TOTAL_EXPENSES: {
         weight: 0.009,
         parent: "DONAT_MONEY_RAISING",
-        arabicLabel:"مصاريف جمع الأموال إلى اجمالي المصاريف ",
+        arabicLabel:" نسبة مصاريف جمع الأموال إلى اجمالي المصاريف ",
         params:[ "FUND_RAISING_EXPENSES", "TOTAL_EXPENSES"],
-        formula : (FUND_RAISING_EXPENSES:number,TOTAL_EXPENSES:number )=>FUND_RAISING_EXPENSES/TOTAL_EXPENSES*100
+        formula : (FUND_RAISING_EXPENSES:number,TOTAL_EXPENSES:number )=>{
+            const res = FUND_RAISING_EXPENSES/TOTAL_EXPENSES*100
+            console.log("Calculating FUND_RAISING_TO_TOTAL_EXPENSES .....");
+            console.log("Parameters:");
+            console.log("FUND_RAISING_EXPENSES:::",FUND_RAISING_EXPENSES);
+            console.log("TOTAL_EXPENSES:::",TOTAL_EXPENSES);
+            console.log("res::", res);
+            
+        
+            if (res < 5) return 100
+            else if (res >=5 && res <10) return (100 - 20*(res-5))
+            else return 0 
+        }
     },
 
     FUND_RAISING_TO_TOTAL_DONAT: {
         weight: 0.008,
         parent: "DONAT_MONEY_RAISING",
-        arabicLabel:"مصاريف جمع الأموال إلى اجمالي التبرعات",
-        params:[ "FUND_RAISING_EXPENSES", "TOTAL_CHARITY"],
-        formula : (FUND_RAISING_EXPENSES:number,TOTAL_CHARITY:number )=>FUND_RAISING_EXPENSES/TOTAL_CHARITY*100
+        arabicLabel:" نسبة مصاريف جمع الأموال إلى اجمالي التبرعات",
+        params:[ "FUND_RAISING_EXPENSES", "TOTAL_DONATIONS"],
+        formula : (FUND_RAISING_EXPENSES:number,TOTAL_DONATIONS:number )=>{
+
+            const res = FUND_RAISING_EXPENSES/TOTAL_DONATIONS*100
+            console.log("Calculating FUND_RAISING_TO_TOTAL_DONAT .....");
+            console.log("Parameters:");
+            console.log("FUND_RAISING_EXPENSES:::",FUND_RAISING_EXPENSES);
+            console.log("TOTAL_DONATIONS:::",TOTAL_DONATIONS);
+            console.log("res::", res);
+            
+            if (res <10) return 100
+            else if (res >=10 && res<19) return (100 - 10*(res-10))
+            else return 0;
+        
+        }
     },
     CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF: {
         weight: 0.012,
         parent: "ABL_COVER_OBLIG",
-        arabicLabel:"النقد وما ي حكمه إلى (صافي الأصول المقيدة + صافي أصول النقدية الأوقاف)",
-        params:[ "CASH_RELATED", "BOUNDED_NET_ASSETS","AWQAF_NET_ASSETS_CASH","CURRENT_LIABILITIES"],
-        formula : (CASH_RELATED:number,BOUNDED_NET_ASSETS:number ,AWQAF_NET_ASSETS_CASH:number,CURRENT_LIABILITIES:number)=>CASH_RELATED/(BOUNDED_NET_ASSETS+AWQAF_NET_ASSETS_CASH+CURRENT_LIABILITIES)*100
+        arabicLabel:"نسبة النقد وما في حكمه الى (صافي الأصول المقيدة+ صافي أصول الأوقاف النقدية + الالتزامات المتداول)",
+        params:[ "CASHE_RELATED", "LIMITED_NET_ASSETS","AWQAF_NET_ASSETS","CURRENT_LIABILITIES"],
+        formula : (CASHE_RELATED:number,LIMITED_NET_ASSETS:number ,AWQAF_NET_ASSETS:number,CURRENT_LIABILITIES:number)=>{
+        
+        const res = CASHE_RELATED/(LIMITED_NET_ASSETS+AWQAF_NET_ASSETS+CURRENT_LIABILITIES)*100
+
+        console.log("Calculating CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF .....");
+        console.log("Parameters:");
+        console.log("CASHE_RELATED:::",CASHE_RELATED);
+        console.log("LIMITED_NET_ASSETS:::",LIMITED_NET_ASSETS);
+        console.log("AWQAF_NET_ASSETS:::",AWQAF_NET_ASSETS);
+        console.log("CURRENT_LIABILITIES:::",CURRENT_LIABILITIES);
+        console.log("res::", res);
+        
+        if(res > 100) return 100
+        else if (res >=50 && res <=100) return res
+        else return 0
+        
+        }
     },
     NET_CACHE_INVEST_ADMIN_EXPENSES: {
         weight: 0.008,
         parent: "ABL_COVER_OBLIG",
-        arabicLabel:"صافي النقد والاستثمارات المتداولة إلى المصاريف الإدارية التقديرية",
-        params:[ "CASH_RELATED", "TRADED_INVESTMENTS","CURRENT_LIABILITIES","BOUNDED_NET_ASSETS","AWQAF_NET_ASSETS_CASH"],
-        formula : (CASH_RELATED:number,TRADED_INVESTMENTS:number ,CURRENT_LIABILITIES:number,BOUNDED_NET_ASSETS:number,AWQAF_NET_ASSETS_CASH:number)=>(CASH_RELATED+TRADED_INVESTMENTS)-(CURRENT_LIABILITIES+BOUNDED_NET_ASSETS+AWQAF_NET_ASSETS_CASH)*12/360
-    },
-    DONAT_PERC: {
-        weight: 0.02,
-        parent: "DIVERSITY_INCOME_RESOURCES",
-        arabicLabel:"نسبة التبرعات (مقيدة/غير مقيدة)",
-        params:[ "UNBOUNDED_CHARITY", "TOTAL_CHARITY"],
-        formula : (UNBOUNDED_CHARITY:number,TOTAL_CHARITY:number )=>(UNBOUNDED_CHARITY/TOTAL_CHARITY)*100
-    },
+        arabicLabel:"نسبة صافي النقد والاستثمارات المتداولة الى المصاريف الإدارية التقديرية",
+        params:[ "CASHE_RELATED", "TRADED_INVESTMENTS","CURRENT_LIABILITIES","LIMITED_NET_ASSETS","AWQAF_NET_ASSETS","GENERAL_ADMINSTRATIVE_EXPENSES"],
+        formula : (CASHE_RELATED:number,TRADED_INVESTMENTS:number ,CURRENT_LIABILITIES:number,LIMITED_NET_ASSETS:number,AWQAF_NET_ASSETS:number,GENERAL_ADMINSTRATIVE_EXPENSES:number)=>{
+        const res = (((CASHE_RELATED+TRADED_INVESTMENTS)- (CURRENT_LIABILITIES+LIMITED_NET_ASSETS+AWQAF_NET_ASSETS))/GENERAL_ADMINSTRATIVE_EXPENSES*12)
+        console.log("Calculating NET_CACHE_INVEST_ADMIN_EXPENSES .....");
+        console.log("Parameters:");
+        console.log("CASHE_RELATED:::",CASHE_RELATED);
+        console.log("TRADED_INVESTMENTS:::",TRADED_INVESTMENTS);
+        console.log("CURRENT_LIABILITIES:::",CURRENT_LIABILITIES);
+        console.log("AWQAF_NET_ASSETS:::",AWQAF_NET_ASSETS);
+        console.log("GENERAL_ADMINSTRATIVE_EXPENSES:::",GENERAL_ADMINSTRATIVE_EXPENSES);
 
-    PLATFORM_REV_PERC: {
-        weight: 0.011,
-        parent: "DIVERSITY_INCOME_RESOURCES",
-        arabicLabel:"نسبة الإيرادات من المنصات",
-        params:[ "UNBOUNDED_CHARITY", "TOTAL_CHARITY"],
-        formula : (UNBOUNDED_CHARITY:number,TOTAL_CHARITY:number )=>(UNBOUNDED_CHARITY/TOTAL_CHARITY)*100
-    },
-    PRGMS_PRJKS_REV: {
-        weight: 0.02,
-        parent: "DIVERSITY_INCOME_RESOURCES",
-        arabicLabel:"  عوائد البرامج و المشاريع",
-        params:[ "PRGMS_PRJKS_REVENUE", "GOV_PLATFORMS_REVENUE","AWQAF_REVENUE","INVESTMENT_REVENUE","SUSTAINBILITY_REVENUE"],
-        formula : (PRGMS_PRJKS_REVENUE:number,GOV_PLATFORMS_REVENUE:number,AWQAF_REVENUE:number,INVESTMENT_REVENUE:number,SUSTAINBILITY_REVENUE:number )=>PRGMS_PRJKS_REVENUE/(GOV_PLATFORMS_REVENUE+AWQAF_REVENUE+INVESTMENT_REVENUE+SUSTAINBILITY_REVENUE+PRGMS_PRJKS_REVENUE)*100
-    },
-
-    PAID_MEMBERSHIP_PERC: {
-        weight: 0.015,
-        parent: "DIVERSITY_INCOME_RESOURCES",
-        arabicLabel:"نسبة العضويات المسددة",
-        params:[ "NO_PAID_MEMBERSHIP", "TOTAL_MEMBERSHIP"],
-        formula : (NO_PAID_MEMBERSHIP:number,TOTAL_MEMBERSHIP:number)=>NO_PAID_MEMBERSHIP/TOTAL_MEMBERSHIP*100
-    },
-    ECO_RETURN_VOLUN: {
-        weight: 0.01,
-        parent: "DIVERSITY_INCOME_RESOURCES",
-        arabicLabel:"العائد الاقتصادي من التطوع",
-        params:[ "FIN_VALUE_VOLUN", "OPERATIONAL_EXPANSES"],
-        formula : (FIN_VALUE_VOLUN:number,OPERATIONAL_EXPANSES:number)=>FIN_VALUE_VOLUN/OPERATIONAL_EXPANSES*100
-    },
-
-    RATE_REV_ANNUAL_GROWTH: {
-        weight: 0.02,
-        parent: "EFFECIENT_RESOURCE_MGMT",
-        arabicLabel:"  معدل نمو الإيرادات السنوي ",
-        params:[ "GOV_PLATFORMS_REVENUE", "AWQAF_REVENUE", "INVESTMENT_REVENUE", "SUSTAINBILITY_REVENUE","PRGMS_PRJKS_REVENUE","LAST_YEAR_REVENUE"],
-        formula : (GOV_PLATFORMS_REVENUE:number,AWQAF_REVENUE:number,INVESTMENT_REVENUE:number,SUSTAINBILITY_REVENUE:number,PRGMS_PRJKS_REVENUE:number,LAST_YEAR_REVENUE:number  )=>(GOV_PLATFORMS_REVENUE+AWQAF_REVENUE+INVESTMENT_REVENUE+SUSTAINBILITY_REVENUE+PRGMS_PRJKS_REVENUE-LAST_YEAR_REVENUE)/LAST_YEAR_REVENUE*100
-    },
-    COMMIT_DISC_PERC: {
-        weight: 0.02,
-        parent: "EFFECIENT_RESOURCE_MGMT",
-        arabicLabel:" نسبة تخفيض الالتزامات",
-        params:[ "START_LIABILITIES", "END_LIABILITIES"],
-        formula : (START_LIABILITIES:number,END_LIABILITIES:number)=>(START_LIABILITIES-END_LIABILITIES)/START_LIABILITIES*100
-    },
-    RATE_SUST_DONAT: {
-        weight: 0.02,
-        parent: "EFFECIENT_RESOURCE_MGMT",
-        arabicLabel:"معدل استدامة المتبرعين",
-        params:[ "NO_CONT_VOLUN", "NO_TOTAL_VOLUN_LAST_YEAR"],
-        formula : (NO_CONT_VOLUN:number,NO_TOTAL_VOLUN_LAST_YEAR:number)=>NO_CONT_VOLUN/NO_TOTAL_VOLUN_LAST_YEAR*100
+        console.log("res::", res);
+        
+        if(res<12) return res/12
+        else if (res>=12 && res <=18) return 100
+        else return (100 - 12.5 *(res-18))
+        }
     },
     TOTAL_TAX_REFUND: {
         weight: 0.02,

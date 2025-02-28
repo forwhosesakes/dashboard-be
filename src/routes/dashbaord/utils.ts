@@ -73,24 +73,12 @@ export const initFinancialIndicators = ()=>{
         NET_CACHE_INVEST_ADMIN_EXPENSES:(0).toPrecision(3),
 
         
-        DONAT_PERC:(0).toPrecision(3),
-        PLATFORM_REV_PERC:(0).toPrecision(3),
-        PRGMS_PRJKS_REV:(0).toPrecision(3),
-        PAID_MEMBERSHIP_PERC:(0).toPrecision(3),
-        ECO_RETURN_VOLUN:(0).toPrecision(3),
-        RATE_REV_ANNUAL_GROWTH:(0).toPrecision(3),
-        COMMIT_DISC_PERC:(0).toPrecision(3),
-        RATE_SUST_DONAT:(0).toPrecision(3),
-        EFFECIENT_RESOURCE_MGMT:(0).toPrecision(3),
-        DIVERSITY_INCOME_RESOURCES:(0).toPrecision(3),
         ABL_COVER_OBLIG:(0).toPrecision(3),
         DONAT_MONEY_RAISING:(0).toPrecision(3),
         FINANCIAL_SUSTAIN:(0).toPrecision(3),
         PRGRMS_EXPENSES:(0).toPrecision(3),
         ADMIN_EXPENSES:(0).toPrecision(3),
-        FINANCIAL_RESOURCES_DEV:(0).toPrecision(3),
         FINANCIAL_PERF:(0).toPrecision(3),
-        TOTAL_FINANCIAL_PEFORMANCE:(0).toPrecision(3),
     }
     return indicators
 }

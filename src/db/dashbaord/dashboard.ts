@@ -101,24 +101,14 @@ type GovernanceType =
           
           corporateEntryId = newEntry.id;
         } else {
-          console.log("are we here chat??????????????????")
           corporateEntryId = existingEntry.id;
         const d  =await db.update(corporateEntries)
             .set({ [type]: totalScore })
             .where(eq(corporateEntries.dashbaordId, dashboardId)).returning();
 
-            console.log("are we here chat??????????????????",d)
         }
-        //todo: update thW governce value as well IN THE corporate indicators tablem it should be current governance value - old total + new total
-  
 
-        const existingIndicators = await db.query.corporateIndicators.findFirst({
-          where: eq(corporateIndicators.dashbaordId, dashboardId)
-        });
-
-        const oldTotal = existingIndicators?Number(existingIndicators[type as GovernanceType]): 0
-
-        const newGovToatal = Number(existingIndicators?.GOVERANCE) + totalScore -oldTotal
+    
       
         // Update or create corporate indicators
         await db.insert(corporateIndicators)
@@ -126,14 +116,11 @@ type GovernanceType =
             dashbaordId: dashboardId,
             entriesId: corporateEntryId,
             [type]: totalScore,
-            GOVERANCE:newGovToatal.toString()
           })
           .onConflictDoUpdate({
             target: corporateIndicators.dashbaordId,
             set: { 
               [type]: totalScore,
-            GOVERANCE:newGovToatal.toString()
-
             }
           });
   
@@ -153,8 +140,6 @@ type GovernanceType =
        }
      })
      .returning();
-     
-  
         resolve({
           status: "success",
           data: {
@@ -790,10 +775,8 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     // if it has, retrive the values of :ECO_RETURN_VOLUN,FINANCIAL_PERF,ADMIN_EXPENSES
     const finResult = await db
       .select({
-        ECO_RETURN_VOLUN: financialIndicators.ECO_RETURN_VOLUN,
+        ECONOMIC_RETURN_OF_VOLUNTEERING: financialIndicators.ECONOMIC_RETURN_OF_VOLUNTEERING,
         FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
-        ADMIN_EXPENSES: financialIndicators.ADMIN_EXPENSES,
-        TOTAL_FINANCIAL_PEFORMANCE:financialIndicators.TOTAL_FINANCIAL_PEFORMANCE
       })
       .from(financialIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))
@@ -805,33 +788,32 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
 
     //todo: check if the org has corporate dashboard
     // if it has, retrive the values of :CORPORATE_PERFORMANCE,VOLUN_SATIS_MEASURMENT,BENEF_SATIS_MEASURMENT,ADMIN_ORG_SATIS_MEASURMENT
+   
+   
     const corResult = await db
       .select({
-        CORPORATE_PERFORMANCE: corporateIndicators.CORORATE_PERFORMANCE,
         VOLUN_SATIS_MEASURMENT: corporateIndicators.VOLUN_SATIS_MEASURMENT,
         BENEF_SATIS_MEASURMENT: corporateIndicators.BENEF_SATIS_MEASURMENT,
-        GOVERANCE: corporateIndicators.GOVERANCE,
-
-        ADMIN_ORG_SATIS_MEASURMENT:
-          corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
+        EMP_SATIS_MEASURMENT: corporateIndicators.EMP_SATIS_MEASURMENT,
+        PARTENERS_SATIS_MEASURMENT: corporateIndicators.PARTENERS_SATIS_MEASURMENT,
+        DONATORS_SATIS_MEASURMENT: corporateIndicators.DONATORS_SATIS_MEASURMENT,
+        ADMIN_ORG_SATIS_MEASURMENT: corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
+        COMMUNITY_SATIS_MEASURMENT:  corporateIndicators.COMMUNITY_SATIS_MEASURMENT,
       })
       .from(corporateIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, corporateIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
     console.log("corResult:", corResult);
     if (corResult.length) {
-      generalIndicators = { ...generalIndicators, ...corResult[0] };
+      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)
+      generalIndicators = { ...generalIndicators, ...corResult[0] ,AVG_SATIS_MEASURMENT};
     }
 
-    //todo: check if the org has operational dashboard
-    // if it has, retrive the values of :OPS_PLAN_EXEC,PRJKT_PRGM_MGMT,EFFIC_INTERNAL_OPS,VOLN_MGMT
     const opResult = await db
       .select({
-        OPS_PLAN_EXEC: operationalIndicators.OPS_PLAN_EXEC,
-        PRJKT_PRGM_MGMT: operationalIndicators.PRJKT_PRGM_MGMT,
-        EFFIC_INTERNAL_OPS: operationalIndicators.EFFIC_INTERNAL_OPS,
-        VOLN_MGMT: operationalIndicators.VOLN_MGMT,
-        OPERATIONAL_PERFORMANCE:operationalIndicators.OPERATIONAL_PERFORMANCE
+        BUDGET_COMMIT_PERC: operationalIndicators.BUDGET_COMMIT_PERC,
+        PGRM_PRJKS_EXEC_PERC: operationalIndicators.PGRM_PRJKS_EXEC_PERC,
+      
       })
       .from(operationalIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, operationalIndicators.dashbaordId))
@@ -839,9 +821,6 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     if (opResult.length) {
       generalIndicators = { ...generalIndicators, ...opResult[0] };
     }
-//TODO: should be the weights saved in the org table
-generalIndicators.GENERAL_PERFORMANCE = Number(generalIndicators.OPERATIONAL_PERFORMANCE)*0.3 + Number(generalIndicators.TOTAL_FINANCIAL_PEFORMANCE)*0.3 + Number(generalIndicators.CORPORATE_PERFORMANCE)*0.4 
-
     try {
       const whereCondition = and(
           eq(dashbaord.orgId, orgId),

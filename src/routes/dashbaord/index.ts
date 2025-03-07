@@ -153,7 +153,7 @@ dashboard.post(
   }
 );
 
-// GET endpoint
+// GET endpoint governance form in corporate dashboard
 dashboard.get(
   "/governance/entries/:id/:type",
   zValidator("param", govParamsSchema),

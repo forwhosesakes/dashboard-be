@@ -176,6 +176,20 @@
       "when": 1741424333029,
       "tag": "0024_orange_gambit",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1741459424581,
+      "tag": "0025_loving_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1741460249819,
+      "tag": "0026_same_jack_power",
+      "breakpoints": true
     }
   ]
 }

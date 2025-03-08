@@ -54,7 +54,7 @@ type GovernanceType =
 
   export const saveGovernanceEntries = async (
     orgId: number,
-    responses: Record<string, number>,
+    responses: Record<string, any>,
     type: GovernanceType,
     dbUrl: string
   ): Promise<StatusResponse<any>> => {
@@ -63,7 +63,8 @@ type GovernanceType =
   
       try {
         // Calculate total score
-        const totalScore = Object.values(responses).reduce((sum, value) => sum + value, 0);
+        const totalScore = Object.values(responses).reduce((sum, value) => sum + (Number(value.toString().split("-")[0])), 0);
+        
   
         // Find the general dashboard for this organization
         const currentDashboard = await db
@@ -75,6 +76,7 @@ type GovernanceType =
               sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
             )
           );
+
   
         if (currentDashboard.length === 0) {
           reject({
@@ -86,57 +88,20 @@ type GovernanceType =
   
         const dashboardId = currentDashboard[0].id;
   
-        // Get or create corporate entries
-        const existingEntry = await db.query.corporateEntries.findFirst({
-          where: eq(corporateEntries.dashbaordId, dashboardId)
-        });
-  
-        let corporateEntryId;
-  
-        if (!existingEntry) {
-          const [newEntry] = await db.insert(corporateEntries).values({
-            dashbaordId: dashboardId,
-            [type]: totalScore,
-          }).returning({ id: corporateEntries.id });
-          
-          corporateEntryId = newEntry.id;
-        } else {
-          corporateEntryId = existingEntry.id;
-        const d  =await db.update(corporateEntries)
-            .set({ [type]: totalScore })
-            .where(eq(corporateEntries.dashbaordId, dashboardId)).returning();
-
-        }
-
-    
-      
-        // Update or create corporate indicators
-        await db.insert(corporateIndicators)
-          .values({
-            dashbaordId: dashboardId,
-            entriesId: corporateEntryId,
-            [type]: totalScore,
-          })
-          .onConflictDoUpdate({
-            target: corporateIndicators.dashbaordId,
-            set: { 
-              [type]: totalScore,
-            }
-          });
-  
-        // Store raw responses in governance entries
+      // Store raw responses in governance entries
      // Store raw responses in governance entries with onConflictDoUpdate
      const governanceRecord = await db.insert(governanceEntries)
      .values({
        dashbaordId: dashboardId,
-       entriesId: corporateEntryId,
-       [type]: JSON.stringify(responses)
+       [type]: JSON.stringify(responses),
+       [type+"_TOTAL"]:totalScore
      })
      .onConflictDoUpdate({
        target: governanceEntries.dashbaordId,
        set: { 
          [type]: JSON.stringify(responses),
-         entriesId: corporateEntryId
+       [type+"_TOTAL"]:totalScore
+
        }
      })
      .returning();
@@ -149,6 +114,8 @@ type GovernanceType =
         });
   
       } catch (error: any) {
+        console.log("error in [saveGovernanceEntries]",error);
+        
         reject({
           status: "error",
           message: error,
@@ -173,8 +140,8 @@ type GovernanceType =
           .where(
             and(
               eq(dashbaord.orgId, orgId),
-              isNotNull(dashbaord.category),
-              sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+              sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
+
             )
           );
   
@@ -192,7 +159,6 @@ type GovernanceType =
         const governanceEntry = await db.query.governanceEntries.findFirst({
           where: and(
             eq(governanceEntries.dashbaordId, dashboardId),
-            sql`${governanceEntries[type]} IS NOT NULL`
           )
         });
   
@@ -206,10 +172,12 @@ type GovernanceType =
   
         resolve({
           status: "success",
-          data: governanceEntry[type]
+          data: {records:governanceEntry[type],total:governanceEntry[type+"_TOTAL" as keyof typeof governanceEntry]}
         });
   
       } catch (error: any) {
+        console.log("error in [getGovernanceEntries]",error );
+        
         reject({
           status: "error",
           message: error,

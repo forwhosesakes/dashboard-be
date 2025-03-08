@@ -183,12 +183,14 @@ export const corporateIndicators = pgTable("corporateIndicators", {
 export const governanceEntries = pgTable("governanceEntries", {
     id: uuid("id").primaryKey().defaultRandom(),
     dashbaordId: serial("dashboardId").notNull().references(()=>dashbaord.id).unique(),
-    entriesId: uuid("entriesId").notNull().references(()=>corporateEntries.id).unique(),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     COMPLIANCE_ADHERENCE_PRACTICES:text("COMPLIANCE_ADHERENCE_PRACTICES"),
     FINANCIAL_SAFETY_PRACTICES:text("FINANCIAL_SAFETY_PRACTICES"),
     TRANSPARENCY_DISCLOSURE_PRACTICES:text("TRANSPARENCY_DISCLOSURE_PRACTICES"),
+    COMPLIANCE_ADHERENCE_PRACTICES_TOTAL:numeric("COMPLIANCE_ADHERENCE_PRACTICES_TOTAL"),
+    FINANCIAL_SAFETY_PRACTICES_TOTAL:numeric("FINANCIAL_SAFETY_PRACTICES_TOTAL"),
+    TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL:numeric("TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL"),
 })
 
 

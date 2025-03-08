@@ -1,0 +1,2 @@
+ALTER TABLE "operationalIndicators" DROP COLUMN "DISBURSED_AMOUNTS_QUARTERLY";--> statement-breakpoint
+ALTER TABLE "operationalIndicators" DROP COLUMN "APPROVED_AMOUNTS_QUARTERLY";

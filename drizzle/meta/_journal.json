@@ -162,6 +162,20 @@
       "when": 1741343893139,
       "tag": "0022_dark_smiling_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1741424114901,
+      "tag": "0023_goofy_big_bertha",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1741424333029,
+      "tag": "0024_orange_gambit",
+      "breakpoints": true
     }
   ]
 }

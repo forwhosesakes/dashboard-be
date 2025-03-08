@@ -258,9 +258,9 @@ export const operationalIndicators = pgTable("operationalIndicators", {
 
 
         BUDGET_COMMIT_PERC:numeric("BUDGET_COMMIT_PERC"),
-        PRJK_GOALS_ACHV_PERC:numeric("PRJK_GOALS_ACHV_PERC"),
-
         REACH_TARGET_AUD_PERC:numeric("RECH_TARGET_AUD_PERC"),
+      
+
 
 })
 

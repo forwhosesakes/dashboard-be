@@ -1,0 +1,1 @@
+ALTER TABLE "corporateEntries" ADD COLUMN "NO_RESPONSES_COM_SATIS" numeric;

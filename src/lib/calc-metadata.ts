@@ -402,23 +402,23 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         weight: 0.02,
         parent: "ROOT",
         arabicLabel:"قياس رضا المستفيدين",
-        params:["NO_GRADES_BENEFITS_SATISF","TOTAL_FORMS_GRADES"],
-        formula : (NO_RESPONSES_SATIS_FORM:number,TOTAL_FORMS_GRADES:number)=>(NO_RESPONSES_SATIS_FORM/TOTAL_FORMS_GRADES*100)
+        params:["NO_GRADES_BENEFITS_SATISF","TOTAL_FORMS_GRADES","NO_RESPONSES_SATIS_FORM"],
+        formula : (NO_GRADES_BENEFITS_SATISF:number,TOTAL_FORMS_GRADES:number,NO_RESPONSES_SATIS_FORM:number)=>(NO_GRADES_BENEFITS_SATISF/(TOTAL_FORMS_GRADES*NO_RESPONSES_SATIS_FORM))*100
     },
     EMP_SATIS_MEASURMENT: {
         weight: 0.02,
         parent: "ROOT",
         arabicLabel:"قياس رضا الموظفين",
-        params:["TOTAL_GRADES_EMP_SATIS","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_GRADES_EMP_SATIS:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_GRADES_EMP_SATIS/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_GRADES_EMP_SATIS","TOTAL_FORMS_GRADES","NO_RESPONSES_EMP_SATIS"],
+        formula : (TOTAL_GRADES_EMP_SATIS:number,TOTAL_FORMS_GRADES:number,NO_RESPONSES_EMP_SATIS:number)=>(TOTAL_GRADES_EMP_SATIS/(TOTAL_FORMS_GRADES*NO_RESPONSES_EMP_SATIS))*100
     },
     
     PARTENERS_SATIS_MEASURMENT: {
         weight: 0.02,
         parent: "ROOT",
         arabicLabel:"قياس رضا الشركاء والموردين",
-        params:["TOTAL_GEADES_PARTENERS_SATIS","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_GEADES_PARTENERS_SATIS:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_GEADES_PARTENERS_SATIS/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_GEADES_PARTENERS_SATIS","TOTAL_FORMS_GRADES","NO_RESPONSES_PARTERS_FORM"],
+        formula : (TOTAL_GEADES_PARTENERS_SATIS:number,TOTAL_FORMS_GRADES:number,NO_RESPONSES_PARTERS_FORM:number)=>(TOTAL_GEADES_PARTENERS_SATIS/(TOTAL_FORMS_GRADES*NO_RESPONSES_PARTERS_FORM))*100
     },
 
 
@@ -426,23 +426,23 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         weight: 0.02,
         parent: "ROOT",
         arabicLabel:"قياس رضا المتطوعين",
-        params:["TOTAL_GRADES_VOL_SATIS","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_GRADES_VOL_SATIS:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_GRADES_VOL_SATIS/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_GRADES_VOL_SATIS","TOTAL_FORMS_GRADES","NO_RESPOSES_VOL_SATIS_FORM"],
+        formula : (TOTAL_GRADES_VOL_SATIS:number,TOTAL_FORMS_GRADES:number,NO_RESPOSES_VOL_SATIS_FORM:number)=>(TOTAL_GRADES_VOL_SATIS/(TOTAL_FORMS_GRADES*NO_RESPOSES_VOL_SATIS_FORM))*100
     },
     DONATORS_SATIS_MEASURMENT: {
         weight: 0.035,
         parent: "ROOT",
         arabicLabel:"قياس رضا المتبرعين والداعمين",
-        params:["TOTAL_GRADES_DONAT_STATIS","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_GRADES_DONAT_STATIS:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_GRADES_DONAT_STATIS/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_GRADES_DONAT_STATIS","TOTAL_FORMS_GRADES","NO_RESPONSES_DONAT_SATIS_FORM"],
+        formula : (TOTAL_GRADES_DONAT_STATIS:number,TOTAL_FORMS_GRADES:number,NO_RESPONSES_DONAT_SATIS_FORM:number)=>(TOTAL_GRADES_DONAT_STATIS/(TOTAL_FORMS_GRADES*NO_RESPONSES_DONAT_SATIS_FORM))*100
     },
 
     ADMIN_ORG_SATIS_MEASURMENT: {
         weight: 0.035,
         parent: "ROOT",
         arabicLabel:"قياس رضا الجمعية العمومية ومجلس الإدارة",
-        params:["TOTAL_SATIS_GRADES_ORG","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_SATIS_GRADES_ORG:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_SATIS_GRADES_ORG/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_SATIS_GRADES_ORG","TOTAL_FORMS_GRADES","NO_ORG_MEMBERS"],
+        formula : (TOTAL_SATIS_GRADES_ORG:number,TOTAL_FORMS_GRADES:number,NO_ORG_MEMBERS:number)=>(TOTAL_SATIS_GRADES_ORG/(TOTAL_FORMS_GRADES*NO_ORG_MEMBERS))*100
     },
 
 
@@ -450,8 +450,8 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         weight: 0.035,
         parent: "ROOT",
         arabicLabel:"قياس رضا المجتمع والصورة الذهنية",
-        params:["TOTAL_GRADES_COM","TOTAL_FORMS_GRADES"],
-        formula : (TOTAL_GRADES_COM:number,TOTAL_FORMS_GRADES:number)=>(TOTAL_GRADES_COM/TOTAL_FORMS_GRADES*100)
+        params:["TOTAL_GRADES_COM","TOTAL_FORMS_GRADES","NO_RESPONSES_COM_SATIS"],
+        formula : (TOTAL_GRADES_COM:number,TOTAL_FORMS_GRADES:number,NO_RESPONSES_COM_SATIS:number)=>(TOTAL_GRADES_COM/(TOTAL_FORMS_GRADES*NO_RESPONSES_COM_SATIS))*100
     },
 
 

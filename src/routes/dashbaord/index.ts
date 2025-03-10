@@ -136,11 +136,22 @@ dashboard.post(
       const { id, type } = c.req.valid("param");
       const { responses } = c.req.valid("json");
       console.log("POST governance/entries/:id/:type", responses);
+      const cleanedUp:any = {};
+  
+      for (const key in responses) {
+        if (Object.prototype.hasOwnProperty.call(responses, key)) {
+          const value = responses[key];
+          if (value !== null && value !== undefined && value !== '') {
+            cleanedUp[key] = value;
+          }
+        }
+      }
+
       
 
       const result = await saveGovernanceEntries(
         parseInt(id),
-        responses,
+        cleanedUp,
         type,
         c.env.DB_URL
       );
@@ -209,6 +220,10 @@ dashboard.post(
     let indicators;
     let DASHBOARD_METADATA;
     let entriesTable;
+    console.log("entries::",entries);
+    
+
+  
 
     try {
       switch (dashboardType) {
@@ -239,6 +254,7 @@ dashboard.post(
       // convert entries formdata to json
       const entriesObject: any = {};
       entries.forEach(function (value, key) {
+      if (value !== null && value !== undefined && value !== '' && value !== 'null') 
         entriesObject[key] = value;
       });
 

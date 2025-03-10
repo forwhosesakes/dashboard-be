@@ -54,7 +54,7 @@ type GovernanceType =
 
   export const saveGovernanceEntries = async (
     orgId: number,
-    responses: Record<string, number>,
+    responses: Record<string, any>,
     type: GovernanceType,
     dbUrl: string
   ): Promise<StatusResponse<any>> => {
@@ -63,7 +63,8 @@ type GovernanceType =
   
       try {
         // Calculate total score
-        const totalScore = Object.values(responses).reduce((sum, value) => sum + value, 0);
+        const totalScore = Object.values(responses).reduce((sum, value) => sum + (Number(value.toString().split("-")[0])), 0);
+        
   
         // Find the general dashboard for this organization
         const currentDashboard = await db
@@ -75,6 +76,7 @@ type GovernanceType =
               sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
             )
           );
+
   
         if (currentDashboard.length === 0) {
           reject({
@@ -86,75 +88,23 @@ type GovernanceType =
   
         const dashboardId = currentDashboard[0].id;
   
-        // Get or create corporate entries
-        const existingEntry = await db.query.corporateEntries.findFirst({
-          where: eq(corporateEntries.dashbaordId, dashboardId)
-        });
-  
-        let corporateEntryId;
-  
-        if (!existingEntry) {
-          const [newEntry] = await db.insert(corporateEntries).values({
-            dashbaordId: dashboardId,
-            [type]: totalScore,
-          }).returning({ id: corporateEntries.id });
-          
-          corporateEntryId = newEntry.id;
-        } else {
-          console.log("are we here chat??????????????????")
-          corporateEntryId = existingEntry.id;
-        const d  =await db.update(corporateEntries)
-            .set({ [type]: totalScore })
-            .where(eq(corporateEntries.dashbaordId, dashboardId)).returning();
-
-            console.log("are we here chat??????????????????",d)
-        }
-        //todo: update thW governce value as well IN THE corporate indicators tablem it should be current governance value - old total + new total
-  
-
-        const existingIndicators = await db.query.corporateIndicators.findFirst({
-          where: eq(corporateIndicators.dashbaordId, dashboardId)
-        });
-
-        const oldTotal = existingIndicators?Number(existingIndicators[type as GovernanceType]): 0
-
-        const newGovToatal = Number(existingIndicators?.GOVERANCE) + totalScore -oldTotal
-      
-        // Update or create corporate indicators
-        await db.insert(corporateIndicators)
-          .values({
-            dashbaordId: dashboardId,
-            entriesId: corporateEntryId,
-            [type]: totalScore,
-            GOVERANCE:newGovToatal.toString()
-          })
-          .onConflictDoUpdate({
-            target: corporateIndicators.dashbaordId,
-            set: { 
-              [type]: totalScore,
-            GOVERANCE:newGovToatal.toString()
-
-            }
-          });
-  
-        // Store raw responses in governance entries
+      // Store raw responses in governance entries
      // Store raw responses in governance entries with onConflictDoUpdate
      const governanceRecord = await db.insert(governanceEntries)
      .values({
        dashbaordId: dashboardId,
-       entriesId: corporateEntryId,
-       [type]: JSON.stringify(responses)
+       [type]: JSON.stringify(responses),
+       [type+"_TOTAL"]:totalScore
      })
      .onConflictDoUpdate({
        target: governanceEntries.dashbaordId,
        set: { 
          [type]: JSON.stringify(responses),
-         entriesId: corporateEntryId
+       [type+"_TOTAL"]:totalScore
+
        }
      })
      .returning();
-     
-  
         resolve({
           status: "success",
           data: {
@@ -164,6 +114,8 @@ type GovernanceType =
         });
   
       } catch (error: any) {
+        console.log("error in [saveGovernanceEntries]",error);
+        
         reject({
           status: "error",
           message: error,
@@ -188,8 +140,8 @@ type GovernanceType =
           .where(
             and(
               eq(dashbaord.orgId, orgId),
-              isNotNull(dashbaord.category),
-              sql`UPPER(${dashbaord.type}) = UPPER('GENERAL')`
+              sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
+
             )
           );
   
@@ -207,7 +159,6 @@ type GovernanceType =
         const governanceEntry = await db.query.governanceEntries.findFirst({
           where: and(
             eq(governanceEntries.dashbaordId, dashboardId),
-            sql`${governanceEntries[type]} IS NOT NULL`
           )
         });
   
@@ -221,10 +172,12 @@ type GovernanceType =
   
         resolve({
           status: "success",
-          data: governanceEntry[type]
+          data: {records:governanceEntry[type],total:governanceEntry[type+"_TOTAL" as keyof typeof governanceEntry]}
         });
   
       } catch (error: any) {
+        console.log("error in [getGovernanceEntries]",error );
+        
         reject({
           status: "error",
           message: error,
@@ -318,10 +271,9 @@ export const saveEntriesForDashboard = async (
 export const saveEntriesForGeneralDashboard = async (
   orgId: number,
   entries: TDashboardEntries,
-  categoryType: CategoryType,
   dbUrl: string
 ): Promise<
-  StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>
+  [StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>,CategoryType]
 > => {
   return new Promise(async (resolve, reject) => {
     const db = dbCLient(dbUrl);
@@ -345,13 +297,17 @@ export const saveEntriesForGeneralDashboard = async (
         });
         return;
       }
+      const categoryType = currentDashboardRec[0].category as CategoryType
+      console.log("categoryType:::",categoryType);
+      
 
       // check if the client exists first
       const rec = await db.query.dashbaord
         .findFirst({
           where: and(
             eq(dashbaord.id, currentDashboardRec[0].id),
-            eq(dashbaord.category, categoryType.toLowerCase())
+            sql`UPPER(${dashbaord.category}) = UPPER(${categoryType})`
+
           ),
         });
 
@@ -381,10 +337,10 @@ export const saveEntriesForGeneralDashboard = async (
         where( and(
           eq(dashbaord.id, currentDashboardRec[0].id),
         )).then(()=>{
-          resolve({
+          resolve([{
             status: "success",
             data: record,
-          });
+          },categoryType]);
         })
 
     
@@ -672,9 +628,7 @@ export const getDashboardEntries = async (
         : null;
         console.log("we should be here:::", categoryType)
 
-      if (categoryType === null || categoryType === "NONE") {
-    console.log("we should be here:::", categoryType)
-
+      if (categoryType === null || categoryType === "NONE" || (categoryType.toLocaleUpperCase()!=="MOSQUES" && categoryType.toLocaleUpperCase()!=="ORPHANS")) {
         resolve({ status: "success", data: [] });}
     }
 
@@ -786,52 +740,80 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
   let generalIndicators:any = {};
 
   try {
-    //todo: check if the org has financial dashboard
+
+
+let fin_perf=0
+
     // if it has, retrive the values of :ECO_RETURN_VOLUN,FINANCIAL_PERF,ADMIN_EXPENSES
     const finResult = await db
       .select({
-        ECO_RETURN_VOLUN: financialIndicators.ECO_RETURN_VOLUN,
+        ECONOMIC_RETURN_OF_VOLUNTEERING: financialIndicators.ECONOMIC_RETURN_OF_VOLUNTEERING,
         FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
-        ADMIN_EXPENSES: financialIndicators.ADMIN_EXPENSES,
-        TOTAL_FINANCIAL_PEFORMANCE:financialIndicators.TOTAL_FINANCIAL_PEFORMANCE
       })
       .from(financialIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
     console.log("finResult:", finResult);
     if (finResult.length) {
+      fin_perf=Number(finResult[0].FINANCIAL_PERF)
       generalIndicators = { ...generalIndicators, ...finResult[0] };
     }
 
-    //todo: check if the org has corporate dashboard
+    const govResult = await db
+  .select({
+    COMPLIANCE_ADHERENCE_PRACTICES_TOTAL: governanceEntries.COMPLIANCE_ADHERENCE_PRACTICES_TOTAL,
+    FINANCIAL_SAFETY_PRACTICES_TOTAL: governanceEntries.FINANCIAL_SAFETY_PRACTICES_TOTAL,
+    TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL: governanceEntries.TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL,
+
+}).from(governanceEntries)
+.innerJoin(dashbaord, eq(dashbaord.id, governanceEntries.dashbaordId))
+.where(eq(dashbaord.orgId, orgId));
+if(govResult.length){
+  const GOVERENCE= Number( govResult[0].COMPLIANCE_ADHERENCE_PRACTICES_TOTAL??0)*0.4 + Number( govResult[0].FINANCIAL_SAFETY_PRACTICES_TOTAL??0)*0.2+  Number( govResult[0].TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL??0)*0.2 + fin_perf*0.2
+  generalIndicators = { ...generalIndicators,GOVERENCE, ...govResult[0] };
+
+
+}
+
+
+
+const corEntryResult = await db
+.select({
+  NO_RESPONSES_SATIS_FORM: corporateEntries.NO_RESPONSES_SATIS_FORM,
+  NO_RESPOSES_VOL_SATIS_FORM: corporateEntries.NO_RESPOSES_VOL_SATIS_FORM,
+})
+.from(corporateEntries)
+.innerJoin(dashbaord, eq(dashbaord.id, corporateEntries.dashbaordId))
+.where(eq(dashbaord.orgId, orgId));
+if (corEntryResult.length) {
+generalIndicators = { ...generalIndicators, ...corEntryResult[0]};
+}
     // if it has, retrive the values of :CORPORATE_PERFORMANCE,VOLUN_SATIS_MEASURMENT,BENEF_SATIS_MEASURMENT,ADMIN_ORG_SATIS_MEASURMENT
+   
+   
     const corResult = await db
       .select({
-        CORPORATE_PERFORMANCE: corporateIndicators.CORORATE_PERFORMANCE,
         VOLUN_SATIS_MEASURMENT: corporateIndicators.VOLUN_SATIS_MEASURMENT,
         BENEF_SATIS_MEASURMENT: corporateIndicators.BENEF_SATIS_MEASURMENT,
-        GOVERANCE: corporateIndicators.GOVERANCE,
-
-        ADMIN_ORG_SATIS_MEASURMENT:
-          corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
+        EMP_SATIS_MEASURMENT: corporateIndicators.EMP_SATIS_MEASURMENT,
+        PARTENERS_SATIS_MEASURMENT: corporateIndicators.PARTENERS_SATIS_MEASURMENT,
+        DONATORS_SATIS_MEASURMENT: corporateIndicators.DONATORS_SATIS_MEASURMENT,
+        ADMIN_ORG_SATIS_MEASURMENT: corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
+        COMMUNITY_SATIS_MEASURMENT:  corporateIndicators.COMMUNITY_SATIS_MEASURMENT,
       })
       .from(corporateIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, corporateIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
-    console.log("corResult:", corResult);
     if (corResult.length) {
-      generalIndicators = { ...generalIndicators, ...corResult[0] };
+      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)/7
+      generalIndicators = { ...generalIndicators, ...corResult[0] ,AVG_SATIS_MEASURMENT};
     }
 
-    //todo: check if the org has operational dashboard
-    // if it has, retrive the values of :OPS_PLAN_EXEC,PRJKT_PRGM_MGMT,EFFIC_INTERNAL_OPS,VOLN_MGMT
     const opResult = await db
       .select({
-        OPS_PLAN_EXEC: operationalIndicators.OPS_PLAN_EXEC,
-        PRJKT_PRGM_MGMT: operationalIndicators.PRJKT_PRGM_MGMT,
-        EFFIC_INTERNAL_OPS: operationalIndicators.EFFIC_INTERNAL_OPS,
-        VOLN_MGMT: operationalIndicators.VOLN_MGMT,
-        OPERATIONAL_PERFORMANCE:operationalIndicators.OPERATIONAL_PERFORMANCE
+        BUDGET_COMMIT_PERC: operationalIndicators.BUDGET_COMMIT_PERC,
+        PGRM_PRJKS_EXEC_PERC: operationalIndicators.PGRM_PRJKS_EXEC_PERC,
+      
       })
       .from(operationalIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, operationalIndicators.dashbaordId))
@@ -839,9 +821,6 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     if (opResult.length) {
       generalIndicators = { ...generalIndicators, ...opResult[0] };
     }
-//TODO: should be the weights saved in the org table
-generalIndicators.GENERAL_PERFORMANCE = Number(generalIndicators.OPERATIONAL_PERFORMANCE)*0.3 + Number(generalIndicators.TOTAL_FINANCIAL_PEFORMANCE)*0.3 + Number(generalIndicators.CORPORATE_PERFORMANCE)*0.4 
-
     try {
       const whereCondition = and(
           eq(dashbaord.orgId, orgId),
@@ -882,7 +861,7 @@ generalIndicators.GENERAL_PERFORMANCE = Number(generalIndicators.OPERATIONAL_PER
     }
       
   } catch (error:any) {
-   console.log("error:::", error);
+   console.log("error in [getGeneralDashboardIndicatorsForOneOrg]:::", error);
    
       throw error;
   }

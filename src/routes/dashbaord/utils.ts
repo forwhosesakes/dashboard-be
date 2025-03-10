@@ -35,24 +35,15 @@ switch (settingType) {
 
 export const initOperationalIndicators = ()=>{
     let indicators:TOperationalIndicators = {
-        REACH_TARGET_AUD_PERC:(0).toPrecision(3),
-        PRJK_GOALS_ACHV_PERC:(0).toPrecision(3),
-        BUDGET_COMMIT_PERC:(0).toPrecision(3),
-        PRJKT_TIMELY_COMP_PERC:(0).toPrecision(3),
-        VOLUN_SUST_PERC:(0).toPrecision(3),
-        VOLUN_GROWTH_RATE_QUAR:(0).toPrecision(3),
-        DOCS_ARCHIV:(0).toPrecision(3),
-        QLY_SPEED_PROC_EXEC:(0).toPrecision(3),
-        EFFIC_PRJKS_EXEC:(0).toPrecision(3),
-        VOLN_CONTR_PRJKS_EXEC:(0).toPrecision(3),
         PGRM_PRJKS_EXEC_PERC:(0).toPrecision(3),
-        OPS_GOALS_ACH_PERC:(0).toPrecision(3),
-        EFFITV_PRJKS_PGRM:(0).toPrecision(3),
-        VOLN_MGMT:(0).toPrecision(3),
-        EFFIC_INTERNAL_OPS:(0).toPrecision(3),
-        PRJKT_PRGM_MGMT:(0).toPrecision(3),
-        OPS_PLAN_EXEC:(0).toPrecision(3),
-        OPERATIONAL_PERFORMANCE:(0).toPrecision(3)
+        BUDGET_COMMIT_PERC:(0).toPrecision(3),
+        REACH_TARGET_AUD_PERC:(0).toPrecision(3),
+        VOLN_CONTR_PRJKS_EXEC:(0).toPrecision(3),
+        VOLUN_GROWTH_RATE_QUAR:(0).toPrecision(3),
+        VOLUN_SUST_PERC:(0).toPrecision(3),
+   
+       
+     
     }
     return indicators
 }
@@ -73,24 +64,12 @@ export const initFinancialIndicators = ()=>{
         NET_CACHE_INVEST_ADMIN_EXPENSES:(0).toPrecision(3),
 
         
-        DONAT_PERC:(0).toPrecision(3),
-        PLATFORM_REV_PERC:(0).toPrecision(3),
-        PRGMS_PRJKS_REV:(0).toPrecision(3),
-        PAID_MEMBERSHIP_PERC:(0).toPrecision(3),
-        ECO_RETURN_VOLUN:(0).toPrecision(3),
-        RATE_REV_ANNUAL_GROWTH:(0).toPrecision(3),
-        COMMIT_DISC_PERC:(0).toPrecision(3),
-        RATE_SUST_DONAT:(0).toPrecision(3),
-        EFFECIENT_RESOURCE_MGMT:(0).toPrecision(3),
-        DIVERSITY_INCOME_RESOURCES:(0).toPrecision(3),
         ABL_COVER_OBLIG:(0).toPrecision(3),
         DONAT_MONEY_RAISING:(0).toPrecision(3),
         FINANCIAL_SUSTAIN:(0).toPrecision(3),
         PRGRMS_EXPENSES:(0).toPrecision(3),
         ADMIN_EXPENSES:(0).toPrecision(3),
-        FINANCIAL_RESOURCES_DEV:(0).toPrecision(3),
         FINANCIAL_PERF:(0).toPrecision(3),
-        TOTAL_FINANCIAL_PEFORMANCE:(0).toPrecision(3),
     }
     return indicators
 }
@@ -102,46 +81,23 @@ export const initFinancialIndicators = ()=>{
 export const initCorporateIndicators = ()=>{
     let indicators:TCorporateIndicators = {
         FOLLOWUP_EMPS_PERF:(0).toPrecision(3),
-        DAILY_OPS_MGMT:(0).toPrecision(3),
-        OPERATIONAL_PLAN_ACHIVMENT_GOALS:(0).toPrecision(3),
-        FOLLOWUP_BOARD_DECISION:(0).toPrecision(3),
-        ENTERPRISE_COMMUN:(0).toPrecision(3),
 
-        COMMUNITY_SATIS_MEASURMENT:(0).toPrecision(3),
-        ADMIN_ORG_SATIS_MEASURMENT:(0).toPrecision(3),
-        DONATORS_SATIS_MEASURMENT:(0).toPrecision(3),
-        VOLUN_SATIS_MEASURMENT:(0).toPrecision(3),
-        PARTENERS_SATIS_MEASURMENT:(0).toPrecision(3),
-
-        
-        EMP_SATIS_MEASURMENT:(0).toPrecision(3),
+        EMPLOYMENT_PERFORMANCE:(0).toPrecision(3),
+        EMP_PERF_AND_PROD:(0).toPrecision(3),
+        EMP_COMMITMENT:(0).toPrecision(3),
+        DIRECT_MANAGER_EVALUATION:(0).toPrecision(3),
+        EMP_TRAINING_INDICATOR:(0).toPrecision(3),
         BENEF_SATIS_MEASURMENT:(0).toPrecision(3),
-        QUALITY_OPERATIONAL_PLAN:(0).toPrecision(3),
-        FOLLOWUP_OPERATIONAL_PLAN:(0).toPrecision(3),
-        TRAIN_IMPACT:(0).toPrecision(3),
-        TRAIN_PLAN_EXEC:(0).toPrecision(3),
-        JOB_COMMITMENT:(0).toPrecision(3),
-        TARGETS_HIT_PERF_EVAL:(0).toPrecision(3),
-FINANCIAL_SAFETY_PRACTICES:(0).toPrecision(3),
-        TRANSPARENCY_DISCLOSURE_PRACTICES:(0).toPrecision(3),
-        COMPLIANCE_ADHERENCE_PRACTICES:(0).toPrecision(3),
-        OPERATIONAL_PERF:(0).toPrecision(3),
-        EXEC_LEADERSHIP:(0).toPrecision(3),
-        EMP_DEV_TRAIN:(0).toPrecision(3),
-        EMP_PERF_PROD:(0).toPrecision(3),
-        RECRUITMENT:(0).toPrecision(3),
+        EMP_SATIS_MEASURMENT:(0).toPrecision(3),
+        PARTENERS_SATIS_MEASURMENT:(0).toPrecision(3),
+        VOLUN_SATIS_MEASURMENT:(0).toPrecision(3),
+        DONATORS_SATIS_MEASURMENT:(0).toPrecision(3),
+        ADMIN_ORG_SATIS_MEASURMENT:(0).toPrecision(3),
+        COMMUNITY_SATIS_MEASURMENT:(0).toPrecision(3),
         CEO_PERFORMANCE:(0).toPrecision(3),
-        SATIS_MEASURMENT:(0).toPrecision(3),
-
-        PLANNING_ORGANIZING:(0).toPrecision(3),
-        HR:(0).toPrecision(3),
-        GOVERANCE:(0).toPrecision(3),
-        CORORATE_PERFORMANCE:(0).toPrecision(3),
-
-
-
-        
-
+        FOLLOWUP_BOARD_DECISION:(0).toPrecision(3),
+        OPERATIONAL_PLAN_ACHIVMENT_GOALS:(0).toPrecision(3),
+        DAILY_OPS_MGMT:(0).toPrecision(3),
     }
     return indicators
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "financialEntries" ADD COLUMN "TRADED_INVESTMENTS" numeric;

@@ -275,14 +275,15 @@ org.post("/", async (c) => {
         );
       }
       const tempPass= crypto.randomUUID()
-      await auth(c.env).api.signUpEmail({
+     await auth(c.env).api.signUpEmail({
         body: {
           email: org.email.toLowerCase(),
           password: tempPass,
           name: org.name,
           role: "user",
         },
-      });
+      })
+    
 
       const ctx = await auth(c.env).$context;
 
@@ -379,7 +380,7 @@ org.post("/", async (c) => {
     return c.json(
       {
         status: "error",
-        message: "Failed to process organization data",
+        message: ((error as any)?.body?.code) ?? "Failed to process organization data",
       },
       500
     );

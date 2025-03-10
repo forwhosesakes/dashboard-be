@@ -54,7 +54,7 @@ const govParamsSchema = z.object({
 });
 
 const govBodySchema = z.object({
-  responses: z.record(z.string(), z.number())
+  responses: z.record(z.string(), z.any())
 });
 
 // Reuse the existing parameter validation schema
@@ -135,6 +135,8 @@ dashboard.post(
     try {
       const { id, type } = c.req.valid("param");
       const { responses } = c.req.valid("json");
+      console.log("POST governance/entries/:id/:type", responses);
+      
 
       const result = await saveGovernanceEntries(
         parseInt(id),
@@ -153,7 +155,7 @@ dashboard.post(
   }
 );
 
-// GET endpoint
+// GET endpoint governance form in corporate dashboard
 dashboard.get(
   "/governance/entries/:id/:type",
   zValidator("param", govParamsSchema),
@@ -161,6 +163,7 @@ dashboard.get(
 
     try {
       const { id:orgId, type } = c.req.valid("param");
+      
 
       const result = await getGovernanceEntries(
         Number(orgId),
@@ -199,11 +202,8 @@ dashboard.get(
 dashboard.post(
   "/entries/:type/:id",
   zValidator("param", paramsSchemaGetIndicators),
-  zValidator("query", querySchemaGetIndicators),
   async (c) => {
     const { id: orgId, type } = c.req.valid("param");
-    const { category } = c.req.valid("query");
-
     const dashboardType = type.toUpperCase() as DashboardType;
     const entries = await c.req.formData();
     let indicators;
@@ -229,13 +229,9 @@ dashboard.post(
           break;
 
         case "GENERAL":
-          if (category === "MOSQUES") {
-            indicators = initMosquesIndicators();
-            DASHBOARD_METADATA = MOSQUES_METADATA;
-          } else if (category === "ORPHANS") {
-            indicators = initOrphansIndicators();
-            DASHBOARD_METADATA = ORPHANS_METADATA;
-          } else throw new Error("API ERROR: no such category");
+          //todo: wrong, temp for now
+          indicators = initMosquesIndicators();
+          DASHBOARD_METADATA = MOSQUES_METADATA;
           break;
         default:
           throw new Error("API ERROR: no such type");
@@ -247,14 +243,20 @@ dashboard.post(
       });
 
       // Save the entries in the db
-      let entriesRecord;
-      if (dashboardType === "GENERAL" && category) {
-        entriesRecord = await saveEntriesForGeneralDashboard(
+      let entriesRecord,category;
+      if (dashboardType === "GENERAL") {
+        [entriesRecord,category] = await saveEntriesForGeneralDashboard(
           Number(orgId),
           entriesObject,
-          category,
           c.env.DB_URL
         );
+        if (category === "MOSQUES") {
+          indicators = initMosquesIndicators();
+          DASHBOARD_METADATA = MOSQUES_METADATA;
+        } else if (category === "ORPHANS") {
+          indicators = initOrphansIndicators();
+          DASHBOARD_METADATA = ORPHANS_METADATA;
+        } else throw new Error("API ERROR: no such category");
       } else {
         entriesRecord = await saveEntriesForDashboard(
           Number(orgId),

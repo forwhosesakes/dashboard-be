@@ -381,7 +381,16 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         parent: "EMPLOYMENT_PERFORMANCE",
         arabicLabel:"الالتزام الوظيفي",
         params:["TOTAL_EMPLOYEE_ATTENDANCE_DAYS","TOTAL_WORKING_DAYS","PERC_COMMIT_WORK_HOURS"],
-        formula : (TOTAL_EMPLOYEE_ATTENDANCE_DAYS:number,TOTAL_WORKING_DAYS:number,PERC_COMMIT_WORK_HOURS:number)=>((TOTAL_EMPLOYEE_ATTENDANCE_DAYS/TOTAL_WORKING_DAYS*0.7)+(PERC_COMMIT_WORK_HOURS*0.3))*100
+        formula : (TOTAL_EMPLOYEE_ATTENDANCE_DAYS:number,TOTAL_WORKING_DAYS:number,PERC_COMMIT_WORK_HOURS:number)=>{
+            console.log("EMP_COMMITMENT::")
+            const res = (((TOTAL_EMPLOYEE_ATTENDANCE_DAYS/TOTAL_WORKING_DAYS)*70)+(PERC_COMMIT_WORK_HOURS*0.3))
+            console.log("TOTAL_EMPLOYEE_ATTENDANCE_DAYS::",TOTAL_EMPLOYEE_ATTENDANCE_DAYS )
+            console.log("TOTAL_WORKING_DAYS::",TOTAL_WORKING_DAYS )
+            console.log("PERC_COMMIT_WORK_HOURS::",PERC_COMMIT_WORK_HOURS )
+
+            console.log("EMP_COMMITMENT::",res )
+            
+            return res}
     },
     DIRECT_MANAGER_EVALUATION: {
         weight: 0.1,

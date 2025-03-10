@@ -100,8 +100,8 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         weight: 0.02,
         parent: "FINANCIAL_PERF",
         arabicLabel:"الاستدامة المالية ",
-        params:["SUST_TO_TOTAL_EXPENSES","SUST_EXPENSEES_TO_REV", "SUST_RETURN_TO_ASSETS"],
-        formula : (SUST_TO_TOTAL_EXPENSES:number,SUST_EXPENSEES_TO_REV:number, SUST_RETURN_TO_ASSETS:number)=>(SUST_TO_TOTAL_EXPENSES*0.3)+(SUST_EXPENSEES_TO_REV*0.3)+(SUST_RETURN_TO_ASSETS*0.4)
+        params:["SUST_TO_TOTAL_EXPENSES","SUST_EXPENSEES_TO_REV"],
+        formula : (SUST_TO_TOTAL_EXPENSES:number,SUST_EXPENSEES_TO_REV:number)=>(SUST_TO_TOTAL_EXPENSES*0.5)+(SUST_EXPENSEES_TO_REV*0.5)
     },
     DONAT_MONEY_RAISING: {
         weight: 0.018,

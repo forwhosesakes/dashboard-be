@@ -578,7 +578,7 @@ export const inviteClientTemplate = (props: {
               border: 1px solid #fee2e2;
           ">يرجى تغيير كلمة المرور عند أول تسجيل دخول</p>
           
-          <a href="https://kedan-dashboard.org" style="
+          <a href="https://kedan-dashboard.org" target="_blank" style="
               display: inline-block;
               background-color: #00AE84;
               color: white;

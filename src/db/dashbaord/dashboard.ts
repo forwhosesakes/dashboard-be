@@ -271,10 +271,9 @@ export const saveEntriesForDashboard = async (
 export const saveEntriesForGeneralDashboard = async (
   orgId: number,
   entries: TDashboardEntries,
-  categoryType: CategoryType,
   dbUrl: string
 ): Promise<
-  StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>
+  [StatusResponse<TOrphansIndicatorsRecord | TMosquesIndicatorsRecord | any>,CategoryType]
 > => {
   return new Promise(async (resolve, reject) => {
     const db = dbCLient(dbUrl);
@@ -298,13 +297,17 @@ export const saveEntriesForGeneralDashboard = async (
         });
         return;
       }
+      const categoryType = currentDashboardRec[0].category as CategoryType
+      console.log("categoryType:::",categoryType);
+      
 
       // check if the client exists first
       const rec = await db.query.dashbaord
         .findFirst({
           where: and(
             eq(dashbaord.id, currentDashboardRec[0].id),
-            eq(dashbaord.category, categoryType.toLowerCase())
+            sql`UPPER(${dashbaord.category}) = UPPER(${categoryType})`
+
           ),
         });
 
@@ -334,10 +337,10 @@ export const saveEntriesForGeneralDashboard = async (
         where( and(
           eq(dashbaord.id, currentDashboardRec[0].id),
         )).then(()=>{
-          resolve({
+          resolve([{
             status: "success",
             data: record,
-          });
+          },categoryType]);
         })
 
     
@@ -625,9 +628,7 @@ export const getDashboardEntries = async (
         : null;
         console.log("we should be here:::", categoryType)
 
-      if (categoryType === null || categoryType === "NONE") {
-    console.log("we should be here:::", categoryType)
-
+      if (categoryType === null || categoryType === "NONE" || (categoryType.toLocaleUpperCase()!=="MOSQUES" && categoryType.toLocaleUpperCase()!=="ORPHANS")) {
         resolve({ status: "success", data: [] });}
     }
 
@@ -739,7 +740,10 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
   let generalIndicators:any = {};
 
   try {
-    //todo: check if the org has financial dashboard
+
+
+let fin_perf=0
+
     // if it has, retrive the values of :ECO_RETURN_VOLUN,FINANCIAL_PERF,ADMIN_EXPENSES
     const finResult = await db
       .select({
@@ -751,10 +755,39 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
       .where(eq(dashbaord.orgId, orgId));
     console.log("finResult:", finResult);
     if (finResult.length) {
+      fin_perf=Number(finResult[0].FINANCIAL_PERF)
       generalIndicators = { ...generalIndicators, ...finResult[0] };
     }
 
-    //todo: check if the org has corporate dashboard
+    const govResult = await db
+  .select({
+    COMPLIANCE_ADHERENCE_PRACTICES_TOTAL: governanceEntries.COMPLIANCE_ADHERENCE_PRACTICES_TOTAL,
+    FINANCIAL_SAFETY_PRACTICES_TOTAL: governanceEntries.FINANCIAL_SAFETY_PRACTICES_TOTAL,
+    TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL: governanceEntries.TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL,
+
+}).from(governanceEntries)
+.innerJoin(dashbaord, eq(dashbaord.id, governanceEntries.dashbaordId))
+.where(eq(dashbaord.orgId, orgId));
+if(govResult.length){
+  const GOVERENCE= Number( govResult[0].COMPLIANCE_ADHERENCE_PRACTICES_TOTAL??0)*0.4 + Number( govResult[0].FINANCIAL_SAFETY_PRACTICES_TOTAL??0)*0.2+  Number( govResult[0].TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL??0)*0.2 + fin_perf*0.2
+  generalIndicators = { ...generalIndicators,GOVERENCE, ...govResult[0] };
+
+
+}
+
+
+
+const corEntryResult = await db
+.select({
+  NO_RESPONSES_SATIS_FORM: corporateEntries.NO_RESPONSES_SATIS_FORM,
+  NO_RESPOSES_VOL_SATIS_FORM: corporateEntries.NO_RESPOSES_VOL_SATIS_FORM,
+})
+.from(corporateEntries)
+.innerJoin(dashbaord, eq(dashbaord.id, corporateEntries.dashbaordId))
+.where(eq(dashbaord.orgId, orgId));
+if (corEntryResult.length) {
+generalIndicators = { ...generalIndicators, ...corEntryResult[0]};
+}
     // if it has, retrive the values of :CORPORATE_PERFORMANCE,VOLUN_SATIS_MEASURMENT,BENEF_SATIS_MEASURMENT,ADMIN_ORG_SATIS_MEASURMENT
    
    
@@ -771,9 +804,8 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
       .from(corporateIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, corporateIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
-    console.log("corResult:", corResult);
     if (corResult.length) {
-      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)
+      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)/7
       generalIndicators = { ...generalIndicators, ...corResult[0] ,AVG_SATIS_MEASURMENT};
     }
 
@@ -829,7 +861,7 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
     }
       
   } catch (error:any) {
-   console.log("error:::", error);
+   console.log("error in [getGeneralDashboardIndicatorsForOneOrg]:::", error);
    
       throw error;
   }

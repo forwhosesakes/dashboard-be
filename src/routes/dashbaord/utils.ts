@@ -80,12 +80,12 @@ export const initFinancialIndicators = ()=>{
 
 export const initCorporateIndicators = ()=>{
     let indicators:TCorporateIndicators = {
+        DIRECT_MANAGER_EVALUATION:(0).toPrecision(3),
+
         FOLLOWUP_EMPS_PERF:(0).toPrecision(3),
 
-        EMPLOYMENT_PERFORMANCE:(0).toPrecision(3),
         EMP_PERF_AND_PROD:(0).toPrecision(3),
         EMP_COMMITMENT:(0).toPrecision(3),
-        DIRECT_MANAGER_EVALUATION:(0).toPrecision(3),
         EMP_TRAINING_INDICATOR:(0).toPrecision(3),
         BENEF_SATIS_MEASURMENT:(0).toPrecision(3),
         EMP_SATIS_MEASURMENT:(0).toPrecision(3),
@@ -94,10 +94,15 @@ export const initCorporateIndicators = ()=>{
         DONATORS_SATIS_MEASURMENT:(0).toPrecision(3),
         ADMIN_ORG_SATIS_MEASURMENT:(0).toPrecision(3),
         COMMUNITY_SATIS_MEASURMENT:(0).toPrecision(3),
-        CEO_PERFORMANCE:(0).toPrecision(3),
+        DAILY_OPS_MGMT:(0).toPrecision(3),
+
         FOLLOWUP_BOARD_DECISION:(0).toPrecision(3),
         OPERATIONAL_PLAN_ACHIVMENT_GOALS:(0).toPrecision(3),
-        DAILY_OPS_MGMT:(0).toPrecision(3),
+        CEO_PERFORMANCE:(0).toPrecision(3),
+        EMPLOYMENT_PERFORMANCE:(0).toPrecision(3),
+
+
+        
     }
     return indicators
 }

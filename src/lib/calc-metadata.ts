@@ -41,7 +41,7 @@ export const OPERATIONAL_METADATA:{[key:string]:IndicatorMetadata<TOperationalIn
         parent: "VOLN_MGMT",
         arabicLabel:"معدل النمو الربعي للمتطوعين",
         params:["NO_VOLUNTEERS_CURRENT_QUARTER","NO_VOLUNTEERS_NEXT_QUARTER"],
-        formula:(NO_VOLUNTEERS_CURRENT_QUARTER:number,NO_VOLUNTEERS_NEXT_QUARTER:number)=>(NO_VOLUNTEERS_CURRENT_QUARTER-NO_VOLUNTEERS_NEXT_QUARTER)/NO_VOLUNTEERS_CURRENT_QUARTER*100,
+        formula:(NO_VOLUNTEERS_CURRENT_QUARTER:number,NO_VOLUNTEERS_NEXT_QUARTER:number)=>(NO_VOLUNTEERS_CURRENT_QUARTER-NO_VOLUNTEERS_NEXT_QUARTER)/NO_VOLUNTEERS_NEXT_QUARTER*100,
     },
     VOLUN_SUST_PERC:{
         weight: 0.025,
@@ -122,12 +122,12 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         weight: 0.8,
         parent: "ADMIN_EXPENSES",
         arabicLabel:"المصاريف الإدارية والعمومية إلى اجمالي المصاريف",
-        params:["GENERAL_ADMINSTRATIVE_EXPENSES","TOTAL_EXPENSES"],
-        formula : (GENERAL_ADMINSTRATIVE_EXPENSES:number,TOTAL_EXPENSES:number)=>{
-            const res = (GENERAL_ADMINSTRATIVE_EXPENSES/(TOTAL_EXPENSES)) * 100
+        params:["TOTAL_ADMINISTRATIVE_GENERAL_AND_GOVERNANCE_EXPENSES","TOTAL_EXPENSES"],
+        formula : (TOTAL_ADMINISTRATIVE_GENERAL_AND_GOVERNANCE_EXPENSES:number,TOTAL_EXPENSES:number)=>{
+            const res = (TOTAL_ADMINISTRATIVE_GENERAL_AND_GOVERNANCE_EXPENSES/(TOTAL_EXPENSES)) * 100
             console.log("Calculating ADMIN_TO_TOTAL_EXPENSES .....");
             console.log("Parameters:");
-            console.log("GENERAL_ADMINSTRATIVE_EXPENSES:::",GENERAL_ADMINSTRATIVE_EXPENSES);
+            console.log("GENERAL_ADMINSTRATIVE_EXPENTOTAL_ADMINISTRATIVE_GENERAL_AND_GOVERNANCE_EXPENSESSES:::",TOTAL_ADMINISTRATIVE_GENERAL_AND_GOVERNANCE_EXPENSES);
             console.log("TOTAL_EXPENSES:::",TOTAL_EXPENSES);
             console.log("res::", res);
             
@@ -315,7 +315,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         arabicLabel:"نسبة صافي النقد والاستثمارات المتداولة الى المصاريف الإدارية التقديرية",
         params:[ "CASHE_RELATED", "TRADED_INVESTMENTS","CURRENT_LIABILITIES","LIMITED_NET_ASSETS","AWQAF_NET_ASSETS","GENERAL_ADMINSTRATIVE_EXPENSES"],
         formula : (CASHE_RELATED:number,TRADED_INVESTMENTS:number ,CURRENT_LIABILITIES:number,LIMITED_NET_ASSETS:number,AWQAF_NET_ASSETS:number,GENERAL_ADMINSTRATIVE_EXPENSES:number)=>{
-        const res = (((CASHE_RELATED+TRADED_INVESTMENTS)- (CURRENT_LIABILITIES+LIMITED_NET_ASSETS+AWQAF_NET_ASSETS))/GENERAL_ADMINSTRATIVE_EXPENSES*12)
+        const res = ((((CASHE_RELATED+TRADED_INVESTMENTS)- (CURRENT_LIABILITIES+LIMITED_NET_ASSETS+AWQAF_NET_ASSETS))/GENERAL_ADMINSTRATIVE_EXPENSES)) * 12
         console.log("Calculating NET_CACHE_INVEST_ADMIN_EXPENSES .....");
         console.log("Parameters:");
         console.log("CASHE_RELATED:::",CASHE_RELATED);
@@ -366,7 +366,22 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         parent: "ROOT",
         arabicLabel:"الأداء الوظيفي",
         params:["EMP_PERF_AND_PROD","EMP_COMMITMENT","DIRECT_MANAGER_EVALUATION"],
-        formula : (EMP_PERF_AND_PROD:number,EMP_COMMITMENT:number,DIRECT_MANAGER_EVALUATION:number)=>(EMP_PERF_AND_PROD*0.4)+(EMP_COMMITMENT*0.3) + (DIRECT_MANAGER_EVALUATION*0.3) 
+        formula : (EMP_PERF_AND_PROD:number,EMP_COMMITMENT:number,DIRECT_MANAGER_EVALUATION:number)=>{
+            console.log("EMPLOYMENT_PERFORMANCE");
+            
+            console.log("EMP_PERF_AND_PROD",EMP_PERF_AND_PROD);
+            console.log("EMP_COMMITMENT",EMP_COMMITMENT);
+            console.log("DIRECT_MANAGER_EVALUATION",DIRECT_MANAGER_EVALUATION);
+
+            
+            const res= (EMP_PERF_AND_PROD*0.4)+(EMP_COMMITMENT*0.3) + (DIRECT_MANAGER_EVALUATION*0.3) 
+            console.log("res::",res);
+            
+        
+        
+        
+        return res
+        }
     },
 
     EMP_PERF_AND_PROD: {

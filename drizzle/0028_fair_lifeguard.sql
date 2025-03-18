@@ -1,0 +1,1 @@
+ALTER TABLE "operationalEntries" ADD COLUMN "MARKETING_EXPENSES" numeric;

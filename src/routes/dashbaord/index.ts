@@ -144,6 +144,7 @@ dashboard.post(
           if (value !== null && value !== undefined && value !== '') {
             cleanedUp[key] = value;
           }
+       
         }
       }
 
@@ -256,6 +257,8 @@ dashboard.post(
       entries.forEach(function (value, key) {
       if (value !== null && value !== undefined && value !== '' && value !== 'null') 
         entriesObject[key] = value;
+      else 
+      entriesObject[key] = 0
       });
 
       // Save the entries in the db

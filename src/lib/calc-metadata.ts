@@ -361,6 +361,21 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
     //     formula : (GOVERANCE:number,HR:number,PLANNING_ORGANIZING:number,SATIS_MEASURMENT:number,CEO_PERFORMANCE:number)=>(GOVERANCE*0.12/0.4)+(HR*0.08/0.4)+(PLANNING_ORGANIZING*0.06/0.4)+(SATIS_MEASURMENT*0.1/0.4)+(CEO_PERFORMANCE*0.04/0.4)
     // },
 
+    BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE: {
+        weight: 0.035,
+        parent: "CEO_PERFORMANCE",
+        arabicLabel:"تقييم مجلس الإدارة للمدير التنفيذي",
+        params:["BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE"],
+        formula : (BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE:number)=>BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE
+    },
+    DAILY_OPS_MGMT: {
+        weight: 0.035,
+        parent: "CEO_PERFORMANCE",
+        arabicLabel:"تقييم مجلس الإدارة للمدير التنفيذي",
+        params:["BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE"],
+        formula : (BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE:number)=>BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE
+    },
+
     EMPLOYMENT_PERFORMANCE: {
         weight: 0.12,
         parent: "ROOT",
@@ -484,8 +499,8 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         weight: 0.035,
         parent: "ROOT",
         arabicLabel:"أداء المدير التنفيذي",
-        params:["FOLLOWUP_BOARD_DECISION","OPERATIONAL_PLAN_ACHIVMENT_GOALS","FOLLOWUP_EMPS_PERF","DAILY_OPS_MGMT"],
-        formula : (FOLLOWUP_BOARD_DECISION:number,OPERATIONAL_PLAN_ACHIVMENT_GOALS:number,FOLLOWUP_EMPS_PERF:number,DAILY_OPS_MGMT:number)=>((FOLLOWUP_BOARD_DECISION+OPERATIONAL_PLAN_ACHIVMENT_GOALS+FOLLOWUP_EMPS_PERF+DAILY_OPS_MGMT)/4)
+        params:["FOLLOWUP_BOARD_DECISION","OPERATIONAL_PLAN_ACHIVMENT_GOALS","FOLLOWUP_EMPS_PERF","BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE"],
+        formula : (FOLLOWUP_BOARD_DECISION:number,OPERATIONAL_PLAN_ACHIVMENT_GOALS:number,FOLLOWUP_EMPS_PERF:number,BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE:number)=>((FOLLOWUP_BOARD_DECISION+OPERATIONAL_PLAN_ACHIVMENT_GOALS+FOLLOWUP_EMPS_PERF+BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE)/4)
     },
 
 
@@ -518,13 +533,7 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         formula : (EMP_PERF_EVALUATION_AVG:number)=>(EMP_PERF_EVALUATION_AVG/4/100)*100
     },
 
-    DAILY_OPS_MGMT: {
-        weight: 0.035,
-        parent: "CEO_PERFORMANCE",
-        arabicLabel:"تقييم مجلس الإدارة للمدير التنفيذي",
-        params:["BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE"],
-        formula : (BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE:number)=>BOARD_OF_DIRECTORS_EVALUATION_PERCENTAGE
-    },
+
 
 
 

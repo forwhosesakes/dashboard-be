@@ -530,7 +530,7 @@ export const CORPORATE_METADATA :{[key:string]:IndicatorMetadata<TCorporateIndic
         parent: "CEO_PERFORMANCE",
         arabicLabel:"متابعة أداء الموظفين",
         params:["EMP_PERF_EVALUATION_AVG"],
-        formula : (EMP_PERF_EVALUATION_AVG:number)=>(EMP_PERF_EVALUATION_AVG/4/100)*100
+        formula : (EMP_PERF_EVALUATION_AVG:number)=>(EMP_PERF_EVALUATION_AVG)
     },
 
 

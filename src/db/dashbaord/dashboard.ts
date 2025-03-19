@@ -63,8 +63,11 @@ type GovernanceType =
   
       try {
         // Calculate total score
+        console.log("the response to calc for governace response::::", responses);
+        
         const totalScore = Object.values(responses).reduce((sum, value) => sum + (Number(value.toString().split("-")[0])), 0);
         
+  console.log("total score::",totalScore);
   
         // Find the general dashboard for this organization
         const currentDashboard = await db
@@ -738,17 +741,39 @@ export const getGeneralDashboardIndicatorsForOneOrg = async (
 ): Promise<StatusResponse<any>> => {
   const db = dbCLient(dbUrl);
   let generalIndicators:any = {};
+  console.log("getGeneralDashboardIndicatorsForOneOrg",orgId);
+  
 
   try {
+    const finResultEntry = await db
+    .select({
+      ECONOMIC_RETURN_OF_VOLUNTEERING: financialEntries.GENERAL_ADMINSTRATIVE_EXPENSES,
+     
+    })
+    .from(financialEntries)
+    .innerJoin(dashbaord, eq(dashbaord.id, financialEntries.dashbaordId))
+    .where(eq(dashbaord.orgId, orgId));
 
+  if (finResultEntry.length) {
+    generalIndicators = { ...generalIndicators, ...finResultEntry[0] };
+  }
 
 let fin_perf=0
+
+
 
     // if it has, retrive the values of :ECO_RETURN_VOLUN,FINANCIAL_PERF,ADMIN_EXPENSES
     const finResult = await db
       .select({
         ECONOMIC_RETURN_OF_VOLUNTEERING: financialIndicators.ECONOMIC_RETURN_OF_VOLUNTEERING,
         FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
+        FINANCIAL_SUSTAIN:financialIndicators.FINANCIAL_SUSTAIN,
+        ADMIN_EXPENSES:financialIndicators.ADMIN_EXPENSES,
+        CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF:financialIndicators.CACHE_RELATED_TO_NET_ASSETS_AND_AWQAF,
+        PRGRMS_EXPENSES:financialIndicators.PRGRMS_EXPENSES,
+        ABL_COVER_OBLIG:financialIndicators.ABL_COVER_OBLIG,
+        FUND_RAISING_TO_TOTAL_EXPENSES:financialIndicators.FUND_RAISING_TO_TOTAL_EXPENSES,
+        FUND_RAISING_TO_TOTAL_DONAT:financialIndicators.FUND_RAISING_TO_TOTAL_DONAT
       })
       .from(financialIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))
@@ -800,12 +825,16 @@ generalIndicators = { ...generalIndicators, ...corEntryResult[0]};
         DONATORS_SATIS_MEASURMENT: corporateIndicators.DONATORS_SATIS_MEASURMENT,
         ADMIN_ORG_SATIS_MEASURMENT: corporateIndicators.ADMIN_ORG_SATIS_MEASURMENT,
         COMMUNITY_SATIS_MEASURMENT:  corporateIndicators.COMMUNITY_SATIS_MEASURMENT,
+        EMPLOYMENT_PERFORMANCE:corporateIndicators.EMPLOYMENT_PERFORMANCE,
+        CEO_PERFORMANCE:corporateIndicators.CEO_PERFORMANCE,
+
+
       })
       .from(corporateIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, corporateIndicators.dashbaordId))
       .where(eq(dashbaord.orgId, orgId));
     if (corResult.length) {
-      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)/7
+      const AVG_SATIS_MEASURMENT= Object.values(corResult[0]).slice(0,7).reduce((accumulator, currentValue)=> accumulator + Number(currentValue),0)/7
       generalIndicators = { ...generalIndicators, ...corResult[0] ,AVG_SATIS_MEASURMENT};
     }
 
@@ -813,7 +842,9 @@ generalIndicators = { ...generalIndicators, ...corEntryResult[0]};
       .select({
         BUDGET_COMMIT_PERC: operationalIndicators.BUDGET_COMMIT_PERC,
         PGRM_PRJKS_EXEC_PERC: operationalIndicators.PGRM_PRJKS_EXEC_PERC,
-      
+        VOLUN_GROWTH_RATE_QUAR:operationalIndicators.VOLUN_GROWTH_RATE_QUAR,
+        VOLUN_SUST_PERC:operationalIndicators.VOLUN_SUST_PERC,
+        REACH_TARGET_AUD_PERC:operationalIndicators.REACH_TARGET_AUD_PERC,
       })
       .from(operationalIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, operationalIndicators.dashbaordId))

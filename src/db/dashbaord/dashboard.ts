@@ -765,7 +765,6 @@ let fin_perf=0
     // if it has, retrive the values of :ECO_RETURN_VOLUN,FINANCIAL_PERF,ADMIN_EXPENSES
     const finResult = await db
       .select({
-        ECONOMIC_RETURN_OF_VOLUNTEERING: financialIndicators.ECONOMIC_RETURN_OF_VOLUNTEERING,
         FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
         FINANCIAL_SUSTAIN:financialIndicators.FINANCIAL_SUSTAIN,
         ADMIN_EXPENSES:financialIndicators.ADMIN_EXPENSES,

@@ -54,7 +54,8 @@ const govParamsSchema = z.object({
 });
 
 const govBodySchema = z.object({
-  responses: z.record(z.string(), z.any())
+  responses: z.record(z.string(), z.any()),
+  total:z.number()
 });
 
 // Reuse the existing parameter validation schema
@@ -134,7 +135,7 @@ dashboard.post(
   async (c) => {
     try {
       const { id, type } = c.req.valid("param");
-      const { responses } = c.req.valid("json");
+      const { responses,total } = c.req.valid("json");
       console.log("POST governance/entries/:id/:type", responses);
       const cleanedUp:any = {};
   
@@ -153,6 +154,7 @@ dashboard.post(
       const result = await saveGovernanceEntries(
         parseInt(id),
         cleanedUp,
+        total,
         type,
         c.env.DB_URL
       );

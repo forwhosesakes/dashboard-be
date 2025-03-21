@@ -55,6 +55,7 @@ type GovernanceType =
   export const saveGovernanceEntries = async (
     orgId: number,
     responses: Record<string, any>,
+    total:number,
     type: GovernanceType,
     dbUrl: string
   ): Promise<StatusResponse<any>> => {
@@ -97,13 +98,13 @@ type GovernanceType =
      .values({
        dashbaordId: dashboardId,
        [type]: JSON.stringify(responses),
-       [type+"_TOTAL"]:totalScore
+       [type+"_TOTAL"]:total
      })
      .onConflictDoUpdate({
        target: governanceEntries.dashbaordId,
        set: { 
          [type]: JSON.stringify(responses),
-       [type+"_TOTAL"]:totalScore
+       [type+"_TOTAL"]:total
 
        }
      })

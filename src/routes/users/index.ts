@@ -5,6 +5,7 @@ import { dbCLient } from "../../db/db-client";
 import { eq } from "drizzle-orm"
 import { user } from "../../db/schema"
 import { sendEmail } from "../../lib/send-email";
+import { getMembersCount } from "../../db/org/org";
 
 
 export const users = new Hono<{
@@ -48,6 +49,45 @@ users.post("/updateSubRole",async (c)=>{
         return c.json({status:"error",error:"Failed to update user"},500)
     }
 })
+
+users.get(
+  "count",
+  async (c) => {
+    try {
+      const dbUrl = c.env.DB_URL;
+
+      if (!dbUrl) {
+        return c.json(
+          {
+            status: "error",
+            message: "Database configuration missing",
+          },
+          500
+        );
+      }
+      const result = await getMembersCount( dbUrl);
+
+      const statusCode =
+        result.status === "success"
+          ? 200
+          : result.status === "warning"
+          ? 400
+          : 500;
+
+      return c.json(result, statusCode);
+    } catch (error) {
+      console.error("Error fetching members count ", error);
+
+      return c.json(
+        {
+          status: "error",
+          message: "Error fetching members count",
+        },
+        500
+      );
+    }
+  }
+);
 
 
 

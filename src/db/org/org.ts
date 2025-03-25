@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, eq, not } from "drizzle-orm";
 import { StatusResponse } from "../../types/types";
 import { dbCLient } from "../db-client";
 import {
@@ -492,3 +492,52 @@ export const removeOrganization = async (orgId: number, dbUrl: string) => {
     };
   }
 };
+
+export const getOrgCount = async (dbUrl: string)=>{
+  try {
+    const db = dbCLient(dbUrl);
+    const countOrg = await db
+    .select({ count: count() })
+    .from(organization)
+
+
+    return {
+      status: "success",
+      data:countOrg[0]}
+  
+  }
+    catch(e){
+      console.error("Error getOrgCount:", e);
+      return {
+        status: "error",
+        error: e instanceof Error ? e.message : "Unknown error occurred",
+      };
+
+    }
+
+
+
+  }
+  export const getMembersCount = async (dbUrl: string)=>{
+
+    try {
+      const db = dbCLient(dbUrl);
+      const countOrg = await db
+      .select({ count: count() })
+      .from(user)
+      .where(not(eq(user.role, "user")));
+  
+      return {
+        status: "success",
+        data:countOrg[0]}
+    
+    }
+      catch(e){
+        console.error("Error getMembersCount:", e);
+        return {
+          status: "error",
+          error: e instanceof Error ? e.message : "Unknown error occurred",
+        };
+  
+      }
+  }

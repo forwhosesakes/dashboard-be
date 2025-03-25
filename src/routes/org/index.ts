@@ -9,6 +9,8 @@ import {
   removeOrganization,
   retrieveOrg,
   getOrgByUserId,
+  getOrgCount,
+  getMembersCount,
 } from "../../db/org/org";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
@@ -493,3 +495,49 @@ org.get(
     }
   }
 );
+
+org.get(
+  "count",
+  async (c) => {
+    try {
+      const dbUrl = c.env.DB_URL;
+
+      if (!dbUrl) {
+        return c.json(
+          {
+            status: "error",
+            message: "Database configuration missing",
+          },
+          500
+        );
+      }
+      const result = await getOrgCount( dbUrl);
+
+      const statusCode =
+        result.status === "success"
+          ? 200
+          : result.status === "warning"
+          ? 400
+          : 500;
+
+      return c.json(result, statusCode);
+    } catch (error) {
+      console.error("Error fetching organizations count ", error);
+
+      return c.json(
+        {
+          status: "error",
+          message: "Error fetching organizations count",
+        },
+        500
+      );
+    }
+  }
+);
+
+
+
+
+
+
+

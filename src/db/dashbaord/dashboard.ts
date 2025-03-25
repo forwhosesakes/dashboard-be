@@ -773,7 +773,8 @@ let fin_perf=0
         PRGRMS_EXPENSES:financialIndicators.PRGRMS_EXPENSES,
         ABL_COVER_OBLIG:financialIndicators.ABL_COVER_OBLIG,
         FUND_RAISING_TO_TOTAL_EXPENSES:financialIndicators.FUND_RAISING_TO_TOTAL_EXPENSES,
-        FUND_RAISING_TO_TOTAL_DONAT:financialIndicators.FUND_RAISING_TO_TOTAL_DONAT
+        FUND_RAISING_TO_TOTAL_DONAT:financialIndicators.FUND_RAISING_TO_TOTAL_DONAT,
+        RETURNS_FROM_TARGET:financialIndicators.RETURNS_FROM_TARGET
       })
       .from(financialIndicators)
       .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))

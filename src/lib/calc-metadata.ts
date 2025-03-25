@@ -338,15 +338,23 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         params:[ "TOTAL_TAX_REFUND"],
         formula : (TOTAL_TAX_REFUND:number)=>TOTAL_TAX_REFUND
     },
-
-
     ECONOMIC_RETURN_OF_VOLUNTEERING:{ weight: 0.02,
         parent: "ROOT",
         arabicLabel:"العائد الاقتصادي للتطوع ",
         params:[ "ECONOMIC_RETURN_OF_VOLUNTEERING"],
         formula : (ECONOMIC_RETURN_OF_VOLUNTEERING:number)=>ECONOMIC_RETURN_OF_VOLUNTEERING
 
+    },
+    RETURNS_FROM_TARGET:{
+        weight:0.7,
+        parent:"ROOT",
+        arabicLabel:"نسبة الإيرادات المحققة من المستهدف العام",
+
+        params:["ACTUAL_RETURNS", "EXPECTED_RETURNS"],
+        formula : (ACTUAL_RETURNS:number,EXPECTED_RETURNS:number)=>ACTUAL_RETURNS/EXPECTED_RETURNS*100
+
     }
+  
 }
 
 

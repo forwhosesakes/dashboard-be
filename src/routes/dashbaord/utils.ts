@@ -70,6 +70,7 @@ export const initFinancialIndicators = ()=>{
         PRGRMS_EXPENSES:(0).toPrecision(3),
         ADMIN_EXPENSES:(0).toPrecision(3),
         FINANCIAL_PERF:(0).toPrecision(3),
+        RETURNS_FROM_TARGET:(0).toPrecision(3)
     }
     return indicators
 }

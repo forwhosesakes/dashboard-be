@@ -29,6 +29,7 @@ import {
 } from "../types";
 import { mapSettingtoDashbaordType } from "../../lib/constants";
 import { DASHBOARD_RELATED_COLUMN } from "../constants";
+import { auth } from "../../lib/auth";
 
 export const createUpdateOrg = (
   org: TOrganization | TOrganizationRecord,
@@ -39,9 +40,22 @@ export const createUpdateOrg = (
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
 
+    //ensure to update the email in the user table as well
+    if (org.email && org.userId)
+      db.update(user)
+        .set({
+          email: org.email,
+        })
+        .where(eq(user.id, org.userId))
+        .returning()
+        .then((updatedRecord) => {
+          console.log("User email was updated", updatedRecord);
+        });
+
     db.insert(organization)
       .values(org)
-      .onConflictDoUpdate({ target: organization.id, 
+      .onConflictDoUpdate({
+        target: organization.id,
         set: {
           name: org.name,
           email: org.email,
@@ -65,11 +79,12 @@ export const createUpdateOrg = (
           licenseImage: org.licenseImage,
           contractImage: org.contractImage,
           additionalDocs: org.additionalDocs,
-          updatedAt: new Date() // Make sure to update the timestamp
-        }
+          governanceIndicatorsSetting:org.governanceIndicatorsSetting,
+          allDashboardsSetting:org.allDashboardsSetting,
+          updatedAt: new Date(), // Make sure to update the timestamp
+        },
       })
       .returning()
-
 
       .then((record) => {
         resolve({
@@ -89,7 +104,7 @@ export const createUpdateOrg = (
 export const retrieveOrg = async (
   orgId: number,
   dbUrl: string
-): Promise<StatusResponse<TOrganizationRecord|any>> => {
+): Promise<StatusResponse<TOrganizationRecord | any>> => {
   // Input validation
   if (!dbUrl) {
     return {
@@ -110,17 +125,21 @@ export const retrieveOrg = async (
     const record = await db.query.organization.findFirst({
       where: eq(organization.id, orgId),
     });
- 
+
     if (!record) {
       return {
         status: "warning",
         message: `No organization found with ID: ${orgId}`,
       };
     }
-    const res = {...record,financialIndicatorsSetting:Number(record?.financialIndicatorsSetting),
-      corporateIndicatorsSetting:Number(record?.corporateIndicatorsSetting),
-      operationalIndicatorsSetting:Number(record?.operationalIndicatorsSetting),
-     }
+    const res = {
+      ...record,
+      financialIndicatorsSetting: Number(record?.financialIndicatorsSetting),
+      corporateIndicatorsSetting: Number(record?.corporateIndicatorsSetting),
+      operationalIndicatorsSetting: Number(
+        record?.operationalIndicatorsSetting
+      ),
+    };
 
     return {
       status: "success",
@@ -284,10 +303,9 @@ export const getPaginatedOrgsOverview = async (
           id: true,
           name: true,
           email: true,
-          financialIndicatorsSetting: true,
-          corporateIndicatorsSetting: true,
-          operationalIndicatorsSetting: true,
-          generalndicatorsSetting: true,
+          allDashboardsSetting: true,
+ 
+          governanceIndicatorsSetting: true,
         },
       }),
     ]);
@@ -300,8 +318,11 @@ export const getPaginatedOrgsOverview = async (
 
       DASHBOARD_RELATED_COLUMN.forEach((el: string) => {
         // console.log("dashboard::", record[el as keyof TOrganizationOverviewRecord]);
+        const k = el==="governanceIndicatorsSetting"?"governanceIndicatorsSetting":"allDashboardsSetting"
+        console.log("records", record)
+     
+        if ((record[k])) {
 
-        if (Number(record[el as keyof TOrganizationOverviewRecord]) > 0) {
           dashboards.push(
             mapSettingtoDashbaordType[
               el as keyof typeof mapSettingtoDashbaordType
@@ -398,91 +419,124 @@ export const getOrgByUserId = async (
   }
 };
 
-
 export const removeOrganization = async (orgId: number, dbUrl: string) => {
   try {
     const db = dbCLient(dbUrl);
-  
-      const org = await db
-        .select({ userId: organization.userId })
-        .from(organization)
-        .where(eq(organization.id, orgId))
-        .limit(1);
 
-      if (!org.length) {
-        return { success: false, error: "Organization not found" };
+    const org = await db
+      .select({ userId: organization.userId })
+      .from(organization)
+      .where(eq(organization.id, orgId))
+      .limit(1);
+
+    if (!org.length) {
+      return { success: false, error: "Organization not found" };
+    }
+    const userId = org[0].userId;
+
+    const dashboards = await db
+      .select({ id: dashbaord.id })
+      .from(dashbaord)
+      .where(eq(dashbaord.orgId, orgId));
+
+    for (const dashboard of dashboards) {
+      try {
+        await Promise.all([
+          db
+            .delete(corporateIndicators)
+            .where(eq(corporateIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete corporate indicators:", e)
+            ),
+          db
+            .delete(operationalIndicators)
+            .where(eq(operationalIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete operational indicators:", e)
+            ),
+          db
+            .delete(financialIndicators)
+            .where(eq(financialIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete financial indicators:", e)
+            ),
+          db
+            .delete(mosquesIndicators)
+            .where(eq(mosquesIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete mosques indicators:", e)
+            ),
+          db
+            .delete(orphansIndicators)
+            .where(eq(orphansIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete orphans indicators:", e)
+            ),
+          db
+            .delete(generalIndicators)
+            .where(eq(generalIndicators.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete general indicators:", e)
+            ),
+          db
+            .delete(governanceEntries)
+            .where(eq(governanceEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete general indicators:", e)
+            ),
+        ]);
+
+        await Promise.all([
+          db
+            .delete(corporateEntries)
+            .where(eq(corporateEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete corporate entries:", e)
+            ),
+          db
+            .delete(operationalEntries)
+            .where(eq(operationalEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete operational entries:", e)
+            ),
+          db
+            .delete(financialEntries)
+            .where(eq(financialEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete financial entries:", e)
+            ),
+          db
+            .delete(mosquesEntries)
+            .where(eq(mosquesEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete mosques entries:", e)
+            ),
+          db
+            .delete(orphansEntries)
+            .where(eq(orphansEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete orphans entries:", e)
+            ),
+          db
+            .delete(generalEntries)
+            .where(eq(generalEntries.dashbaordId, dashboard.id))
+            .catch((e) =>
+              console.error("Failed to delete general entries:", e)
+            ),
+        ]);
+      } catch (error) {
+        console.error("Failed to delete dashboard data:", error);
+        throw error;
       }
-      const userId = org[0].userId;
+    }
 
-      const dashboards = await db
-        .select({ id: dashbaord.id })
-        .from(dashbaord)
-        .where(eq(dashbaord.orgId, orgId));
+    await db.delete(dashbaord).where(eq(dashbaord.orgId, orgId));
+    await db.delete(organization).where(eq(organization.id, orgId));
 
-      for (const dashboard of dashboards) {
-        try {
-          await Promise.all([
-            db.delete(corporateIndicators)
-              .where(eq(corporateIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete corporate indicators:', e)),
-            db.delete(operationalIndicators)
-              .where(eq(operationalIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete operational indicators:', e)),
-            db.delete(financialIndicators)
-              .where(eq(financialIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete financial indicators:', e)),
-            db.delete(mosquesIndicators)
-              .where(eq(mosquesIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete mosques indicators:', e)),
-            db.delete(orphansIndicators)
-              .where(eq(orphansIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete orphans indicators:', e)),
-            db.delete(generalIndicators)
-              .where(eq(generalIndicators.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete general indicators:', e)),
-              db.delete(governanceEntries)
-              .where(eq(governanceEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete general indicators:', e))
+    if (userId) {
+      await db.delete(user).where(eq(user.id, userId));
+    }
 
-          ]);
-
-          await Promise.all([
-            db.delete(corporateEntries)
-              .where(eq(corporateEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete corporate entries:', e)),
-            db.delete(operationalEntries)
-              .where(eq(operationalEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete operational entries:', e)),
-            db.delete(financialEntries)
-              .where(eq(financialEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete financial entries:', e)),
-            db.delete(mosquesEntries)
-              .where(eq(mosquesEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete mosques entries:', e)),
-            db.delete(orphansEntries)
-              .where(eq(orphansEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete orphans entries:', e)),
-            db.delete(generalEntries)
-              .where(eq(generalEntries.dashbaordId, dashboard.id))
-              .catch(e => console.error('Failed to delete general entries:', e))
-          ]);
-        } catch (error) {
-          console.error('Failed to delete dashboard data:', error);
-          throw error;
-
-        }
-      }
-
-      await db.delete(dashbaord).where(eq(dashbaord.orgId, orgId));
-      await db.delete(organization).where(eq(organization.id, orgId));
-
-      if (userId) {
-        await db.delete(user).where(eq(user.id, userId));
-    
-      }
-
-      
-    
     return { status: "success" };
   } catch (e) {
     console.error("Error deleting organization:", e);
@@ -493,51 +547,40 @@ export const removeOrganization = async (orgId: number, dbUrl: string) => {
   }
 };
 
-export const getOrgCount = async (dbUrl: string)=>{
+export const getOrgCount = async (dbUrl: string) => {
   try {
     const db = dbCLient(dbUrl);
-    const countOrg = await db
-    .select({ count: count() })
-    .from(organization)
-
+    const countOrg = await db.select({ count: count() }).from(organization);
 
     return {
       status: "success",
-      data:countOrg[0]}
-  
+      data: countOrg[0],
+    };
+  } catch (e) {
+    console.error("Error getOrgCount:", e);
+    return {
+      status: "error",
+      error: e instanceof Error ? e.message : "Unknown error occurred",
+    };
   }
-    catch(e){
-      console.error("Error getOrgCount:", e);
-      return {
-        status: "error",
-        error: e instanceof Error ? e.message : "Unknown error occurred",
-      };
-
-    }
-
-
-
-  }
-  export const getMembersCount = async (dbUrl: string)=>{
-
-    try {
-      const db = dbCLient(dbUrl);
-      const countOrg = await db
+};
+export const getMembersCount = async (dbUrl: string) => {
+  try {
+    const db = dbCLient(dbUrl);
+    const countOrg = await db
       .select({ count: count() })
       .from(user)
       .where(not(eq(user.role, "user")));
-  
-      return {
-        status: "success",
-        data:countOrg[0]}
-    
-    }
-      catch(e){
-        console.error("Error getMembersCount:", e);
-        return {
-          status: "error",
-          error: e instanceof Error ? e.message : "Unknown error occurred",
-        };
-  
-      }
+
+    return {
+      status: "success",
+      data: countOrg[0],
+    };
+  } catch (e) {
+    console.error("Error getMembersCount:", e);
+    return {
+      status: "error",
+      error: e instanceof Error ? e.message : "Unknown error occurred",
+    };
   }
+};

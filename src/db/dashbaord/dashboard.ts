@@ -52,9 +52,15 @@ type GovernanceType =
   | "FINANCIAL_SAFETY_PRACTICES"
   | "TRANSPARENCY_DISCLOSURE_PRACTICES";
 
+  const govIndicatorsColumns = {
+    COMPLIANCE_ADHERENCE_PRACTICES:"COMPLIANCE_ADHERENCE_INDICATORS",
+    FINANCIAL_SAFETY_PRACTICES:"FINANCIAL_SAFETY_INDICATORS",
+    TRANSPARENCY_DISCLOSURE_PRACTICES:"TRANSPARENCY_DISCLOSURE_INDICATORS"
+  }
   export const saveGovernanceEntries = async (
     orgId: number,
     responses: Record<string, any>,
+    indicators:Record<string,any>,
     total:number,
     type: GovernanceType,
     dbUrl: string
@@ -65,19 +71,21 @@ type GovernanceType =
       try {
         // Calculate total score
         console.log("the response to calc for governace response::::", responses);
+        console.log("the indicators to calc for governace response::::", indicators);
+
         
         const totalScore = Object.values(responses).reduce((sum, value) => sum + (Number(value.toString().split("-")[0])), 0);
         
   console.log("total score::",totalScore);
   
-        // Find the general dashboard for this organization
+        // Find the GOVERNANCE dashboard for this organization
         const currentDashboard = await db
           .select()
           .from(dashbaord)
           .where(
             and(
               eq(dashbaord.orgId, orgId),
-              sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
+              sql`UPPER(${dashbaord.type}) = UPPER('GOVERNANCE')`
             )
           );
 
@@ -98,13 +106,17 @@ type GovernanceType =
      .values({
        dashbaordId: dashboardId,
        [type]: JSON.stringify(responses),
+     [  govIndicatorsColumns[type]]: JSON.stringify(indicators),
        [type+"_TOTAL"]:total
      })
      .onConflictDoUpdate({
        target: governanceEntries.dashbaordId,
        set: { 
          [type]: JSON.stringify(responses),
-       [type+"_TOTAL"]:total
+       [type+"_TOTAL"]:total,
+
+      [ govIndicatorsColumns[type]]: JSON.stringify(indicators),
+       
 
        }
      })
@@ -144,7 +156,7 @@ type GovernanceType =
           .where(
             and(
               eq(dashbaord.orgId, orgId),
-              sql`UPPER(${dashbaord.type}) = UPPER('CORPORATE')`
+              sql`UPPER(${dashbaord.type}) = UPPER('GOVERNANCE')`
 
             )
           );
@@ -189,6 +201,88 @@ type GovernanceType =
       }
     });
   };
+
+
+  export const getGovernanceIndicators = async (
+    orgId: number,
+    dbUrl: string
+  ): Promise<StatusResponse<any>> => {
+    return new Promise(async (resolve, reject) => {
+      const db = dbCLient(dbUrl);
+  
+      try {
+        // Find the general dashboard for this organization
+        const currentDashboard = await db
+          .select()
+          .from(dashbaord)
+          .where(
+            and(
+              eq(dashbaord.orgId, orgId),
+              sql`UPPER(${dashbaord.type}) = UPPER('GOVERNANCE')`
+            )
+          );
+  
+        if (currentDashboard.length === 0) {
+          reject({
+            status: "error",
+            message: "NO_SUCH_DASHBOARD",
+          });
+          return;
+        }
+  
+        const dashboardId = currentDashboard[0].id;
+  
+        const [governanceEntry, financialEntry] = await Promise.all([
+          db.query.governanceEntries.findFirst({
+            where: and(
+              eq(governanceEntries.dashbaordId, dashboardId),
+            )
+          }),
+          
+          db
+          .select({
+            FINANCIAL_PERF: financialIndicators.FINANCIAL_PERF,
+            FINANCIAL_SUSTAIN:financialIndicators.FINANCIAL_SUSTAIN,
+            ADMIN_EXPENSES:financialIndicators.ADMIN_EXPENSES,
+            DONAT_MONEY_RAISING:financialIndicators.DONAT_MONEY_RAISING,
+            PRGRMS_EXPENSES:financialIndicators.PRGRMS_EXPENSES,
+            ABL_COVER_OBLIG:financialIndicators.ABL_COVER_OBLIG,
+            FUND_RAISING_TO_TOTAL_EXPENSES:financialIndicators.FUND_RAISING_TO_TOTAL_EXPENSES,
+            FUND_RAISING_TO_TOTAL_DONAT:financialIndicators.FUND_RAISING_TO_TOTAL_DONAT,
+            RETURNS_FROM_TARGET:financialIndicators.RETURNS_FROM_TARGET
+          })
+          .from(financialIndicators)
+          .innerJoin(dashbaord, eq(dashbaord.id, financialIndicators.dashbaordId))
+          .where(eq(dashbaord.orgId, orgId))
+        ]);
+  
+        if (!governanceEntry && !financialEntry) {
+          resolve({
+            status: "success",
+            data: null
+          });
+          return;
+        }
+  
+        resolve({
+          status: "success",
+          data: {
+            governance: governanceEntry,
+            financial: financialEntry
+          }
+        });
+  
+      } catch (error: any) {
+        console.log("error in [getGovernanceIndicators]", error);
+        
+        reject({
+          status: "error",
+          message: error,
+        });
+      }
+    });
+  }
+  
   
 // save entries for the three type
 export const saveEntriesForDashboard = async (
@@ -489,16 +583,43 @@ export const createDashboard = (
 
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
-    db.insert(dashbaord)
-      .values(dashboardData)
-      .returning()
-      .then((res) => {
-        resolve({ status: "success", data: res });
+    
+    // First check if a dashboard with the same orgId and type exists
+    db.query.dashbaord
+      .findFirst({
+        where: and(
+          eq(dashbaord.orgId, dashboardData.orgId as number),
+          eq(dashbaord.type, dashboardData.type)
+        )
+      })
+      .then((existingDashboard) => {
+        if (existingDashboard) {
+          // Dashboard with same orgId and type already exists
+          resolve({ 
+            status: "success", 
+            data: [existingDashboard],
+            message: "Dashboard with this orgId and type already exists" 
+          });
+        } else {
+          // No existing dashboard with same orgId and type, proceed with insert
+          db.insert(dashbaord)
+            .values(dashboardData)
+            .returning()
+            .then((res) => {
+              resolve({ status: "success", data: res });
+            })
+            .catch((e) => {
+              reject({
+                status: "error",
+                message: "error in creating a new dashboard" + e,
+              });
+            });
+        }
       })
       .catch((e) => {
         reject({
           status: "error",
-          message: "error in creating a new dashboard" + e,
+          message: "error checking for existing dashboard: " + e,
         });
       });
   });
@@ -911,6 +1032,42 @@ generalIndicators = { ...generalIndicators, ...corEntryResult[0]};
   //     operationalIndicatorsSetting:organization.operationalIndicatorsSetting,
   //     corporateIndicatorsSetting:organization.corporateIndicatorsSetting}).from(organization).where(  eq(organization.id, orgId),)
   //     const { financialIndicatorsSetting, operationalIndicatorsSetting,corporateIndicatorsSetting } = result[0];
+};
+
+
+
+export const getGovernanceDashboardIndicatorsForOneOrg = async (
+  orgId: number,
+  dbUrl: string
+): Promise<StatusResponse<any>> => {
+  const db = dbCLient(dbUrl);
+
+  console.log("getGovernanceDashboardIndicatorsForOneOrg",orgId);
+  return new Promise(async (resolve, reject) => {
+    const res = await db
+    .select({
+      TRANSPARENCY_DISCLOSURE_INDICATORS: governanceEntries.TRANSPARENCY_DISCLOSURE_INDICATORS,
+      FINANCIAL_SAFETY_INDICATORS: governanceEntries.FINANCIAL_SAFETY_INDICATORS,
+      COMPLIANCE_ADHERENCE_INDICATORS: governanceEntries.COMPLIANCE_ADHERENCE_INDICATORS,
+    })
+    .from(governanceEntries)
+    .innerJoin(dashbaord, eq(dashbaord.id, governanceEntries.dashbaordId))
+    .where(eq(dashbaord.orgId, orgId));
+
+    if (res.length == 0) {
+      reject({
+        status: "error",
+        message: "NO_SUCH_DASHBOARD",
+      });
+    }
+    resolve({ status: "success", data: res[0] });
+
+
+  })
+
+  
+
+ 
 };
 
 

@@ -10,22 +10,20 @@ import {
   retrieveOrg,
   getOrgByUserId,
   getOrgCount,
-  getMembersCount,
 } from "../../db/org/org";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { auth } from "../../lib/auth";
-import { DASHBOARD_RELATED_COLUMN } from "../../db/constants";
+import { DASHBOARD_RELATED_COLUMN, MAIN_DASHBOARD_RELATED_COLUMN } from "../../db/constants";
 import { createDashboard } from "../../db/dashbaord/dashboard";
 import { getDashboardBodyGivenSettingType } from "../dashbaord/utils";
 import { sendEmail } from "../../lib/send-email";
+import { StatusCode } from "hono/utils/http-status";
 
 export const org = new Hono<{
   Variables: AuthVariables;
   Bindings: Env;
 }>();
-
-org.get("/test", (c) => c.json({ data: "Hello org router!!" }));
 
 //?Endpoint for getting latest added orgs
 // Validation schema for query parameters
@@ -189,46 +187,48 @@ org.get("/pre/:id", zValidator("param", querySchemaLRetriveOrg), async (c) => {
   }
 });
 
+org.delete(
+  "/pre/:id",
+  zValidator("param", querySchemaLRetriveOrg),
+  async (c) => {
+    try {
+      // Get and validate query parameters
+      const { id } = c.req.valid("param");
+      const dbUrl = c.env.DB_URL;
 
-org.delete("/pre/:id",zValidator("param",querySchemaLRetriveOrg),async (c)=>{
-  try {
-    // Get and validate query parameters
-    const { id } = c.req.valid("param");
-    const dbUrl = c.env.DB_URL;
+      if (!dbUrl) {
+        return c.json(
+          {
+            status: "error",
+            message: "Database configuration missing",
+          },
+          500
+        );
+      }
 
-    if (!dbUrl) {
+      const result = await removeOrganization(id, dbUrl);
+
+      const statusCode =
+        result.status === "success"
+          ? 200
+          : result.status === "warning"
+          ? 400
+          : 500;
+
+      return c.json(result, statusCode);
+    } catch (error) {
+      console.error("Error fetching single organization:", error);
+
       return c.json(
         {
           status: "error",
-          message: "Database configuration missing",
+          message: "Failed to fetch single organization",
         },
         500
       );
     }
-
-    const result = await removeOrganization(id, dbUrl);
-    
-    const statusCode =
-      result.status === "success"
-        ? 200
-        : result.status === "warning"
-        ? 400
-        : 500;
-
-    return c.json(result, statusCode);
-  } catch (error) {
-    console.error("Error fetching single organization:", error);
-
-    return c.json(
-      {
-        status: "error",
-        message: "Failed to fetch single organization",
-      },
-      500
-    );
   }
-
-})
+);
 // ?Endpoint for create update orginization
 // todo: add validation schema for the body you idiot
 
@@ -236,9 +236,9 @@ org.post("/", async (c) => {
   try {
     const org = await c.req.json<TOrganization & { password: string }>();
     const dbUrl = c.env.DB_URL;
-    let userId = null;
-    console.log("org to be added/updated::", org)
-
+    let orgResult;
+    let statusCode;
+    console.log("org to be added/updated::", org);
 
     if (!dbUrl) {
       return c.json(
@@ -250,23 +250,26 @@ org.post("/", async (c) => {
       );
     }
 
+    //update exisitng org operation
     if (org.id) {
-      //TODO: update org
-      const orgResult = await createUpdateOrg({ ...org }, dbUrl);
-   
-      const statusCode =
-      orgResult.status === "success"
-        ? org.id
-          ? 200
-          : 201 // 201 for create, 200 for update
-        : orgResult.status === "warning"
-        ? 400
-        : 500;
-
-    return c.json(orgResult, statusCode);
-
-
-    } else {
+      orgResult = await createUpdateOrg({ ...org }, dbUrl);
+      statusCode =
+        orgResult.status === "success"
+          ? org.id
+            ? 200
+            : 201 // 201 for create, 200 for update
+          : orgResult.status === "warning"
+          ? 400
+          : 500;
+    } 
+    
+    
+    
+    
+    
+    
+    //Create new orginzation
+    else {
       if (!org.email) {
         return c.json(
           {
@@ -276,16 +279,15 @@ org.post("/", async (c) => {
           500
         );
       }
-      const tempPass= crypto.randomUUID()
-     await auth(c.env).api.signUpEmail({
+      const tempPass = crypto.randomUUID();
+      await auth(c.env).api.signUpEmail({
         body: {
           email: org.email.toLowerCase(),
           password: tempPass,
           name: org.name,
           role: "user",
         },
-      })
-    
+      });
 
       const ctx = await auth(c.env).$context;
 
@@ -298,61 +300,93 @@ org.post("/", async (c) => {
       //If creating new user went successfully, create new org and link the userId to it
       if (userId) {
         const orgResult = await createUpdateOrg({ ...org, userId }, dbUrl);
+        console.log("org::", org);
 
+        // send welcoming email
+
+        await sendEmail(
+          {
+            to: org.email,
+            subject: "  نرحب بانضمام جمعيتكم إلى كدان! ",
+            template: "member-invite",
+            props: { name: org.name, email: org.email, password: tempPass },
+          },
+          c.env.RESEND_API,
+          c.env.MAIN_EMAIL
+        );
+
+        const statusCode =
+          orgResult.status === "success"
+            ? org.id
+              ? 200
+              : 201 // 201 for create, 200 for update
+            : orgResult.status === "warning"
+            ? 400
+            : 500;
         if (orgResult.status === "success") {
           // Create the dashboards types related to the org
           // Note: if the org has a general dashbaord, then look for the category field
           if (orgResult.data[0].id) {
-            const dashboardResults = await Promise.all(
-              DASHBOARD_RELATED_COLUMN.map(async (el) => {
-                try {
-                  const value = Number(orgResult.data[0][el]);
-                  console.log("dashboard value flag:::", value);
-                  console.log("orgResult.data::", orgResult.data[0][el]);
-                  
-                  if (value <= 0 && el!=="generalndicatorsSetting" ) return { status: 'success', data: [] };
-
-                  return await createDashboard(
-                    {
-                      orgId: orgResult.data[0].id,
-                      ...getDashboardBodyGivenSettingType(
-                        el,
-                        org.category ?? ""
-                      ),
-                    },
-                    dbUrl
-                  );
-                } catch (error) {
-                  console.error(`Failed to create dashboard for ${el}:`, error);
-                  return null;
-                }
-              })
-            );
-
-            console.log("dashboardResults:::", dashboardResults);
-            if (!dashboardResults.every((res) => res?.status === "success")) {
-              return c.json(
+            if (/^true$/i.test(orgResult.data[0].governanceIndicatorsSetting)) {
+              await createDashboard(
                 {
-                  status: "error",
-                  message: "Failed to create the orginazation dashboards",
+                  orgId: orgResult.data[0].id,
+                  ...getDashboardBodyGivenSettingType(
+                    "governanceIndicatorsSetting",
+                    org.category ?? ""
+                  ),
                 },
-                500
+                dbUrl
               );
+            }
+
+
+
+            else {
+              //todo: remove gov dashboard and related govEntres.indicators record
+            }
+            if (/^true$/i.test(orgResult.data[0].allDashboardsSetting)) {
+              await Promise.all(
+                MAIN_DASHBOARD_RELATED_COLUMN.map(async (el) => {
+                  try {
+                    return await createDashboard(
+                      {
+                        orgId: orgResult.data[0].id,
+                        ...getDashboardBodyGivenSettingType(
+                          el,
+                          org.category ?? ""
+                        ),
+                      },
+                      dbUrl
+                    );
+                  } catch (error) {
+                    console.error(
+                      `Failed to create dashboard for ${el}:`,
+                      error
+                    );
+                    return null;
+                  }
+                })
+              );
+            }
+
+            else {
+              //todo: remove main dashboards and related  record
             }
           }
 
-
-
           // send welcoming email
 
-
-             
-                await sendEmail({
-                  to: org.email,
-                  subject: "  نرحب بانضمام جمعيتكم إلى كدان! ",
-                  template: "member-invite",
-                  props: { name:org.name, email:org.email, password:tempPass },
-                }, c.env.RESEND_API, c.env.MAIN_EMAIL);
+          await sendEmail(
+            {
+              to: org.email,
+              subject: "  نرحب بانضمام جمعيتكم إلى كدان! ",
+              template: "member-invite",
+              props: { name: org.name, email: org.email, password: tempPass },
+            },
+            c.env.RESEND_API,
+            c.env.MAIN_EMAIL
+          );
         } else {
           return c.json(
             {
@@ -363,26 +397,63 @@ org.post("/", async (c) => {
             500
           );
         }
-
-        const statusCode =
-          orgResult.status === "success"
-            ? org.id
-              ? 200
-              : 201 // 201 for create, 200 for update
-            : orgResult.status === "warning"
-            ? 400
-            : 500;
-
         return c.json(orgResult, statusCode);
       }
     }
+
+    if (orgResult?.status === "success") {
+      // Create the dashboards types related to the org
+      // Note: if the org has a general dashbaord, then look for the category field
+      if (orgResult.data[0].id) {
+        if (/^true$/i.test(orgResult.data[0].governanceIndicatorsSetting)) {
+          await createDashboard(
+            {
+              orgId: orgResult.data[0].id,
+              ...getDashboardBodyGivenSettingType(
+                "governanceIndicatorsSetting",
+                org.category ?? ""
+              ),
+            },
+            dbUrl
+          );
+        }
+        if (/^true$/i.test(orgResult.data[0].allDashboardsSetting)) {
+          await Promise.all(
+            DASHBOARD_RELATED_COLUMN.map(async (el) => {
+              try {
+                return await createDashboard(
+                  {
+                    orgId: orgResult.data[0].id,
+                    ...getDashboardBodyGivenSettingType(el, org.category ?? ""),
+                  },
+                  dbUrl
+                );
+              } catch (error) {
+                console.error(`Failed to create dashboard for ${el}:`, error);
+                return null;
+              }
+            })
+          );
+        }
+      }
+    } else {
+      return c.json(
+        {
+          status: "error",
+          message: "Failed to create the user account for this organization",
+        },
+        500
+      );
+    }
+    return c.json(orgResult, statusCode as StatusCode);
   } catch (error) {
     console.error("Organization creation/update error:", error);
 
     return c.json(
       {
         status: "error",
-        message: ((error as any)?.body?.code) ?? "Failed to process organization data",
+        message:
+          (error as any)?.body?.code ?? "Failed to process organization data",
       },
       500
     );
@@ -496,48 +567,38 @@ org.get(
   }
 );
 
-org.get(
-  "count",
-  async (c) => {
-    try {
-      const dbUrl = c.env.DB_URL;
+org.get("count", async (c) => {
+  try {
+    const dbUrl = c.env.DB_URL;
 
-      if (!dbUrl) {
-        return c.json(
-          {
-            status: "error",
-            message: "Database configuration missing",
-          },
-          500
-        );
-      }
-      const result = await getOrgCount( dbUrl);
-
-      const statusCode =
-        result.status === "success"
-          ? 200
-          : result.status === "warning"
-          ? 400
-          : 500;
-
-      return c.json(result, statusCode);
-    } catch (error) {
-      console.error("Error fetching organizations count ", error);
-
+    if (!dbUrl) {
       return c.json(
         {
           status: "error",
-          message: "Error fetching organizations count",
+          message: "Database configuration missing",
         },
         500
       );
     }
+    const result = await getOrgCount(dbUrl);
+
+    const statusCode =
+      result.status === "success"
+        ? 200
+        : result.status === "warning"
+        ? 400
+        : 500;
+
+    return c.json(result, statusCode);
+  } catch (error) {
+    console.error("Error fetching organizations count ", error);
+
+    return c.json(
+      {
+        status: "error",
+        message: "Error fetching organizations count",
+      },
+      500
+    );
   }
-);
-
-
-
-
-
-
-
+});

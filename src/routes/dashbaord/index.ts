@@ -20,6 +20,7 @@ import {
   getDashboardsOverviewForOrg,
   getGeneralDashboardIndicatorsForOneOrg,
   getGovernanceEntries,
+  getGovernanceIndicators,
   removeEntriesAndIndicators,
   saveEntriesForDashboard,
   saveEntriesForGeneralDashboard,
@@ -55,6 +56,7 @@ const govParamsSchema = z.object({
 
 const govBodySchema = z.object({
   responses: z.record(z.string(), z.any()),
+  indicators: z.record(z.string(), z.any()),
   total:z.number()
 });
 
@@ -135,7 +137,7 @@ dashboard.post(
   async (c) => {
     try {
       const { id, type } = c.req.valid("param");
-      const { responses,total } = c.req.valid("json");
+      const { responses,total ,indicators} = c.req.valid("json");
       console.log("POST governance/entries/:id/:type", responses);
       const cleanedUp:any = {};
   
@@ -154,6 +156,7 @@ dashboard.post(
       const result = await saveGovernanceEntries(
         parseInt(id),
         cleanedUp,
+        indicators,
         total,
         type,
         c.env.DB_URL
@@ -169,7 +172,7 @@ dashboard.post(
   }
 );
 
-// GET endpoint governance form in corporate dashboard
+// GET endpoint governance form in gov dashboard
 dashboard.get(
   "/governance/entries/:id/:type",
   zValidator("param", govParamsSchema),
@@ -194,6 +197,31 @@ dashboard.get(
     }
   }
 );
+
+// GET endpoint governance indciator for one org
+
+dashboard.get(
+  "/governance/indicators/:id",
+  async (c) => {
+
+    try {
+      const orgId = c.req.param("id");
+      const result = await getGovernanceIndicators(
+        Number(orgId),
+        c.env.DB_URL
+      );
+
+      return c.json(result);
+    } catch (error: any) {
+      return c.json({
+        status: "error",
+        message: error.message || 'Failed to fetch governance data'
+      }, 500);
+    }
+  }
+);
+
+
 //get entries for a specific org
 dashboard.get(
   "/entries/:type/:id",
@@ -339,11 +367,12 @@ dashboard.get(
   zValidator("param", paramsSchemaGetIndicators),
   async (c) => {
     const { id: orgId, type } = c.req.valid("param");
-    const dashboardType = type.toUpperCase() as DashboardType;
+    const dashboardType = type.toUpperCase() as DashboardType |"GOVERNANCE";
     try {
       const res =
         dashboardType === "GENERAL"
-          ? await getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
+          ? await getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL):
+            dashboardType === "GOVERNANCE"?await getGeneralDashboardIndicatorsForOneOrg(orgId, c.env.DB_URL)
           : await getDashboardIndicators(
               Number(orgId),
               dashboardType as Exclude<DashboardType, "GENERAL">,

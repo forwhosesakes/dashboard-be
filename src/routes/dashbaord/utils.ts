@@ -4,6 +4,11 @@ import { TCorporateIndicators, TFinancialIndicators, TMosquesIndicators, TOperat
 
 export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], category?:string)=>{
 switch (settingType) {
+    case "governanceIndicatorsSetting":
+        return {
+            title:"NEW_GOVERNANCE_INDICATORS",
+            type:"governance"
+        }
     case "financialIndicatorsSetting":
         return {
             title:"NEW_FINANCIAL_INDICATORS",

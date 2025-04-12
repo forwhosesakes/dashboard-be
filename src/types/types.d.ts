@@ -1,4 +1,4 @@
-type DashboardType = "OPERATIONAL" | "CORPORATE" | "FINANCIAL" | "GENERAL"
+type DashboardType = "OPERATIONAL" | "CORPORATE" | "FINANCIAL" | "GENERAL" 
 type CategoryType = "MOSQUES" | "ORPHANS" 
 interface AuthVariables  {
   user: typeof auth.$Infer.Session.user | null;

@@ -211,6 +211,41 @@
       "when": 1742601920964,
       "tag": "0029_lame_apocalypse",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1744310336414,
+      "tag": "0030_numerous_jean_grey",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1744311078361,
+      "tag": "0031_massive_kronos",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1744378703101,
+      "tag": "0032_perfect_george_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1744461547384,
+      "tag": "0033_omniscient_husk",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1744468954728,
+      "tag": "0034_aromatic_iron_lad",
+      "breakpoints": true
     }
   ]
 }

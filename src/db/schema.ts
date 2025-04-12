@@ -64,7 +64,7 @@ export const organization = pgTable("organization", {
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     name:text("name").notNull(),
     phoneNumber:text("phoneNumber"),
-    email:text("email"),
+    email:text("email").unique(),
     type:text("type"),
     category:text("category"),
     licenseNumber:text("licenseNumber"),
@@ -94,7 +94,9 @@ export const organization = pgTable("organization", {
     financialIndicatorsSetting:numeric("financialIndicatorsSetting"),
     operationalIndicatorsSetting:numeric("operationalIndicatorsSetting"),
     corporateIndicatorsSetting:numeric("corporateIndicatorsSetting"),
-    generalndicatorsSetting:numeric("generalndicatorsSetting"),
+    generalndicatorsSetting:text("generalndicatorsSetting"),
+    governanceIndicatorsSetting:boolean("governanceIndicatorsSetting").default(false),
+    allDashboardsSetting:boolean("allDashboardsSetting").default(false),
                 }, (table) => {
                     return {
                       idIdx: uniqueIndex('org_id_idx').on(table.id),
@@ -187,11 +189,17 @@ export const governanceEntries = pgTable("governanceEntries", {
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
     COMPLIANCE_ADHERENCE_PRACTICES:text("COMPLIANCE_ADHERENCE_PRACTICES"),
+
     FINANCIAL_SAFETY_PRACTICES:text("FINANCIAL_SAFETY_PRACTICES"),
     TRANSPARENCY_DISCLOSURE_PRACTICES:text("TRANSPARENCY_DISCLOSURE_PRACTICES"),
     COMPLIANCE_ADHERENCE_PRACTICES_TOTAL:numeric("COMPLIANCE_ADHERENCE_PRACTICES_TOTAL"),
     FINANCIAL_SAFETY_PRACTICES_TOTAL:numeric("FINANCIAL_SAFETY_PRACTICES_TOTAL"),
     TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL:numeric("TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL"),
+
+    COMPLIANCE_ADHERENCE_INDICATORS:text("COMPLIANCE_ADHERENCE_INDICATORS"),
+    FINANCIAL_SAFETY_INDICATORS:text("FINANCIAL_SAFETY_INDICATORS"),
+    TRANSPARENCY_DISCLOSURE_INDICATORS:text("TRANSPARENCY_DISCLOSURE_INDICATORS"),
+
 })
 
 

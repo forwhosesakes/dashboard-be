@@ -39,18 +39,45 @@ export const createUpdateOrg = (
 
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
+    
+    const processUpdate = (orgData: TOrganization | TOrganizationRecord) => {
+      if (orgData.email && orgData.userId) {
+        db.update(user)
+          .set({
+            email: orgData.email,
+          })
+          .where(eq(user.id, orgData.userId))
+          .returning()
+          .then((updatedRecord) => {
+            console.log("User email was updated", updatedRecord);
+          });
+      }
+    }
 
-    //ensure to update the email in the user table as well
-    if (org.email && org.userId)
-      db.update(user)
-        .set({
-          email: org.email,
-        })
-        .where(eq(user.id, org.userId))
-        .returning()
-        .then((updatedRecord) => {
-          console.log("User email was updated", updatedRecord);
-        });
+       // If this is an update operation and userId is not provided but we have the id
+       if (org.id && !org.userId) {
+        // fetch first
+        db.select({ userId: organization.userId })
+          .from(organization)
+          .where(eq(organization.id, org.id))
+          .then((result) => {
+            if (result.length > 0) {
+              const orgWithUserId = {
+                ...org,
+                userId: result[0].userId
+              };
+              processUpdate(orgWithUserId);
+            } else {
+              processUpdate(org);
+            }
+          })
+          .catch((e: any) => {
+            reject({
+              status: "error",
+              message: e,
+            });
+          });
+      } 
 
     db.insert(organization)
       .values(org)

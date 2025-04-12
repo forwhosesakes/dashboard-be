@@ -916,7 +916,7 @@ let fin_perf=0
 .innerJoin(dashbaord, eq(dashbaord.id, governanceEntries.dashbaordId))
 .where(eq(dashbaord.orgId, orgId));
 if(govResult.length){
-  const GOVERENCE= (Number( govResult[0].COMPLIANCE_ADHERENCE_PRACTICES_TOTAL??0)*0.4 + Number( govResult[0].FINANCIAL_SAFETY_PRACTICES_TOTAL??0)*0.2+  Number( govResult[0].TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL??0)*0.2 + fin_perf*0.2) || 0
+  const GOVERENCE= (Number( govResult[0].COMPLIANCE_ADHERENCE_PRACTICES_TOTAL??0)*0.4 + Number( govResult[0].FINANCIAL_SAFETY_PRACTICES_TOTAL??0)*0.2+  Number( govResult[0].TRANSPARENCY_DISCLOSURE_PRACTICES_TOTAL??0)*0.2 + (fin_perf||0)*0.2) 
   generalIndicators = { ...generalIndicators,GOVERENCE, ...govResult[0] };
 
 

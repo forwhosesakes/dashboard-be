@@ -579,31 +579,15 @@ export const createDashboard = (
   dashboardData: TDashboard,
   dbUrl: string
 ): Promise<StatusResponse<TDashboardRecord>> => {
-  console.log("create dashbaord db:", dashboardData);
+  console.log("create/update dashbaord db:", dashboardData);
 
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     
-    // First check if a dashboard with the same orgId and type exists
-    db.query.dashbaord
-      .findFirst({
-        where: and(
-          eq(dashbaord.orgId, dashboardData.orgId as number),
-          eq(dashbaord.type, dashboardData.type)
-        )
-      })
-      .then((existingDashboard) => {
-        if (existingDashboard) {
-          // Dashboard with same orgId and type already exists
-          resolve({ 
-            status: "success", 
-            data: [existingDashboard],
-            message: "Dashboard with this orgId and type already exists" 
-          });
-        } else {
           // No existing dashboard with same orgId and type, proceed with insert
           db.insert(dashbaord)
             .values(dashboardData)
+            .onConflictDoUpdate({target:[dashbaord.orgId, dashbaord.type],set:{visible:dashboardData.visible}})
             .returning()
             .then((res) => {
               resolve({ status: "success", data: res });
@@ -614,15 +598,10 @@ export const createDashboard = (
                 message: "error in creating a new dashboard" + e,
               });
             });
-        }
+        
       })
-      .catch((e) => {
-        reject({
-          status: "error",
-          message: "error checking for existing dashboard: " + e,
-        });
-      });
-  });
+      
+  
 };
 
 export const retrieveAllDashboardsForClient = (
@@ -633,7 +612,7 @@ export const retrieveAllDashboardsForClient = (
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     db.query.dashbaord
-      .findMany({ where: eq(dashbaord.orgId, Number(orgId)) })
+      .findMany({ where: and( eq(dashbaord.visible,true),eq(dashbaord.orgId, Number(orgId))) })
       .then((res: TDashboardRecord[]) => {
         resolve({ status: "success", data: res });
       })
@@ -653,7 +632,10 @@ export const getDashboardsOverviewForOrg = (
   return new Promise((resolve, reject) => {
     const db = dbCLient(dbUrl);
     db.query.dashbaord
-      .findMany({ where: eq(dashbaord.orgId, Number(orgId)) })
+      .findMany({ where: and(
+      
+        eq(dashbaord.visible,true)
+        ,eq(dashbaord.orgId, Number(orgId))) })
       .then((res: TDashboardRecord[]) => {
         console.log("record::::", res);
           
@@ -691,7 +673,7 @@ export const getDashboardIndicators = (
       .where(
         and(
           eq(dashbaord.orgId, orgId),
-          sql`UPPER(${dashbaord.type}) = UPPER(${dashboardType})`
+          sql`UPPER(${dashbaord.type}) = UPPER(${dashboardType})`,
         )
       );
     if (currentDashboardRec.length == 0) {

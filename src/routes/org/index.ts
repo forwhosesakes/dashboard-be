@@ -264,10 +264,6 @@ org.post("/", async (c) => {
     } 
     
     
-    
-    
-    
-    
     //Create new orginzation
     else {
       if (!org.email) {
@@ -299,9 +295,13 @@ org.post("/", async (c) => {
 
       //If creating new user went successfully, create new org and link the userId to it
       if (userId) {
-        const orgResult = await createUpdateOrg({ ...org, userId }, dbUrl);
-        console.log("org::", org);
+         orgResult = await createUpdateOrg({ ...org, userId }, dbUrl);
+        console.log("orgResult::", orgResult);
 
+       
+
+        
+        if (orgResult.status === "success") {
         // send welcoming email
 
         await sendEmail(
@@ -315,78 +315,6 @@ org.post("/", async (c) => {
           c.env.MAIN_EMAIL
         );
 
-        const statusCode =
-          orgResult.status === "success"
-            ? org.id
-              ? 200
-              : 201 // 201 for create, 200 for update
-            : orgResult.status === "warning"
-            ? 400
-            : 500;
-        if (orgResult.status === "success") {
-          // Create the dashboards types related to the org
-          // Note: if the org has a general dashbaord, then look for the category field
-          if (orgResult.data[0].id) {
-            if (/^true$/i.test(orgResult.data[0].governanceIndicatorsSetting)) {
-              await createDashboard(
-                {
-                  orgId: orgResult.data[0].id,
-                  ...getDashboardBodyGivenSettingType(
-                    "governanceIndicatorsSetting",
-                    org.category ?? ""
-                  ),
-                },
-                dbUrl
-              );
-            }
-
-
-
-            else {
-              //todo: remove gov dashboard and related govEntres.indicators record
-            }
-            if (/^true$/i.test(orgResult.data[0].allDashboardsSetting)) {
-              await Promise.all(
-                MAIN_DASHBOARD_RELATED_COLUMN.map(async (el) => {
-                  try {
-                    return await createDashboard(
-                      {
-                        orgId: orgResult.data[0].id,
-                        ...getDashboardBodyGivenSettingType(
-                          el,
-                          org.category ?? ""
-                        ),
-                      },
-                      dbUrl
-                    );
-                  } catch (error) {
-                    console.error(
-                      `Failed to create dashboard for ${el}:`,
-                      error
-                    );
-                    return null;
-                  }
-                })
-              );
-            }
-
-            else {
-              //todo: remove main dashboards and related  record
-            }
-          }
-
-          // send welcoming email
-
-          await sendEmail(
-            {
-              to: org.email,
-              subject: "  نرحب بانضمام جمعيتكم إلى كدان! ",
-              template: "member-invite",
-              props: { name: org.name, email: org.email, password: tempPass },
-            },
-            c.env.RESEND_API,
-            c.env.MAIN_EMAIL
-          );
         } else {
           return c.json(
             {
@@ -397,45 +325,55 @@ org.post("/", async (c) => {
             500
           );
         }
-        return c.json(orgResult, statusCode);
       }
     }
 
     if (orgResult?.status === "success") {
       // Create the dashboards types related to the org
       // Note: if the org has a general dashbaord, then look for the category field
-      if (orgResult.data[0].id) {
-        if (/^true$/i.test(orgResult.data[0].governanceIndicatorsSetting)) {
-          await createDashboard(
-            {
-              orgId: orgResult.data[0].id,
-              ...getDashboardBodyGivenSettingType(
-                "governanceIndicatorsSetting",
-                org.category ?? ""
-              ),
-            },
-            dbUrl
-          );
-        }
-        if (/^true$/i.test(orgResult.data[0].allDashboardsSetting)) {
-          await Promise.all(
-            DASHBOARD_RELATED_COLUMN.map(async (el) => {
-              try {
-                return await createDashboard(
-                  {
-                    orgId: orgResult.data[0].id,
-                    ...getDashboardBodyGivenSettingType(el, org.category ?? ""),
-                  },
-                  dbUrl
-                );
-              } catch (error) {
-                console.error(`Failed to create dashboard for ${el}:`, error);
-                return null;
-              }
-            })
-          );
-        }
-      }
+
+
+      console.log("Going to create new dashboard now, update the visiblity if org id and type already exists")
+   
+      await createDashboard(
+        {
+          orgId: orgResult.data[0].id,
+          ...getDashboardBodyGivenSettingType(
+            "governanceIndicatorsSetting",
+            /^true$/i.test(orgResult.data[0].governanceIndicatorsSetting),
+            org.category ?? ""
+          ),
+        },
+        dbUrl
+      );
+    
+
+
+
+
+      await Promise.all(
+        MAIN_DASHBOARD_RELATED_COLUMN.map(async (el) => {
+          try {
+            return await createDashboard(
+              {
+                orgId: orgResult.data[0].id,
+                ...getDashboardBodyGivenSettingType(
+                  el,
+              /^true$/i.test(orgResult.data[0].allDashboardsSetting),
+                  org.category ?? ""
+                ),
+              },
+              dbUrl
+            );
+          } catch (error) {
+            console.error(
+              `Failed to create dashboard for ${el}:`,
+              error
+            );
+            return null;
+          }
+        })
+      );
     } else {
       return c.json(
         {

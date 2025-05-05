@@ -2,34 +2,39 @@ import { DASHBOARD_RELATED_COLUMN } from "../../db/constants"
 import { TCorporateIndicators, TFinancialIndicators, TMosquesIndicators, TOperationalIndicators, TOrphansIndicators } from "../../db/types"
 
 
-export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], category?:string)=>{
+export const  getDashboardBodyGivenSettingType = (settingType:  typeof DASHBOARD_RELATED_COLUMN[number], visible:boolean,category?:string)=>{
 switch (settingType) {
     case "governanceIndicatorsSetting":
         return {
             title:"NEW_GOVERNANCE_INDICATORS",
-            type:"governance"
+            type:"governance",
+            visible
         }
     case "financialIndicatorsSetting":
         return {
             title:"NEW_FINANCIAL_INDICATORS",
-            type:"financial"
+            type:"financial",
+            visible
         }
         case "corporateIndicatorsSetting":
             return {
                 title:"NEW_CORPORATE_INDICATORS",
-                type:"corporate"
+                type:"corporate",
+                visible
             }
         case "operationalIndicatorsSetting":
         
             return {
                 title:"NEW_OPERATIONAL_INDICATORS",
-                type:"operational"
+                type:"operational",
+                visible
             }
             case "generalndicatorsSetting":
                 default:
                  return {
                     title:"NEW_GENERAL_INDICATORS", 
                     type:"general",
+                    visible,
                     category:category??"",
                  }
 

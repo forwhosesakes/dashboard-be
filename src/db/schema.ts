@@ -1,5 +1,5 @@
 
-import { pgTable, text, serial, timestamp, boolean, numeric, uuid, integer, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, numeric, uuid, integer, uniqueIndex, unique } from "drizzle-orm/pg-core";
 
 			
 export const user = pgTable("user", {
@@ -113,9 +113,14 @@ export const dashbaord = pgTable("dashboard",{
     theme:text("theme").default("default"),
     entriesId: uuid("entriesId"),
     indicatorsId: uuid("indicatorsId"),
+    visible:boolean("visible").default(true),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt').notNull().defaultNow(),
-})
+    
+},(t) => [
+    unique().on(t.orgId, t.type),
+    unique('custom_name').on(t.orgId, t.type)
+  ])
 
 export const corporateEntries = pgTable("corporateEntries", {
     id: uuid("id").primaryKey().defaultRandom(),

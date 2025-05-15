@@ -132,7 +132,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             console.log("res::", res);
             
             if (res >=25) return 0
-            else if (res>=15) return (100 - 10*(res-15))
+            else if (res>=15) return Math.max(0, 100 - 10*(res-15))
             else  return 100
             }
     },
@@ -157,7 +157,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         else if (res<=0)
             return 0
         else 
-            return res  //TODO: but in percent    
+            return Math.max(0, res)  //TODO: but in percent    
         }
     },
 
@@ -178,7 +178,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             console.log("res::",res);
             
             if (res>80) return 100
-            else if (res >= 41 && res <=80) return 2.5*(res-40)
+            else if (res >= 41 && res <=80) return Math.max(0, 2.5*(res-40))
             else return 0
         }
     },
@@ -199,7 +199,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             console.log("res::", res);
             
             if (res < 5) return 100
-            else if (res >=5 && res <10) return (100 - 20*(res-5))
+            else if (res >=5 && res <10) return Math.max(0, 100 - 20*(res-5))
             else return 0 
 
         
@@ -222,7 +222,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             console.log("res::", res);
             
             if (res<10) return 100
-            else if (res>=10 && res <20) return (100 - 10*(res-10))
+            else if (res>=10 && res <20) return Math.max(0, 100 - 10*(res-10))
              else return 0
         }
     },
@@ -242,7 +242,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             
             if(res <=0) return 0
             else if(res >=7.5) return 100
-            else return ((res/7.5)*100)
+            else return Math.max(0, (res/7.5)*100)
 
         }
     },
@@ -261,7 +261,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             
         
             if (res < 5) return 100
-            else if (res >=5 && res <10) return (100 - 20*(res-5))
+            else if (res >=5 && res <10) return Math.max(0, 100 - 20*(res-5))
             else return 0 
         }
     },
@@ -281,7 +281,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
             console.log("res::", res);
             
             if (res <10) return 100
-            else if (res >=10 && res<19) return (100 - 10*(res-10))
+            else if (res >=10 && res<19) return Math.max(0, 100 - 10*(res-10))
             else return 0;
         
         }
@@ -304,7 +304,7 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
         console.log("res::", res);
         
         if(res > 100) return 100
-        else if (res >=50 && res <=100) return res
+        else if (res >=50 && res <=100) return Math.max(0, res)
         else return 0
         
         }
@@ -326,9 +326,9 @@ export const FINANCIAL_METADATA :{[key:string]:IndicatorMetadata<TFinancialIndic
 
         console.log("res::", res);
         
-        if(res<12) return res/12
+        if(res<12) return Math.max(0, res/12)
         else if (res>=12 && res <=18) return 100
-        else return (100 - 12.5 *(res-18))
+        else return Math.max(0, 100 - 12.5 *(res-18))
         }
     },
     TOTAL_TAX_REFUND: {
